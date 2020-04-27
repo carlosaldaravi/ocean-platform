@@ -6,6 +6,8 @@ import {
 import { RoleRepository } from './role.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
+import { plainToClass } from 'class-transformer';
+import { ReadRoleDto, CreateRoleDto, UpdateRoleDto } from './dtos';
 
 @Injectable()
 export class RoleService {
@@ -13,7 +15,7 @@ export class RoleService {
     @InjectRepository(RoleRepository)
     private readonly _roleRepository: RoleRepository,
   ) {}
-  async get(id: number): Promise<Role> {
+  async get(id: number): Promise<ReadRoleDto> {
     if (!id) {
       throw new BadRequestException('Id must be sent');
     }
@@ -26,10 +28,10 @@ export class RoleService {
       throw new NotFoundException();
     }
 
-    return role;
+    return plainToClass(ReadRoleDto, role);
   }
 
-  async getAll(): Promise<Role[]> {
+  async getAll(): Promise<ReadRoleDto[]> {
     const roles: Role[] = await this._roleRepository.find({
       where: { status: 'ACTIVE' },
     });
@@ -38,16 +40,26 @@ export class RoleService {
       throw new NotFoundException();
     }
 
-    return roles;
+    return roles.map((role: Role) => plainToClass(ReadRoleDto, Role));
   }
 
-  async create(role: Role): Promise<Role> {
+  async create(role: Partial<CreateRoleDto>): Promise<ReadRoleDto> {
     const savedRole: Role = await this._roleRepository.save(role);
-    return savedRole;
+    return plainToClass(ReadRoleDto, savedRole);
   }
 
-  async update(id: number, role: Role): Promise<void> {
-    await this._roleRepository.update(id, role);
+  async update(id: number, role: Partial<UpdateRoleDto>): Promise<ReadRoleDto> {
+    const foundRole: Role = await this._roleRepository.findOne(id, {
+      where: { status: 'ACTIVE' },
+    });
+    if (!foundRole) {
+      throw new NotFoundException('This role does not exist');
+    }
+    foundRole.name = role.name;
+
+    const updatedRole = await this._roleRepository.save(foundRole);
+
+    return plainToClass(ReadRoleDto, updatedRole);
   }
 
   async delete(id: number): Promise<void> {
