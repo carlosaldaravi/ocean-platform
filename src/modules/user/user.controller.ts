@@ -11,9 +11,6 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { Role } from '../role/role.entity';
-import { getConnection } from 'typeorm';
-import { UserDetails } from './user.details.entity';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
@@ -43,5 +40,13 @@ export class UserController {
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     await this._userService.delete(id);
     return true;
+  }
+
+  @Post('setRole/:userId/:roleId')
+  async setRoleToUser(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('roleId', ParseIntPipe) roleId: number,
+  ) {
+    return this._userService.setRoleToUser(userId, roleId);
   }
 }
