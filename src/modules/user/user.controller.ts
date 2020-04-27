@@ -7,12 +7,14 @@ import {
   Patch,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { Role } from '../role/role.entity';
 import { getConnection } from 'typeorm';
 import { UserDetails } from './user.details.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UserController {
@@ -25,6 +27,7 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(AuthGuard())
   async getUsers(): Promise<User[]> {
     const users = await this._userService.getAll();
     return users;
