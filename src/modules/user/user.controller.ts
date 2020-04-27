@@ -9,7 +9,6 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from './dto/user.dto';
 import { User } from './user.entity';
 import { Role } from '../role/role.entity';
 import { getConnection } from 'typeorm';
@@ -20,27 +19,15 @@ export class UserController {
   constructor(private readonly _userService: UserService) {}
 
   @Get(':id')
-  async getUser(@Param('id', ParseIntPipe) id: number): Promise<UserDto> {
+  async getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     const user = await this._userService.get(id);
     return user;
   }
 
   @Get()
-  async getUsers(): Promise<UserDto[]> {
+  async getUsers(): Promise<User[]> {
     const users = await this._userService.getAll();
     return users;
-  }
-
-  @Post()
-  async createUser(@Body() user: User): Promise<UserDto> {
-    const userDetails = new UserDetails();
-    user.details = userDetails;
-
-    const repo = await getConnection().getRepository(Role);
-    const defaultRole = await repo.findOne({ where: { name: 'GENERAL' } });
-    user.roles = [defaultRole];
-    const createdUser = await this._userService.create(user);
-    return createdUser;
   }
 
   @Patch(':id')

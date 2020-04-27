@@ -6,7 +6,6 @@ import {
 import { RoleRepository } from './role.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
-import { MapperService } from '../../shared/mapper.service';
 
 @Injectable()
 export class RoleService {
