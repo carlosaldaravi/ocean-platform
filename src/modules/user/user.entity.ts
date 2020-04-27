@@ -40,7 +40,7 @@ export class User extends BaseEntity {
     role => role.users,
     { eager: true },
   )
-  @JoinTable({ name: 'user_roles ' })
+  @JoinTable({ name: 'user_roles' })
   roles: Role[];
 
   @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
