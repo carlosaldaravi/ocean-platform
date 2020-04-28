@@ -7,7 +7,7 @@ import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { RoleRepository } from '../role/role.repository';
-import { status } from '../../shared/entity-status.num';
+import { status } from '../../shared/entity-status.enum';
 import { ReadUserDto, UpdateUserDto } from './dto';
 import { plainToClass } from 'class-transformer';
 

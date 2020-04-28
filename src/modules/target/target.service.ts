@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TargetRepository } from './target.reposity';
-import { status } from '../../shared/entity-status.num';
+import { status } from '../../shared/entity-status.enum';
 import { ReadTargetDto, CreateTargetDto, UpdateTargetDto } from './dto';
 import { plainToClass } from 'class-transformer';
 import { Target } from './target.entity';
