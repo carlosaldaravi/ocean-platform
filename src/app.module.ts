@@ -7,9 +7,13 @@ import { UserModule } from './modules/user/user.module';
 import { RoleModule } from './modules/role/role.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TargetModule } from './modules/target/target.module';
+import { CalendarModule } from './modules/calendar/calendar.module';
+import { LanguageModule } from './modules/language/language.module';
+import { SportModule } from './modules/sport/sport.module';
+import { LevelModule } from './modules/level/level.module';
 
 @Module({
-  imports: [ConfigModule, DatabaseModule, UserModule, RoleModule, AuthModule, TargetModule],
+  imports: [ConfigModule, DatabaseModule, UserModule, RoleModule, AuthModule, TargetModule, CalendarModule, LanguageModule, SportModule, LevelModule],
 })
 export class AppModule {
   static port: number | string;
