@@ -1,4 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { gender } from 'src/shared/user-gender.enum';
 
 @Entity('user_details')
 export class UserDetails extends BaseEntity {
@@ -17,7 +18,7 @@ export class UserDetails extends BaseEntity {
   @Column({ type: 'varchar', nullable: true, length: 50 })
   city: string;
 
-  @Column({ type: 'varchar', nullable: true, length: 50 })
+  @Column({ type: 'varchar', nullable: true, length: 50, name: 'known_way' })
   knownWay: string;
 
   @Column({ type: 'varchar', nullable: true, length: 50 })
@@ -34,4 +35,7 @@ export class UserDetails extends BaseEntity {
 
   @Column({ type: 'varchar', nullable: true })
   comments: string;
+
+  @Column({ type: 'varchar', nullable: true, length: 6 })
+  gender: string;
 }
