@@ -36,11 +36,10 @@ export class TargetController {
     return this._targetService.getAll();
   }
 
-  @Post(':targetId')
+  @Post()
   @Roles(RoleType.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)
   createTarget(
-    @Param('targetId', ParseIntPipe) targetId: number,
     @Body() target: Partial<CreateTargetDto>,
   ): Promise<ReadTargetDto> {
     return this._targetService.create(target);

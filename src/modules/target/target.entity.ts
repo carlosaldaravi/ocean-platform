@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
 import { StudentTarget } from '../user/student/student-target.entity';
 
@@ -35,10 +34,4 @@ export class Target extends BaseEntity {
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;
-
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt: Date;
 }
