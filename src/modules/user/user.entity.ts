@@ -15,6 +15,7 @@ import { UserDetails } from './user.details.entity';
 import { Role } from '../role/role.entity';
 import { status } from '../../shared/entity-status.enum';
 import { StudentTarget } from './student/student-target.entity';
+import { Calendar } from '../calendar/calendar.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -55,6 +56,12 @@ export class User extends BaseEntity {
     studentTarget => studentTarget.validatedBy,
   )
   studentTargetValidations: StudentTarget[];
+
+  @OneToMany(
+    type => Calendar,
+    calendar => calendar.user,
+  )
+  date: Calendar[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;
