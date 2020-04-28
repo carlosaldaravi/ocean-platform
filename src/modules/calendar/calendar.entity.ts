@@ -5,15 +5,17 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { User } from '../user/user.entity';
+import { CalendarType } from './calendar-type.entity';
 
 @Entity()
 export class Calendar extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('timestamp', { unique: true })
+  @Column({ type: 'date', nullable: false })
   date: Date;
 
   @Column('time', { nullable: true })
@@ -31,4 +33,11 @@ export class Calendar extends BaseEntity {
   )
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToOne(
+    type => CalendarType,
+    type => type.calendar,
+  )
+  @JoinColumn({ name: 'type_id' })
+  type: Calendar;
 }
