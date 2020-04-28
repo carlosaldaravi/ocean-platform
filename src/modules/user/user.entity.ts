@@ -9,11 +9,12 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { UserDetails } from './user.details.entity';
 import { Role } from '../role/role.entity';
-import { Target } from '../target/target.entity';
-import { status } from '../../shared/entity-status.num';
+import { status } from '../../shared/entity-status.enum';
+import { StudentTarget } from './student/student-target.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -29,8 +30,6 @@ export class User extends BaseEntity {
   // availability
   // idiomas
   // nivel
-  // comments
-  // gender
   // tipo de curso
 
   @OneToOne(type => UserDetails, { cascade: true, eager: true })
@@ -45,12 +44,17 @@ export class User extends BaseEntity {
   @JoinTable({ name: 'user_roles' })
   roles: Role[];
 
-  @ManyToMany(
-    type => Target,
-    target => target.students,
+  @OneToMany(
+    type => StudentTarget,
+    studentTarget => studentTarget.target,
   )
-  @JoinTable({ name: 'student_targets' })
-  targets: Target[];
+  studentTarget!: StudentTarget[];
+
+  @OneToMany(
+    type => StudentTarget,
+    studentTarget => studentTarget.validatedBy,
+  )
+  studentTargetValidations: StudentTarget[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;

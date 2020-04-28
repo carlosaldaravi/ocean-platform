@@ -7,9 +7,11 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../user/user.entity';
-import { status } from '../../shared/entity-status.num';
+import { status } from '../../shared/entity-status.enum';
+import { StudentTarget } from '../user/student/student-target.entity';
 
 @Entity('targets')
 export class Target extends BaseEntity {
@@ -25,13 +27,11 @@ export class Target extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   description: string;
 
-  @ManyToMany(
-    type => User,
-    user => user.targets,
-    { cascade: true },
+  @OneToMany(
+    type => StudentTarget,
+    studentTarget => studentTarget.student,
   )
-  @JoinTable({ name: 'student_target' })
-  students: User[];
+  studentTarget!: StudentTarget[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;
