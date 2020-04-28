@@ -25,7 +25,7 @@ export class StudentTarget extends BaseEntity {
   @Column({ name: 'validated_by' })
   validatedBy: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'date' })
   date: Date;
 
   @Column({ nullable: true })

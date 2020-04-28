@@ -1,5 +1,4 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { gender } from 'src/shared/user-gender.enum';
 
 @Entity('user_details')
 export class UserDetails extends BaseEntity {
@@ -30,7 +29,7 @@ export class UserDetails extends BaseEntity {
   @Column({ type: 'int', nullable: true })
   footprint: number;
 
-  @Column({ type: 'timestamp', nullable: true, name: 'date_born' })
+  @Column({ type: 'date', nullable: true, name: 'date_born' })
   dateBorn: Date;
 
   @Column({ type: 'varchar', nullable: true })
