@@ -1,4 +1,5 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { StudentSize } from './student/student-size.enum';
 
 @Entity('user_details')
 export class UserDetails extends BaseEntity {
@@ -20,8 +21,8 @@ export class UserDetails extends BaseEntity {
   @Column({ type: 'varchar', nullable: true, length: 50, name: 'known_way' })
   knownWay: string;
 
-  @Column({ type: 'varchar', nullable: true, length: 50 })
-  size: string;
+  @Column({ type: 'varchar', nullable: true, length: 2 })
+  size: StudentSize;
 
   @Column({ type: 'int', nullable: true })
   weight: number;
