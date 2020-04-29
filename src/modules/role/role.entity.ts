@@ -7,13 +7,14 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
+import { status } from '../../shared/entity-status.enum';
 
 @Entity('roles')
 export class Role extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 20, nullable: false, unique: true })
   name: string;
 
   @ManyToMany(
@@ -23,6 +24,6 @@ export class Role extends BaseEntity {
   @JoinColumn()
   users: User[];
 
-  @Column({ type: 'varchar', default: 'ACTIVE', length: 8 })
+  @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;
 }
