@@ -99,6 +99,8 @@ export const setDefaultValues = async () => {
       const adminRole = await Role.findOne({ name: 'ADMIN' });
       const studentRole = await Role.findOne({ name: 'STUDENT' });
       const instructorRole = await Role.findOne({ name: 'INSTRUCTOR' });
+      const spanishLanguage = await Language.findOne({ name: 'Spanish' });
+      const englishLanguage = await Language.findOne({ name: 'English' });
       const admin = await User.findOne({ email: 'admin@prueba.com' });
       if (admin) {
         const details = new UserDetails();
@@ -108,6 +110,7 @@ export const setDefaultValues = async () => {
         details.phone = '653642915';
         admin.details = details;
         admin.roles = [generalRole, adminRole];
+        admin.languages = [spanishLanguage];
         admin.save();
       }
       const student1 = await User.findOne({ email: 'student1@prueba.com' });
@@ -120,6 +123,7 @@ export const setDefaultValues = async () => {
         details.weight = 88;
         details.footprint = 46;
         details.gender = gender.MALE;
+        student1.languages = [spanishLanguage, englishLanguage];
         student1.details = details;
         student1.roles = [generalRole, studentRole];
         student1.save();
@@ -135,6 +139,7 @@ export const setDefaultValues = async () => {
         details.footprint = 37;
         details.gender = gender.FEMALE;
         details.knownWay = 'Instagram';
+        student2.languages = [spanishLanguage, englishLanguage];
         student2.details = details;
         student2.roles = [generalRole, studentRole];
         student2.save();
@@ -151,6 +156,7 @@ export const setDefaultValues = async () => {
         details.gender = gender.MALE;
         details.knownWay = 'Internet';
         details.comments = 'Tiene una lesión en el hombro derecho';
+        student3.languages = [spanishLanguage];
         student3.details = details;
         student3.roles = [generalRole, studentRole];
         student3.save();
@@ -159,8 +165,10 @@ export const setDefaultValues = async () => {
         email: 'instructor1@prueba.com',
       });
       if (instructor1) {
-        logger.log(`User encontrado, ID: ${instructor1.id}`);
-
+        const details = new UserDetails();
+        details.firstname = 'Instructor 1';
+        instructor1.details = details;
+        instructor1.languages = [englishLanguage];
         instructor1.roles = [generalRole, instructorRole];
         instructor1.save();
       }
@@ -168,8 +176,10 @@ export const setDefaultValues = async () => {
         email: 'instructor2@prueba.com',
       });
       if (instructor2) {
-        logger.log(`User encontrado, ID: ${instructor2.id}`);
-
+        const details = new UserDetails();
+        details.firstname = 'Instructor 2';
+        instructor1.details = details;
+        instructor2.languages = [spanishLanguage];
         instructor2.roles = [generalRole, instructorRole];
         instructor2.save();
       }
@@ -177,8 +187,10 @@ export const setDefaultValues = async () => {
         email: 'instructor3@prueba.com',
       });
       if (instructor3) {
-        logger.log(`User encontrado, ID: ${instructor3.id}`);
-
+        const details = new UserDetails();
+        details.firstname = 'Instructor 3';
+        instructor1.details = details;
+        instructor3.languages = [spanishLanguage, englishLanguage];
         instructor3.roles = [generalRole, instructorRole];
         instructor3.save();
       }
