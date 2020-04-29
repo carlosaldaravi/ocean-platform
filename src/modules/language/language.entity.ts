@@ -20,10 +20,9 @@ export class Language extends BaseEntity {
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;
 
-  // @ManyToOne(
-  //   type => User,
-  //   user => user.date,
-  // )
-  // @JoinColumn({ name: 'user_id' })
-  // user: User;
+  @ManyToOne(
+    type => User,
+    user => user.languages,
+  )
+  users: User[];
 }

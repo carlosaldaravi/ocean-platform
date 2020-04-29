@@ -16,6 +16,7 @@ import { Role } from '../role/role.entity';
 import { status } from '../../shared/entity-status.enum';
 import { StudentTarget } from './student/student-target.entity';
 import { Calendar } from '../calendar/calendar.entity';
+import { Language } from '../language/language.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -44,6 +45,14 @@ export class User extends BaseEntity {
   )
   @JoinTable({ name: 'user_roles' })
   roles: Role[];
+
+  @ManyToMany(
+    type => Language,
+    language => language.users,
+    { eager: true },
+  )
+  @JoinTable({ name: 'user_languages' })
+  languages: Language[];
 
   @OneToMany(
     type => StudentTarget,
