@@ -5,9 +5,11 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
+import { Target } from '../target/target.entity';
 
 @Entity('levels')
 export class Level extends BaseEntity {
@@ -19,6 +21,12 @@ export class Level extends BaseEntity {
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;
+
+  @OneToMany(
+    type => Target,
+    target => target.level,
+  )
+  target: Target;
 
   // @ManyToOne(
   //   type => User,
