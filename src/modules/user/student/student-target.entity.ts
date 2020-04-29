@@ -13,13 +13,10 @@ import { User } from '../user.entity';
 
 @Entity('student_targets')
 export class StudentTarget extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column({ name: 'student_id' })
+  @Column({ name: 'student_id', primary: true })
   studentId!: number;
 
-  @Column({ name: 'target_id' })
+  @Column({ name: 'target_id', primary: true })
   targetId!: number;
 
   @Column({ name: 'validated_by' })
