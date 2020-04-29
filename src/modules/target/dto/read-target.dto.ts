@@ -2,6 +2,7 @@ import { IsNumber, IsEmail, IsString } from 'class-validator';
 import { Type, Exclude, Expose } from 'class-transformer';
 import { ReadRoleDto } from '../../role/dtos';
 import { ReadUserDto } from '../../../modules/user/dto';
+import { Level } from 'src/modules/level/level.entity';
 
 @Exclude()
 export class ReadTargetDto {
@@ -14,8 +15,8 @@ export class ReadTargetDto {
   readonly name: string;
 
   @Expose()
-  @IsString()
-  readonly level: string;
+  @Type(type => Level)
+  readonly level: Level;
 
   @Expose()
   @IsString()

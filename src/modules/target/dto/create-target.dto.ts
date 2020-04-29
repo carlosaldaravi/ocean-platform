@@ -1,4 +1,5 @@
 import { IsNumber, IsString } from 'class-validator';
+import { Level } from 'src/modules/level/level.entity';
 
 export class CreateTargetDto {
   @IsNumber()
@@ -8,7 +9,7 @@ export class CreateTargetDto {
   readonly name: string;
 
   @IsString()
-  readonly level: string;
+  readonly level: Level;
 
   @IsString()
   readonly description: string;
