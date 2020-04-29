@@ -6,17 +6,22 @@ import {
   ManyToOne,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { CalendarType } from './calendar-type.entity';
 
-@Entity()
+@Entity('user_calendar')
 export class Calendar extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn({ name: 'user_id' })
+  userId: number;
 
-  @Column({ type: 'date', nullable: false })
+  @PrimaryColumn({ type: 'date' })
   date: Date;
+
+  @Column({ name: 'type_id', nullable: false, unique: false })
+  typeId: number;
 
   @Column('time', { nullable: true })
   start_time: Date;
@@ -30,6 +35,7 @@ export class Calendar extends BaseEntity {
   @ManyToOne(
     type => User,
     user => user.date,
+    { primary: true },
   )
   @JoinColumn({ name: 'user_id' })
   user: User;
@@ -37,7 +43,11 @@ export class Calendar extends BaseEntity {
   @OneToOne(
     type => CalendarType,
     type => type.calendar,
+    { eager: true },
   )
   @JoinColumn({ name: 'type_id' })
-  type: Calendar;
+  type: CalendarType;
+
+  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
+  deletedAt: Date;
 }
