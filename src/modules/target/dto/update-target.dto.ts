@@ -1,5 +1,5 @@
 import { IsNumber, IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import { Level } from 'src/modules/level/level.entity';
+import { Level } from '../../level/level.entity';
 
 export class UpdateTargetDto {
   @IsString()
