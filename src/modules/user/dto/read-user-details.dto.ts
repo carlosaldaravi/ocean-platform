@@ -10,4 +10,8 @@ export class ReadUserDetailsDto {
   @Expose()
   @IsString()
   readonly lastname: string;
+
+  @Expose()
+  @IsString()
+  readonly phone: string;
 }
