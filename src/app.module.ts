@@ -13,7 +13,18 @@ import { SportModule } from './modules/sport/sport.module';
 import { LevelModule } from './modules/level/level.module';
 
 @Module({
-  imports: [ConfigModule, DatabaseModule, UserModule, RoleModule, AuthModule, TargetModule, CalendarModule, LanguageModule, SportModule, LevelModule],
+  imports: [
+    ConfigModule,
+    DatabaseModule,
+    UserModule,
+    RoleModule,
+    AuthModule,
+    TargetModule,
+    CalendarModule,
+    LanguageModule,
+    SportModule,
+    LevelModule,
+  ],
 })
 export class AppModule {
   static port: number | string;
