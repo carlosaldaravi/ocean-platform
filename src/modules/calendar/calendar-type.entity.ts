@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Calendar } from './calendar.entity';
 
-@Entity()
+@Entity('calendar_types')
 export class CalendarType extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
