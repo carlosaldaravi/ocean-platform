@@ -6,6 +6,7 @@ import { User } from '../user.entity';
 import { status } from '../../../shared/entity-status.enum';
 import { RoleType } from '../../role/roletype.enum';
 import { plainToClass } from 'class-transformer';
+import { Role } from 'src/modules/role/role.entity';
 
 @Injectable()
 export class StudentService {
@@ -14,15 +15,12 @@ export class StudentService {
     private readonly _userRepository: UserRepository,
   ) {}
   async getAll(): Promise<ReadStudentDto[]> {
-    const users: User[] = await this._userRepository.find({
-      //   join: { alias: 'user', innerJoin: { roles: 'user.roles' } },
-      where: qb => {
-        qb.where({
-          // Filter Role fields
-          status: status.ACTIVE,
-        }).andWhere('roles.name = :rolesType', { rolesType: RoleType.STUDENT }); // Filter related field
-      },
-    });
+    const users = await this._userRepository
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.details', 'd')
+      .leftJoinAndSelect('u.roles', 'r')
+      .where('r.name = :name', { name: RoleType.STUDENT })
+      .getMany();
 
     return users.map((user: User) => plainToClass(ReadStudentDto, user));
   }
