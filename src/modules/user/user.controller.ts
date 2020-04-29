@@ -13,8 +13,14 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { ReadUserDto } from './dto';
+import { CreateStudentTargetDto } from './student/dto/create-student-target.dto';
+import { RoleType } from '../role/roletype.enum';
+import { Roles } from '../role/decorators/role.decoratos';
+import { GetUser } from '../auth/user.decorator';
+import { RoleGuard } from '../role/guards/role.guard';
 
 @Controller('users')
+@UseGuards(AuthGuard('jwt'), RoleGuard)
 export class UserController {
   constructor(private readonly _userService: UserService) {}
 
@@ -50,5 +56,14 @@ export class UserController {
     @Param('roleId', ParseIntPipe) roleId: number,
   ): Promise<boolean> {
     return this._userService.setRoleToUser(userId, roleId);
+  }
+
+  @Post('setTargets')
+  @Roles(RoleType.ADMIN, RoleType.INSTRUCTOR)
+  setTargetsToUsers(
+    @Body() createStudentTargetDto: CreateStudentTargetDto,
+    @GetUser() user: User,
+  ): Promise<boolean> {
+    return this._userService.setTargetsToUsers(createStudentTargetDto, user);
   }
 }
