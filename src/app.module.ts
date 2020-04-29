@@ -11,6 +11,9 @@ import { CalendarModule } from './modules/calendar/calendar.module';
 import { LanguageModule } from './modules/language/language.module';
 import { SportModule } from './modules/sport/sport.module';
 import { LevelModule } from './modules/level/level.module';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpErrorFilter } from './shared/http-error.filter';
+import { LoggingInterceptor } from './shared/logging.interceptor';
 
 @Module({
   imports: [
@@ -24,6 +27,16 @@ import { LevelModule } from './modules/level/level.module';
     LanguageModule,
     SportModule,
     LevelModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpErrorFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
   ],
 })
 export class AppModule {
