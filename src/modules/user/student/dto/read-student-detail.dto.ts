@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { StudentSize } from '../student-size.enum';
 
 @Exclude()
-export class ReadUserDetailsDto {
+export class ReadStudentDetailsDto {
   @Expose()
   @IsString()
   readonly firstname: string;
