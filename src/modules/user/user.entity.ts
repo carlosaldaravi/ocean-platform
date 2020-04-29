@@ -29,11 +29,6 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar' })
   password: string;
 
-  // availability
-  // idiomas
-  // nivel
-  // tipo de curso
-
   @OneToOne(type => UserDetails, { cascade: true, eager: true })
   @JoinColumn({ name: 'detail_id' })
   details: UserDetails;
@@ -69,6 +64,7 @@ export class User extends BaseEntity {
   @OneToMany(
     type => Calendar,
     calendar => calendar.user,
+    { eager: true },
   )
   date: Calendar[];
 
