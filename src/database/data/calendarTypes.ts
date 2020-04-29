@@ -5,4 +5,7 @@ export const calendarTypes_DB_DATA = [
   {
     name: 'AVAILABILITY',
   },
+  {
+    name: 'COURSE',
+  },
 ];

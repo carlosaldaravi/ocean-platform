@@ -16,6 +16,7 @@ import { targets_DB_DATA } from './targets';
 import { languages_DB_DATA } from './languages';
 import { Level } from '../../modules/level/level.entity';
 import { levels_DB_DATA } from './levels';
+import { Calendar } from '../../modules/calendar/calendar.entity';
 
 // insert data base examples
 
@@ -178,7 +179,7 @@ export const setDefaultValues = async () => {
       if (instructor2) {
         const details = new UserDetails();
         details.firstname = 'Instructor 2';
-        instructor1.details = details;
+        instructor2.details = details;
         instructor2.languages = [spanishLanguage];
         instructor2.roles = [generalRole, instructorRole];
         instructor2.save();
@@ -189,10 +190,30 @@ export const setDefaultValues = async () => {
       if (instructor3) {
         const details = new UserDetails();
         details.firstname = 'Instructor 3';
-        instructor1.details = details;
+        instructor3.details = details;
         instructor3.languages = [spanishLanguage, englishLanguage];
         instructor3.roles = [generalRole, instructorRole];
         instructor3.save();
+      }
+      if ((await Calendar.count()) == 0) {
+        logger.log(`Adding calendar to student1...`);
+
+        const calendar = new Calendar();
+        const calendar2 = new Calendar();
+        const student1 = await User.findOne({ email: 'student1@prueba.com' });
+        const avType = await CalendarType.findOne({
+          where: { name: 'AVAILABILITY' },
+        });
+        if (avType && student1) {
+          calendar.typeId = avType.id;
+          calendar.userId = student1.id;
+          calendar.date = new Date('2020-06-20');
+          calendar2.typeId = avType.id;
+          calendar2.userId = student1.id;
+          calendar2.date = new Date('2020-06-21');
+          await calendar.save();
+          await calendar2.save();
+        }
       }
     }
   } catch (error) {
