@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -65,7 +66,12 @@ export class UserService {
     }
 
     foundUser.email = user.email;
-    const updatedUser = await this._userRepository.findOne(foundUser);
+    const updatedUser = await this._userRepository.save(foundUser);
+
+    if (!foundUser) {
+      throw new InternalServerErrorException();
+    }
+
     return plainToClass(ReadUserDto, updatedUser);
   }
 
