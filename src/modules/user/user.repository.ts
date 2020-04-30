@@ -20,13 +20,10 @@ export class UserRepository extends Repository<User> {
     switch (role) {
       case RoleType.STUDENT:
         return users.map((user: User) => plainToClass(ReadStudentDto, user));
-        break;
       case RoleType.INSTRUCTOR:
         return users.map((user: User) => plainToClass(ReadInstructorDto, user));
-        break;
       default:
         return users.map((user: User) => plainToClass(ReadUserDto, user));
-        break;
     }
 
     // return this._userRepository.findByRol('student');
