@@ -6,7 +6,6 @@ import { User } from '../user.entity';
 import { status } from '../../../shared/entity-status.enum';
 import { RoleType } from '../../role/roletype.enum';
 import { plainToClass } from 'class-transformer';
-import { Role } from 'src/modules/role/role.entity';
 
 @Injectable()
 export class StudentService {

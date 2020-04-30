@@ -17,12 +17,11 @@ import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
 
 @Controller('targets')
+@UseGuards(AuthGuard('jwt'), RoleGuard)
 export class TargetController {
   constructor(private readonly _targetService: TargetService) {}
 
   @Get(':targetId')
-  // @Roles(RoleType.ADMIN)
-  // @UseGuards(AuthGuard(), RoleGuard)
   getTarget(
     @Param('targetId', ParseIntPipe) targetId: number,
   ): Promise<ReadTargetDto> {
@@ -30,15 +29,12 @@ export class TargetController {
   }
 
   @Get()
-  @Roles(RoleType.ADMIN)
-  @UseGuards(AuthGuard(), RoleGuard)
   async getTargets(): Promise<ReadTargetDto[]> {
     return this._targetService.getAll();
   }
 
   @Post()
   @Roles(RoleType.ADMIN)
-  @UseGuards(AuthGuard(), RoleGuard)
   createTarget(
     @Body() target: Partial<CreateTargetDto>,
   ): Promise<ReadTargetDto> {
@@ -46,8 +42,6 @@ export class TargetController {
   }
 
   @Patch(':targetId')
-  @Roles(RoleType.ADMIN)
-  @UseGuards(AuthGuard(), RoleGuard)
   updateTarget(
     @Param('targetId', ParseIntPipe) targetId: number,
     @Body() target: Partial<UpdateTargetDto>,
@@ -56,8 +50,6 @@ export class TargetController {
   }
 
   @Delete(':targetId')
-  @Roles(RoleType.ADMIN)
-  @UseGuards(AuthGuard(), RoleGuard)
   deleteTarget(@Param('targetId', ParseIntPipe) targetId: number) {
     return this._targetService.delete(targetId);
   }
