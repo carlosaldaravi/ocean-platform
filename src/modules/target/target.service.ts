@@ -2,6 +2,8 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TargetRepository } from './target.reposity';
@@ -10,6 +12,7 @@ import { ReadTargetDto, CreateTargetDto, UpdateTargetDto } from './dto';
 import { plainToClass } from 'class-transformer';
 import { Target } from './target.entity';
 import { In } from 'typeorm';
+import { Level } from '../level/level.entity';
 
 @Injectable()
 export class TargetService {
@@ -56,9 +59,13 @@ export class TargetService {
   }
 
   async create(target: Partial<CreateTargetDto>): Promise<ReadTargetDto> {
+    const level = await Level.findOne(target.level);
+    if (!level) {
+      throw new HttpException('This level does not exists', HttpStatus.OK);
+    }
     const savedTarget: Target = await this._targetRepository.save({
       name: target.name,
-      level: target.level,
+      levelId: level.id,
       description: target.description,
     });
     return plainToClass(ReadTargetDto, savedTarget);

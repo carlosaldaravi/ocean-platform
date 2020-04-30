@@ -9,7 +9,7 @@ export class CreateTargetDto {
   readonly name: string;
 
   @IsString()
-  readonly level: Level;
+  readonly level: number;
 
   @IsString()
   readonly description: string;
