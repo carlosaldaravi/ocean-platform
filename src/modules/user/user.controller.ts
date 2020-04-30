@@ -18,6 +18,8 @@ import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
 import { GetUser } from '../auth/user.decorator';
 import { RoleGuard } from '../role/guards/role.guard';
+import { StatusValidationPipe } from '../../pipes/status-validation.pipe';
+import { status } from 'src/shared/entity-status.enum';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -25,8 +27,6 @@ export class UserController {
   constructor(private readonly _userService: UserService) {}
 
   @Get(':userId')
-  // @Roles(RoleType.ADMIN)
-  // @UseGuards(AuthGuard(), RoleGuard)
   getUser(@Param('userId', ParseIntPipe) userId: number): Promise<ReadUserDto> {
     return this._userService.get(userId);
   }
@@ -45,11 +45,6 @@ export class UserController {
     return this._userService.update(userId, user);
   }
 
-  @Delete(':userId')
-  deleteUser(@Param('userId', ParseIntPipe) userId: number) {
-    return this._userService.delete(userId);
-  }
-
   @Post('setRole/:userId/:roleId')
   setRoleToUser(
     @Param('userId', ParseIntPipe) userId: number,
@@ -65,5 +60,11 @@ export class UserController {
     @GetUser() user: User,
   ): Promise<boolean> {
     return this._userService.setTargetsToUsers(createStudentTargetDto, user);
+  }
+
+  @Delete(':userId')
+  @Roles(RoleType.ADMIN)
+  deleteUser(@Param('userId', ParseIntPipe) userId: number) {
+    return this._userService.delete(userId);
   }
 }

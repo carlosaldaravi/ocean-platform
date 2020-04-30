@@ -3,6 +3,7 @@ import {
   BadRequestException,
   NotFoundException,
   InternalServerErrorException,
+  ConflictException,
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -38,7 +39,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
 
     return plainToClass(ReadUserDto, user);
@@ -50,29 +51,34 @@ export class UserService {
     });
 
     if (!users) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
 
     return users.map((user: User) => plainToClass(ReadUserDto, user));
   }
 
   async update(userId: number, user: UpdateUserDto): Promise<ReadUserDto> {
-    const foundUser = await this._userRepository.findOne(userId, {
-      where: { status: status.ACTIVE },
-    });
+    try {
+      const foundUser = await this._userRepository.findOne(userId);
 
-    if (!foundUser) {
-      throw new NotFoundException('User does not exists');
+      if (!foundUser) {
+        throw new NotFoundException('User does not exists');
+      }
+
+      foundUser.email = user.email;
+      const updatedUser = await this._userRepository.save(foundUser);
+
+      if (!updatedUser) {
+        throw new InternalServerErrorException();
+      }
+      return plainToClass(ReadUserDto, updatedUser);
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('Email already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
-
-    foundUser.email = user.email;
-    const updatedUser = await this._userRepository.save(foundUser);
-
-    if (!foundUser) {
-      throw new InternalServerErrorException();
-    }
-
-    return plainToClass(ReadUserDto, updatedUser);
   }
 
   async delete(userId: number): Promise<void> {
@@ -81,7 +87,7 @@ export class UserService {
     });
 
     if (!userExist) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
 
     await this._userRepository.update(userId, { status: status.INACTIVE });
@@ -93,7 +99,7 @@ export class UserService {
     });
 
     if (!userExist) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found');
     }
 
     const roleExist = await this._roleRepository.findOne(roleId, {
