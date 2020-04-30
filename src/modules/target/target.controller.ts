@@ -42,6 +42,7 @@ export class TargetController {
   }
 
   @Patch(':targetId')
+  @Roles(RoleType.ADMIN)
   updateTarget(
     @Param('targetId', ParseIntPipe) targetId: number,
     @Body() target: Partial<UpdateTargetDto>,
@@ -50,7 +51,10 @@ export class TargetController {
   }
 
   @Delete(':targetId')
-  deleteTarget(@Param('targetId', ParseIntPipe) targetId: number) {
+  @Roles(RoleType.ADMIN)
+  deleteTarget(
+    @Param('targetId', ParseIntPipe) targetId: number,
+  ): Promise<ReadTargetDto> {
     return this._targetService.delete(targetId);
   }
 }

@@ -29,7 +29,7 @@ export class TargetService {
       where: { status: status.ACTIVE },
     });
     if (!target) {
-      throw new NotFoundException('Target does not exist');
+      throw new HttpException('This target does not exists', HttpStatus.OK);
     }
     return plainToClass(ReadTargetDto, target);
   }
@@ -61,14 +61,28 @@ export class TargetService {
   async create(target: Partial<CreateTargetDto>): Promise<ReadTargetDto> {
     const level = await Level.findOne(target.level);
     if (!level) {
-      throw new HttpException('This level does not exists', HttpStatus.OK);
+      throw new HttpException('This target does not exists', HttpStatus.OK);
     }
-    const savedTarget: Target = await this._targetRepository.save({
-      name: target.name,
-      levelId: level.id,
-      description: target.description,
+    const foundTarget: Target = await this._targetRepository.findOne({
+      where: { name: target.name },
     });
-    return plainToClass(ReadTargetDto, savedTarget);
+
+    if (foundTarget) {
+      if (foundTarget.status === status.INACTIVE) {
+        foundTarget.status = status.ACTIVE;
+        await foundTarget.save();
+        return plainToClass(ReadTargetDto, foundTarget);
+      } else {
+        throw new HttpException('This target already exists', HttpStatus.OK);
+      }
+    } else {
+      const savedTarget: Target = await this._targetRepository.save({
+        name: target.name,
+        levelId: level.id,
+        description: target.description,
+      });
+      return plainToClass(ReadTargetDto, savedTarget);
+    }
   }
 
   async update(
@@ -80,27 +94,38 @@ export class TargetService {
     });
 
     if (!foundTarget) {
-      throw new NotFoundException('Target does not exists');
+      throw new HttpException('This target does not exists', HttpStatus.OK);
+    }
+
+    if (target.level) {
+      var level = await Level.findOne(target.level, {
+        where: { status: status.ACTIVE },
+      });
     }
 
     foundTarget.name = target.name;
-    foundTarget.level = target.level;
+    foundTarget.levelId = level.id;
+    foundTarget.level = level;
     foundTarget.description = target.description;
 
-    const updatedTarget = await this._targetRepository.findOne(foundTarget);
+    await foundTarget.save();
 
-    return plainToClass(ReadTargetDto, updatedTarget);
+    return plainToClass(ReadTargetDto, foundTarget);
   }
 
-  async delete(targetId: number): Promise<void> {
-    const userExist = await this._targetRepository.findOne(targetId, {
+  async delete(targetId: number): Promise<ReadTargetDto> {
+    const targetExist = await this._targetRepository.findOne(targetId, {
       where: { status: status.ACTIVE },
     });
 
-    if (!userExist) {
-      throw new NotFoundException();
+    if (!targetExist) {
+      throw new HttpException('This target does not exists', HttpStatus.OK);
     }
 
-    await this._targetRepository.update(targetId, { status: status.INACTIVE });
+    const updatedTarget = await this._targetRepository.update(targetId, {
+      status: status.INACTIVE,
+    });
+
+    return plainToClass(ReadTargetDto, updatedTarget);
   }
 }
