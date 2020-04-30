@@ -1,8 +1,8 @@
 import { IsNumber, IsEmail, IsString } from 'class-validator';
 import { ReadUserDetailsDto } from './read-user-details.dto';
 import { Type, Exclude, Expose } from 'class-transformer';
-import { ReadRoleDto } from '../../role/dtos';
-import { status } from 'src/shared/entity-status.enum';
+import { ReadRoleDto } from '../../role/dto';
+import { status } from '../../../shared/entity-status.enum';
 
 @Exclude()
 export class ReadUserDto {
