@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
 import { plainToClass } from 'class-transformer';
 import { ReadRoleDto, CreateRoleDto, UpdateRoleDto } from './dto';
-import { status } from 'src/shared/entity-status.enum';
+import { status } from '../../shared/entity-status.enum';
 
 @Injectable()
 export class RoleService {
@@ -79,15 +79,18 @@ export class RoleService {
     return plainToClass(ReadRoleDto, updatedRole);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: number): Promise<ReadRoleDto> {
     const roleExists = await this._roleRepository.findOne(id, {
-      where: { status: 'ACTIVE' },
+      where: { status: status.ACTIVE },
     });
 
     if (!roleExists) {
       throw new HttpException('This role does not exists', HttpStatus.OK);
     }
 
-    await this._roleRepository.update(id, { status: 'INACTIVE' });
+    const updatedRole = await this._roleRepository.update(id, {
+      status: status.INACTIVE,
+    });
+    return plainToClass(ReadRoleDto, updatedRole);
   }
 }

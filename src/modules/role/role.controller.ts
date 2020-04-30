@@ -48,7 +48,9 @@ export class RoleController {
 
   @Delete(':roleId')
   @Roles(RoleType.ADMIN)
-  deleteRole(@Param('roleId', ParseIntPipe) roleId: number) {
+  deleteRole(
+    @Param('roleId', ParseIntPipe) roleId: number,
+  ): Promise<ReadRoleDto> {
     return this._roleService.delete(roleId);
   }
 }
