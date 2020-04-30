@@ -69,7 +69,7 @@ export class User extends BaseEntity {
   date: Calendar[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
-  status: string;
+  status: status;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
