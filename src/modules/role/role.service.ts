@@ -2,12 +2,15 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { RoleRepository } from './role.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
 import { plainToClass } from 'class-transformer';
 import { ReadRoleDto, CreateRoleDto, UpdateRoleDto } from './dto';
+import { status } from 'src/shared/entity-status.enum';
 
 @Injectable()
 export class RoleService {
@@ -25,7 +28,7 @@ export class RoleService {
     });
 
     if (!role) {
-      throw new NotFoundException();
+      throw new HttpException('This role does not exists', HttpStatus.OK);
     }
 
     return plainToClass(ReadRoleDto, role);
@@ -37,15 +40,29 @@ export class RoleService {
     });
 
     if (!roles) {
-      throw new NotFoundException();
+      throw new HttpException('This role does not exists', HttpStatus.OK);
     }
 
     return roles.map((role: Role) => plainToClass(ReadRoleDto, role));
   }
 
   async create(role: Partial<CreateRoleDto>): Promise<ReadRoleDto> {
-    const savedRole: Role = await this._roleRepository.save(role);
-    return plainToClass(ReadRoleDto, savedRole);
+    const foundRole: Role = await this._roleRepository.findOne({
+      where: { name: role.name },
+    });
+
+    if (foundRole) {
+      if (foundRole.status === status.INACTIVE) {
+        foundRole.status = status.ACTIVE;
+        await foundRole.save();
+        return plainToClass(ReadRoleDto, foundRole);
+      } else {
+        throw new HttpException('This role already exists', HttpStatus.OK);
+      }
+    } else {
+      const savedRole: Role = await this._roleRepository.save(role);
+      return plainToClass(ReadRoleDto, savedRole);
+    }
   }
 
   async update(id: number, role: Partial<UpdateRoleDto>): Promise<ReadRoleDto> {
@@ -53,7 +70,7 @@ export class RoleService {
       where: { status: 'ACTIVE' },
     });
     if (!foundRole) {
-      throw new NotFoundException('This role does not exist');
+      throw new HttpException('This role does not exists', HttpStatus.OK);
     }
     foundRole.name = role.name;
 
@@ -68,7 +85,7 @@ export class RoleService {
     });
 
     if (!roleExists) {
-      throw new NotFoundException();
+      throw new HttpException('This role does not exists', HttpStatus.OK);
     }
 
     await this._roleRepository.update(id, { status: 'INACTIVE' });
