@@ -20,6 +20,7 @@ export class StudentService {
       .leftJoinAndSelect('u.details', 'd')
       .leftJoinAndSelect('u.roles', 'r')
       .where('r.name = :name', { name: RoleType.STUDENT })
+      .andWhere('u.status = :status', { status: status.ACTIVE })
       .getMany();
 
     return users.map((user: User) => plainToClass(ReadStudentDto, user));
