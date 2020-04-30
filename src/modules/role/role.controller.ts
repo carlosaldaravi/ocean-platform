@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { Role } from './role.entity';
-import { ReadRoleDto, CreateRoleDto, UpdateRoleDto } from './dtos';
+import { ReadRoleDto, CreateRoleDto, UpdateRoleDto } from './dto';
 
 @Controller('roles')
 export class RoleController {

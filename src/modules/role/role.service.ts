@@ -7,7 +7,7 @@ import { RoleRepository } from './role.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './role.entity';
 import { plainToClass } from 'class-transformer';
-import { ReadRoleDto, CreateRoleDto, UpdateRoleDto } from './dtos';
+import { ReadRoleDto, CreateRoleDto, UpdateRoleDto } from './dto';
 
 @Injectable()
 export class RoleService {
@@ -40,7 +40,7 @@ export class RoleService {
       throw new NotFoundException();
     }
 
-    return roles.map((role: Role) => plainToClass(ReadRoleDto, Role));
+    return roles.map((role: Role) => plainToClass(ReadRoleDto, role));
   }
 
   async create(role: Partial<CreateRoleDto>): Promise<ReadRoleDto> {
