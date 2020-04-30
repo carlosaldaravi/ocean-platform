@@ -13,15 +13,7 @@ export class StudentService {
     @InjectRepository(UserRepository)
     private readonly _userRepository: UserRepository,
   ) {}
-  async getAll(): Promise<ReadStudentDto[]> {
-    const users = await this._userRepository
-      .createQueryBuilder('u')
-      .leftJoinAndSelect('u.details', 'd')
-      .leftJoinAndSelect('u.roles', 'r')
-      .where('r.name = :name', { name: RoleType.STUDENT })
-      .andWhere('u.status = :status', { status: status.ACTIVE })
-      .getMany();
-
-    return users.map((user: User) => plainToClass(ReadStudentDto, user));
+  getAll(): Promise<ReadStudentDto[]> {
+    return this._userRepository.findByRole(RoleType.STUDENT);
   }
 }
