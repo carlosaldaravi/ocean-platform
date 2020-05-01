@@ -18,4 +18,8 @@ export class CreateUserCalendarDto {
   @IsString()
   @IsOptional()
   readonly comments: string;
+
+  @IsString()
+  @IsOptional()
+  readonly typeId: number;
 }

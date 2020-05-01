@@ -6,6 +6,10 @@ import { ReadUserDto } from '../../user/dto';
 export class ReadUserCalendarDto {
   @Expose()
   @IsNumber()
+  readonly id: number;
+
+  @Expose()
+  @IsNumber()
   readonly userId: number;
 
   @Expose()

@@ -14,6 +14,9 @@ import { CalendarType } from './calendar-type.entity';
 
 @Entity('user_calendar')
 export class Calendar extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
   @PrimaryColumn({ name: 'user_id' })
   userId: number;
 
@@ -34,13 +37,13 @@ export class Calendar extends BaseEntity {
 
   @ManyToOne(
     type => User,
-    user => user.date,
+    user => user.calendar,
     { primary: true },
   )
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @OneToOne(
+  @ManyToOne(
     type => CalendarType,
     type => type.calendar,
     { eager: true },

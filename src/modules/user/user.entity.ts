@@ -71,7 +71,7 @@ export class User extends BaseEntity {
     calendar => calendar.user,
     { eager: true },
   )
-  date: Calendar[];
+  calendar: Calendar[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: status;

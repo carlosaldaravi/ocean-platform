@@ -3,7 +3,7 @@ import {
   Column,
   BaseEntity,
   PrimaryGeneratedColumn,
-  OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { Calendar } from './calendar.entity';
 
@@ -15,7 +15,7 @@ export class CalendarType extends BaseEntity {
   @Column({ nullable: false, unique: true })
   name: string;
 
-  @OneToOne(
+  @OneToMany(
     type => Calendar,
     calendar => calendar.type,
   )

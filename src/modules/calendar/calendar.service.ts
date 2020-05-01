@@ -2,6 +2,8 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CalendarRepository } from './calendar.reposity';
@@ -13,6 +15,8 @@ import {
 import { plainToClass } from 'class-transformer';
 import { Calendar } from './calendar.entity';
 import { In } from 'typeorm';
+import { User } from '../user/user.entity';
+import { status } from 'src/shared/entity-status.enum';
 
 @Injectable()
 export class CalendarService {
@@ -25,17 +29,21 @@ export class CalendarService {
     if (!calendarId) {
       throw new BadRequestException('calendarId must be sent');
     }
-    const calendar: Calendar = await this._calendarRepository.findOne(
-      calendarId,
-    );
-    if (!calendar) {
+    const foundCalendar: Calendar = await this._calendarRepository.findOne({
+      id: calendarId,
+    });
+    if (!foundCalendar) {
       throw new NotFoundException('Calendar does not exist');
     }
-    return plainToClass(ReadUserCalendarDto, calendar);
+    return plainToClass(ReadUserCalendarDto, foundCalendar);
   }
 
   async getAll(): Promise<ReadUserCalendarDto[]> {
-    const calendars: Calendar[] = await this._calendarRepository.find();
+    const calendars: Calendar[] = await this._calendarRepository
+      .createQueryBuilder('calendar')
+      .innerJoin('calendar.user', 'user')
+      .where('user.status = :status', { status: status.ACTIVE })
+      .getMany();
 
     if (!calendars) {
       throw new NotFoundException();
@@ -61,46 +69,33 @@ export class CalendarService {
   }
 
   async create(
-    calendar: Partial<CreateUserCalendarDto>,
-  ): Promise<ReadUserCalendarDto> {
-    const savedCalendar: Calendar = await this._calendarRepository.save({
-      date: calendar.date,
-      start_time: calendar.start_time,
-      end_time: calendar.end_time,
-      comments: calendar.comments,
-    });
-    return plainToClass(ReadUserCalendarDto, savedCalendar);
+    calendar: Partial<CreateUserCalendarDto[]>,
+    user: User,
+  ): Promise<any> {
+    await this._calendarRepository.save(calendar);
+    return true;
   }
 
   async update(
     calendarId: number,
     calendar: Partial<UpdateUserCalendarDto>,
   ): Promise<ReadUserCalendarDto> {
-    const foundCalendar = await this._calendarRepository.findOne(calendarId);
-
-    if (!foundCalendar) {
-      throw new NotFoundException('Calendar does not exists');
-    }
-
-    foundCalendar.date = calendar.date;
-    foundCalendar.start_time = calendar.start_time;
-    foundCalendar.end_time = calendar.end_time;
-    foundCalendar.comments = calendar.comments;
-
-    const updatedCalendar = await this._calendarRepository.findOne(
-      foundCalendar,
-    );
+    const updatedCalendar = await this._calendarRepository
+      .createQueryBuilder()
+      .update(Calendar)
+      .set(calendar)
+      .where('id = :id', { id: calendarId })
+      .execute();
 
     return plainToClass(ReadUserCalendarDto, updatedCalendar);
   }
 
   async delete(calendarId: number): Promise<void> {
-    const dateExist = await this._calendarRepository.findOne(calendarId);
-
-    if (!dateExist) {
-      throw new NotFoundException();
-    }
-
-    await this._calendarRepository.delete(calendarId);
+    await this._calendarRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Calendar)
+      .where('id = :id', { id: calendarId })
+      .execute();
   }
 }

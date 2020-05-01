@@ -19,6 +19,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../role/guards/role.guard';
 import { Roles } from '../role/decorators/role.decoratos';
 import { RoleType } from '../role/roletype.enum';
+import { User } from '../user/user.entity';
+import { GetUser } from '../auth/user.decorator';
 
 @Controller('calendar')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -39,17 +41,10 @@ export class CalendarController {
 
   @Post()
   createCalendar(
-    @Body() calendar: Partial<CreateUserCalendarDto>,
-  ): Promise<ReadUserCalendarDto> {
-    return this._calendarService.create(calendar);
-  }
-
-  @Post()
-  @Roles(RoleType.ADMIN)
-  createCalendarByAdmin(
-    @Body() calendar: Partial<CreateUserCalendarDto>,
-  ): Promise<ReadUserCalendarDto> {
-    return this._calendarService.create(calendar);
+    @Body() calendar: Partial<CreateUserCalendarDto[]>,
+    @GetUser() user: User,
+  ): Promise<ReadUserCalendarDto[]> {
+    return this._calendarService.create(calendar, user);
   }
 
   @Patch(':calendarId')
