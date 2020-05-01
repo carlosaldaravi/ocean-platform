@@ -9,37 +9,54 @@ import {
   ParseIntPipe,
   UseGuards,
 } from '@nestjs/common';
-import { ReadCalendarDto, CreateCalendarDto, UpdateCalendarDto } from './dto';
+import {
+  ReadUserCalendarDto,
+  CreateUserCalendarDto,
+  UpdateUserCalendarDto,
+} from './dto';
 import { CalendarService } from './calendar.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RoleGuard } from '../role/guards/role.guard';
+import { Roles } from '../role/decorators/role.decoratos';
+import { RoleType } from '../role/roletype.enum';
 
 @Controller('calendar')
+@UseGuards(AuthGuard('jwt'), RoleGuard)
 export class CalendarController {
   constructor(private readonly _calendarService: CalendarService) {}
 
   @Get(':calendarId')
   getCalendar(
     @Param('calendarId', ParseIntPipe) calendarId: number,
-  ): Promise<ReadCalendarDto> {
+  ): Promise<ReadUserCalendarDto> {
     return this._calendarService.get(calendarId);
   }
 
   @Get()
-  async getCalendars(): Promise<ReadCalendarDto[]> {
+  async getCalendars(): Promise<ReadUserCalendarDto[]> {
     return this._calendarService.getAll();
   }
 
   @Post()
   createCalendar(
-    @Body() calendar: Partial<CreateCalendarDto>,
-  ): Promise<ReadCalendarDto> {
+    @Body() calendar: Partial<CreateUserCalendarDto>,
+  ): Promise<ReadUserCalendarDto> {
+    return this._calendarService.create(calendar);
+  }
+
+  @Post()
+  @Roles(RoleType.ADMIN)
+  createCalendarByAdmin(
+    @Body() calendar: Partial<CreateUserCalendarDto>,
+  ): Promise<ReadUserCalendarDto> {
     return this._calendarService.create(calendar);
   }
 
   @Patch(':calendarId')
   updateCalendar(
     @Param('calendarId', ParseIntPipe) calendarId: number,
-    @Body() calendar: Partial<UpdateCalendarDto>,
-  ): Promise<ReadCalendarDto> {
+    @Body() calendar: Partial<UpdateUserCalendarDto>,
+  ): Promise<ReadUserCalendarDto> {
     return this._calendarService.update(calendarId, calendar);
   }
 

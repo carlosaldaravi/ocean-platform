@@ -5,7 +5,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CalendarRepository } from './calendar.reposity';
-import { ReadCalendarDto, CreateCalendarDto, UpdateCalendarDto } from './dto';
+import {
+  ReadUserCalendarDto,
+  CreateUserCalendarDto,
+  UpdateUserCalendarDto,
+} from './dto';
 import { plainToClass } from 'class-transformer';
 import { Calendar } from './calendar.entity';
 import { In } from 'typeorm';
@@ -17,7 +21,7 @@ export class CalendarService {
     private readonly _calendarRepository: CalendarRepository,
   ) {}
 
-  async get(calendarId: number): Promise<ReadCalendarDto> {
+  async get(calendarId: number): Promise<ReadUserCalendarDto> {
     if (!calendarId) {
       throw new BadRequestException('calendarId must be sent');
     }
@@ -27,10 +31,10 @@ export class CalendarService {
     if (!calendar) {
       throw new NotFoundException('Calendar does not exist');
     }
-    return plainToClass(ReadCalendarDto, calendar);
+    return plainToClass(ReadUserCalendarDto, calendar);
   }
 
-  async getAll(): Promise<ReadCalendarDto[]> {
+  async getAll(): Promise<ReadUserCalendarDto[]> {
     const calendars: Calendar[] = await this._calendarRepository.find();
 
     if (!calendars) {
@@ -38,11 +42,11 @@ export class CalendarService {
     }
 
     return calendars.map((calendar: Calendar) =>
-      plainToClass(ReadCalendarDto, calendar),
+      plainToClass(ReadUserCalendarDto, calendar),
     );
   }
 
-  async getCalendarByStudent(userId: number): Promise<ReadCalendarDto[]> {
+  async getCalendarByStudent(userId: number): Promise<ReadUserCalendarDto[]> {
     if (!userId) {
       throw new BadRequestException('Student id must be sent');
     }
@@ -51,23 +55,27 @@ export class CalendarService {
       where: { users: In[userId] },
     });
 
-    return calendars.map(calendar => plainToClass(ReadCalendarDto, calendar));
+    return calendars.map(calendar =>
+      plainToClass(ReadUserCalendarDto, calendar),
+    );
   }
 
-  async create(calendar: Partial<CreateCalendarDto>): Promise<ReadCalendarDto> {
+  async create(
+    calendar: Partial<CreateUserCalendarDto>,
+  ): Promise<ReadUserCalendarDto> {
     const savedCalendar: Calendar = await this._calendarRepository.save({
       date: calendar.date,
       start_time: calendar.start_time,
       end_time: calendar.end_time,
       comments: calendar.comments,
     });
-    return plainToClass(ReadCalendarDto, savedCalendar);
+    return plainToClass(ReadUserCalendarDto, savedCalendar);
   }
 
   async update(
     calendarId: number,
-    calendar: Partial<UpdateCalendarDto>,
-  ): Promise<ReadCalendarDto> {
+    calendar: Partial<UpdateUserCalendarDto>,
+  ): Promise<ReadUserCalendarDto> {
     const foundCalendar = await this._calendarRepository.findOne(calendarId);
 
     if (!foundCalendar) {
@@ -83,7 +91,7 @@ export class CalendarService {
       foundCalendar,
     );
 
-    return plainToClass(ReadCalendarDto, updatedCalendar);
+    return plainToClass(ReadUserCalendarDto, updatedCalendar);
   }
 
   async delete(calendarId: number): Promise<void> {

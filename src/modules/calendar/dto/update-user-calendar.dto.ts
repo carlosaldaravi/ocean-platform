@@ -1,6 +1,6 @@
 import { IsString, IsDate } from 'class-validator';
 
-export class UpdateCalendarDto {
+export class UpdateUserCalendarDto {
   @IsDate()
   readonly date: Date;
 

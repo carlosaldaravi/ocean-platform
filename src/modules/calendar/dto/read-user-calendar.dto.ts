@@ -1,12 +1,12 @@
 import { IsNumber, IsString, IsDate } from 'class-validator';
 import { Type, Exclude, Expose } from 'class-transformer';
-import { ReadUserDto } from '../../../modules/user/dto';
+import { ReadUserDto } from '../../user/dto';
 
 @Exclude()
-export class ReadCalendarDto {
+export class ReadUserCalendarDto {
   @Expose()
   @IsNumber()
-  readonly id: number;
+  readonly userId: number;
 
   @Expose()
   @IsDate()
@@ -23,8 +23,4 @@ export class ReadCalendarDto {
   @Expose()
   @IsString()
   readonly comments: string;
-
-  @Expose()
-  @Type(type => ReadUserDto)
-  readonly user: ReadUserDto;
 }

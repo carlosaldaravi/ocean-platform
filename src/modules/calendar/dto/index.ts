@@ -1,3 +1,3 @@
-export { CreateCalendarDto } from './create-calendar.dto';
-export { UpdateCalendarDto } from './update-calendar.dto';
-export { ReadCalendarDto } from './read-calendar.dto';
+export { CreateUserCalendarDto } from './create-user-calendar.dto';
+export { UpdateUserCalendarDto } from './update-user-calendar.dto';
+export { ReadUserCalendarDto } from './read-user-calendar.dto';
