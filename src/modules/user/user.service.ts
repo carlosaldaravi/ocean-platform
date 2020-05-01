@@ -4,6 +4,9 @@ import {
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
+  HttpException,
+  HttpStatus,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +16,6 @@ import { status } from '../../shared/entity-status.enum';
 import { ReadUserDto, UpdateUserDto } from './dto';
 import { plainToClass } from 'class-transformer';
 import { CreateStudentTargetDto } from './student/dto/create-student-target.dto';
-import { StudentTarget } from './student/student-target.entity';
 import { StudentTargetRepository } from './student/student-target.repository';
 import { TargetRepository } from '../target/target.reposity';
 
@@ -39,7 +41,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new HttpException('User not found as student', HttpStatus.OK);
     }
 
     return plainToClass(ReadUserDto, user);
@@ -117,33 +119,12 @@ export class UserService {
   }
 
   async setTargetsToUsers(
-    createStudentTargetDto: Partial<CreateStudentTargetDto>,
+    createStudentTargetDto: Partial<CreateStudentTargetDto[]>,
     user: User,
-  ): Promise<boolean> {
-    try {
-      // falta comprobar que el instructor es instructor del alumno
-      const { students, targets, feedback } = createStudentTargetDto;
-      students.forEach(async student => {
-        const foundStudent = await this._userRepository.findOne(student);
-        if (!foundStudent) {
-          throw new NotFoundException(`Not found user with id ${student}`);
-        }
-        targets.forEach(async target => {
-          const foundTarget = await this._targetRepository.findOne(target);
-          if (!foundTarget) {
-            throw new NotFoundException(`Not found target with id ${student}`);
-          }
-          const savedStudentTarget = new StudentTarget();
-          savedStudentTarget.student = foundStudent;
-          savedStudentTarget.target = foundTarget;
-          savedStudentTarget.feedback = feedback;
-          savedStudentTarget.validatedBy = 1;
-          await this._studentTargetRepository.save(savedStudentTarget);
-        });
-      });
-    } catch (error) {
-      throw new Error(error);
-    }
-    return true;
+  ): Promise<any> {
+    return this._studentTargetRepository.setTargetsToUsers(
+      createStudentTargetDto,
+      user,
+    );
   }
 }

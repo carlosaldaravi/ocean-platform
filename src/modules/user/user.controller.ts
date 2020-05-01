@@ -18,8 +18,8 @@ import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
 import { GetUser } from '../auth/user.decorator';
 import { RoleGuard } from '../role/guards/role.guard';
-import { StatusValidationPipe } from '../../pipes/status-validation.pipe';
-import { status } from 'src/shared/entity-status.enum';
+import { ReadStudentDto } from './student/dto/read-student.dto';
+import { ReadStudentTargetDto } from './student/dto/read-student-target.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -56,9 +56,9 @@ export class UserController {
   @Post('setTargets')
   @Roles(RoleType.ADMIN, RoleType.INSTRUCTOR)
   setTargetsToUsers(
-    @Body() createStudentTargetDto: CreateStudentTargetDto,
+    @Body() createStudentTargetDto: CreateStudentTargetDto[],
     @GetUser() user: User,
-  ): Promise<boolean> {
+  ): Promise<ReadStudentTargetDto[]> {
     return this._userService.setTargetsToUsers(createStudentTargetDto, user);
   }
 
