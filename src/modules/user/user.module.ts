@@ -9,6 +9,8 @@ import { StudentTargetRepository } from './student/student-target.repository';
 import { TargetRepository } from '../target/target.reposity';
 import { StudentController } from './student/student.controller';
 import { StudentService } from './student/student.service';
+import { InstructorService } from './instructor/instructor.service';
+import { InstructorController } from './instructor/instructor.controller';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { StudentService } from './student/student.service';
     ]),
     AuthModule,
   ],
-  providers: [UserService, StudentService],
-  controllers: [UserController, StudentController],
+  providers: [UserService, StudentService, InstructorService],
+  controllers: [UserController, StudentController, InstructorController],
 })
 export class UserModule {}
