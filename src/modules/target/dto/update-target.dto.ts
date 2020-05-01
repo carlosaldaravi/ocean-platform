@@ -6,7 +6,7 @@ export class UpdateTargetDto {
   readonly name: string;
 
   @IsString()
-  readonly level: Level;
+  readonly level: number;
 
   @IsString()
   readonly description: string;
