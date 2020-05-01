@@ -14,6 +14,6 @@ export class StudentService {
     private readonly _userRepository: UserRepository,
   ) {}
   getAll(): Promise<ReadStudentDto[]> {
-    return this._userRepository.findByRole(RoleType.STUDENT);
+    return this._userRepository.findUsersByRole(RoleType.STUDENT);
   }
 }

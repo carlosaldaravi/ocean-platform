@@ -9,7 +9,7 @@ import { ReadInstructorDto } from './instructor/dto/read-instructor.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async findByRole(role: RoleType): Promise<any[]> {
+  async findUsersByRole(role: RoleType): Promise<any[]> {
     const users = await this.createQueryBuilder('u')
       .leftJoinAndSelect('u.details', 'd')
       .leftJoinAndSelect('u.roles', 'r')
@@ -25,7 +25,5 @@ export class UserRepository extends Repository<User> {
       default:
         return users.map((user: User) => plainToClass(ReadUserDto, user));
     }
-
-    // return this._userRepository.findByRol('student');
   }
 }
