@@ -14,9 +14,12 @@ import {
 import { UserDetails } from './user.details.entity';
 import { Role } from '../role/role.entity';
 import { status } from '../../shared/entity-status.enum';
-import { StudentTarget } from './student/student-target.entity';
+// import { StudentTarget } from './student/student-target.entity';
 import { Calendar } from '../calendar/calendar.entity';
 import { Language } from '../language/language.entity';
+import { Target } from '../target/target.entity';
+import { StudentTarget } from './student/student-target.entity';
+// import { StudentTarget } from './student/student-target.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -49,11 +52,13 @@ export class User extends BaseEntity {
   @JoinTable({ name: 'user_languages' })
   languages: Language[];
 
-  @OneToMany(
-    type => StudentTarget,
-    studentTarget => studentTarget.target,
-  )
-  studentTarget!: StudentTarget[];
+  @ManyToMany(type => Target, { eager: true })
+  @JoinTable({
+    name: 'student_targets',
+    joinColumn: { name: 'student_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'target_id', referencedColumnName: 'id' },
+  })
+  targets!: Target[];
 
   @OneToMany(
     type => StudentTarget,

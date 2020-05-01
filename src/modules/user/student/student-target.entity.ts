@@ -13,13 +13,21 @@ import { User } from '../user.entity';
 
 @Entity('student_targets')
 export class StudentTarget extends BaseEntity {
-  @Column({ name: 'student_id', primary: true })
+  @PrimaryColumn({
+    name: 'student_id',
+    primary: true,
+    unique: false,
+  })
   studentId!: number;
 
-  @Column({ name: 'target_id', primary: true })
+  @PrimaryColumn({
+    name: 'target_id',
+    primary: true,
+    unique: false,
+  })
   targetId!: number;
 
-  @Column({ name: 'validated_by' })
+  @Column({ name: 'validated_by', nullable: true })
   validatedBy: number;
 
   @CreateDateColumn({ type: 'date' })
@@ -27,20 +35,6 @@ export class StudentTarget extends BaseEntity {
 
   @Column({ nullable: true })
   feedback: string;
-
-  @ManyToOne(
-    type => User,
-    user => user.studentTarget,
-  )
-  @JoinColumn({ name: 'student_id' })
-  student!: User;
-
-  @ManyToOne(
-    type => Target,
-    target => target.studentTarget,
-  )
-  @JoinColumn({ name: 'target_id' })
-  target!: Target;
 
   @ManyToOne(type => User)
   @JoinColumn({ name: 'validated_by' })

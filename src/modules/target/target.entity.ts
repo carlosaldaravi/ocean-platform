@@ -13,8 +13,9 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { status } from '../../shared/entity-status.enum';
-import { StudentTarget } from '../user/student/student-target.entity';
+// import { StudentTarget } from '../user/student/student-target.entity';
 import { Level } from '../level/level.entity';
+import { User } from '../user/user.entity';
 
 @Entity('targets')
 export class Target extends BaseEntity {
@@ -30,11 +31,8 @@ export class Target extends BaseEntity {
   @Column({ name: 'level_id' })
   levelId: number;
 
-  @OneToMany(
-    type => StudentTarget,
-    studentTarget => studentTarget.student,
-  )
-  studentTarget!: StudentTarget[];
+  @ManyToMany(type => User)
+  students!: User[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: string;
