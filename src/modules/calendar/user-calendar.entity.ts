@@ -5,7 +5,6 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-  OneToOne,
   PrimaryColumn,
   DeleteDateColumn,
 } from 'typeorm';
@@ -13,7 +12,7 @@ import { User } from '../user/user.entity';
 import { CalendarType } from './calendar-type.entity';
 
 @Entity('user_calendar')
-export class Calendar extends BaseEntity {
+export class UserCalendar extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
