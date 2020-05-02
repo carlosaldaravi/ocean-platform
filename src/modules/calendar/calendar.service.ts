@@ -16,7 +16,7 @@ import { plainToClass } from 'class-transformer';
 import { Calendar } from './calendar.entity';
 import { In } from 'typeorm';
 import { User } from '../user/user.entity';
-import { status } from 'src/shared/entity-status.enum';
+import { status } from '../../shared/entity-status.enum';
 
 @Injectable()
 export class CalendarService {
