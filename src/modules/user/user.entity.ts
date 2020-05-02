@@ -15,10 +15,12 @@ import { UserDetails } from './user.details.entity';
 import { Role } from '../role/role.entity';
 import { status } from '../../shared/entity-status.enum';
 // import { StudentTarget } from './student/student-target.entity';
-import { Calendar } from '../calendar/calendar.entity';
+import { UserCalendar } from '../calendar/user-calendar.entity';
 import { Language } from '../language/language.entity';
 import { Target } from '../target/target.entity';
 import { StudentTarget } from './student/student-target.entity';
+import { Course } from '../course/course.entity';
+import { Sport } from '../sport/sport.entity';
 // import { StudentTarget } from './student/student-target.entity';
 
 @Entity('users')
@@ -56,6 +58,30 @@ export class User extends BaseEntity {
   })
   targets!: Target[];
 
+  @ManyToMany(type => Course, { eager: true })
+  @JoinTable({
+    name: 'course_students',
+    joinColumn: { name: 'student_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'course_id', referencedColumnName: 'id' },
+  })
+  studentCourses!: Course[];
+
+  @ManyToMany(type => Course, { eager: true })
+  @JoinTable({
+    name: 'course_instructors',
+    joinColumn: { name: 'instructor_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'course_id', referencedColumnName: 'id' },
+  })
+  instrucorCourses!: Course[];
+
+  @ManyToMany(type => Sport, { eager: true })
+  @JoinTable({
+    name: 'user_sports',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'sport_id', referencedColumnName: 'id' },
+  })
+  sports!: Sport[];
+
   @OneToMany(
     type => StudentTarget,
     studentTarget => studentTarget.validatedBy,
@@ -63,11 +89,11 @@ export class User extends BaseEntity {
   studentTargetValidations: StudentTarget[];
 
   @OneToMany(
-    type => Calendar,
+    type => UserCalendar,
     calendar => calendar.user,
     { eager: true },
   )
-  calendar: Calendar[];
+  calendar: UserCalendar[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: status;
