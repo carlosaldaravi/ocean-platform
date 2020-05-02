@@ -10,6 +10,7 @@ import {
 import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
 import { Target } from '../target/target.entity';
+import { Course } from '../course/course.entity';
 
 @Entity('levels')
 export class Level extends BaseEntity {
@@ -27,6 +28,12 @@ export class Level extends BaseEntity {
     target => target.level,
   )
   target: Target;
+
+  @OneToMany(
+    type => Course,
+    course => course.level,
+  )
+  courses: Course[];
 
   // @ManyToOne(
   //   type => User,
