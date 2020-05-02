@@ -4,24 +4,23 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   JoinColumn,
-  OneToOne,
   PrimaryColumn,
+  ManyToOne,
+  DeleteDateColumn,
 } from 'typeorm';
 import { CalendarType } from './calendar-type.entity';
+import { Course } from '../course/course.entity';
 
 @Entity('course_calendar')
 export class CourseCalendar extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @PrimaryColumn({ name: 'course_id' })
-  // courseId: number;
+  @PrimaryColumn({ name: 'course_id' })
+  courseId: number;
 
   @PrimaryColumn({ type: 'date' })
   date: Date;
-
-  @Column({ name: 'type_id', nullable: false })
-  typeId: number;
 
   @Column('time', { nullable: true })
   start_time: Date;
@@ -32,18 +31,14 @@ export class CourseCalendar extends BaseEntity {
   @Column({ nullable: true })
   comments: string;
 
-  // @ManyToOne(
-  //   type => Course,
-  //   course => course.date,
-  //   { primary: true },
-  // )
-  // @JoinColumn({ name: 'course_id' })
-  // course: Course;
-
-  @OneToOne(
-    type => CalendarType,
-    type => type.calendar,
+  @ManyToOne(
+    type => Course,
+    course => course.calendar,
+    { primary: true },
   )
-  @JoinColumn({ name: 'type_id' })
-  type: CalendarType;
+  @JoinColumn({ name: 'course_id' })
+  course: Course;
+
+  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
+  deletedAt: Date;
 }
