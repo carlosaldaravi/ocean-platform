@@ -16,7 +16,7 @@ import { targets_DB_DATA } from './targets';
 import { languages_DB_DATA } from './languages';
 import { Level } from '../../modules/level/level.entity';
 import { levels_DB_DATA } from './levels';
-import { Calendar } from '../../modules/calendar/calendar.entity';
+import { UserCalendar } from '../../modules/calendar/user-calendar.entity';
 
 // insert data base examples
 
@@ -195,11 +195,11 @@ export const setDefaultValues = async () => {
         instructor3.roles = [generalRole, instructorRole];
         instructor3.save();
       }
-      if ((await Calendar.count()) == 0) {
+      if ((await UserCalendar.count()) == 0) {
         logger.log(`Adding calendar to student1...`);
 
-        const calendar = new Calendar();
-        const calendar2 = new Calendar();
+        const calendar = new UserCalendar();
+        const calendar2 = new UserCalendar();
         const student1 = await User.findOne({ email: 'student1@prueba.com' });
         const avType = await CalendarType.findOne({
           where: { name: 'AVAILABILITY' },
