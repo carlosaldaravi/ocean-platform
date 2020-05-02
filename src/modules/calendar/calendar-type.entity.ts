@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
-import { Calendar } from './calendar.entity';
+import { UserCalendar } from './user-calendar.entity';
 
 @Entity('calendar_types')
 export class CalendarType extends BaseEntity {
@@ -16,8 +16,8 @@ export class CalendarType extends BaseEntity {
   name: string;
 
   @OneToMany(
-    type => Calendar,
+    type => UserCalendar,
     calendar => calendar.type,
   )
-  calendar: Calendar;
+  calendar: UserCalendar;
 }

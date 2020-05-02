@@ -13,7 +13,7 @@ import {
   UpdateUserCalendarDto,
 } from './dto';
 import { plainToClass } from 'class-transformer';
-import { Calendar } from './calendar.entity';
+import { UserCalendar } from './user-calendar.entity';
 import { In } from 'typeorm';
 import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
@@ -29,7 +29,7 @@ export class CalendarService {
     if (!calendarId) {
       throw new BadRequestException('calendarId must be sent');
     }
-    const foundCalendar: Calendar = await this._calendarRepository.findOne({
+    const foundCalendar: UserCalendar = await this._calendarRepository.findOne({
       id: calendarId,
     });
     if (!foundCalendar) {
@@ -39,7 +39,7 @@ export class CalendarService {
   }
 
   async getAll(): Promise<ReadUserCalendarDto[]> {
-    const calendars: Calendar[] = await this._calendarRepository
+    const calendars: UserCalendar[] = await this._calendarRepository
       .createQueryBuilder('calendar')
       .innerJoin('calendar.user', 'user')
       .where('user.status = :status', { status: status.ACTIVE })
@@ -49,7 +49,7 @@ export class CalendarService {
       throw new NotFoundException();
     }
 
-    return calendars.map((calendar: Calendar) =>
+    return calendars.map((calendar: UserCalendar) =>
       plainToClass(ReadUserCalendarDto, calendar),
     );
   }
@@ -59,7 +59,7 @@ export class CalendarService {
       throw new BadRequestException('Student id must be sent');
     }
 
-    const calendars: Calendar[] = await this._calendarRepository.find({
+    const calendars: UserCalendar[] = await this._calendarRepository.find({
       where: { users: In[userId] },
     });
 
@@ -82,7 +82,7 @@ export class CalendarService {
   ): Promise<ReadUserCalendarDto> {
     const updatedCalendar = await this._calendarRepository
       .createQueryBuilder()
-      .update(Calendar)
+      .update(UserCalendar)
       .set(calendar)
       .where('id = :id', { id: calendarId })
       .execute();
@@ -94,7 +94,7 @@ export class CalendarService {
     await this._calendarRepository
       .createQueryBuilder()
       .delete()
-      .from(Calendar)
+      .from(UserCalendar)
       .where('id = :id', { id: calendarId })
       .execute();
   }

@@ -1,5 +1,5 @@
 import { Repository, EntityRepository } from 'typeorm';
-import { Calendar } from './calendar.entity';
+import { UserCalendar } from './user-calendar.entity';
 
-@EntityRepository(Calendar)
-export class CalendarRepository extends Repository<Calendar> {}
+@EntityRepository(UserCalendar)
+export class CalendarRepository extends Repository<UserCalendar> {}
