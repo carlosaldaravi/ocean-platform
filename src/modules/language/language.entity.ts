@@ -16,7 +16,4 @@ export class Language extends BaseEntity {
 
   @Column({ type: 'varchar', length: 20, nullable: false, unique: true })
   name: string;
-
-  @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
-  status: string;
 }

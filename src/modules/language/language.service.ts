@@ -26,9 +26,6 @@ export class LanguageService {
     }
     const language: Language = await this._languageRepository.findOne(
       languageId,
-      {
-        where: { status: status.ACTIVE },
-      },
     );
     if (!language) {
       throw new HttpException('This language does not exists', HttpStatus.OK);
@@ -37,9 +34,7 @@ export class LanguageService {
   }
 
   async getAll(): Promise<ReadLanguageDto[]> {
-    const languages: Language[] = await this._languageRepository.find({
-      where: { status: status.ACTIVE },
-    });
+    const languages: Language[] = await this._languageRepository.find();
 
     if (!languages) {
       throw new NotFoundException();
@@ -56,7 +51,7 @@ export class LanguageService {
     }
 
     const languages: Language[] = await this._languageRepository.find({
-      where: { status: status.ACTIVE, students: In[studentId] },
+      where: { students: In[studentId] },
     });
 
     return languages.map(language => plainToClass(ReadLanguageDto, language));
@@ -66,30 +61,17 @@ export class LanguageService {
     const foundLanguage: Language = await this._languageRepository.findOne({
       where: { name: language.name },
     });
-
-    if (foundLanguage) {
-      if (foundLanguage.status === status.INACTIVE) {
-        foundLanguage.status = status.ACTIVE;
-        await foundLanguage.save();
-        return plainToClass(ReadLanguageDto, foundLanguage);
-      } else {
-        throw new HttpException('This language already exists', HttpStatus.OK);
-      }
-    } else {
-      const savedLanguage: Language = await this._languageRepository.save({
-        name: language.name,
-      });
-      return plainToClass(ReadLanguageDto, savedLanguage);
-    }
+    const savedLanguage: Language = await this._languageRepository.save({
+      name: language.name,
+    });
+    return plainToClass(ReadLanguageDto, savedLanguage);
   }
 
   async update(
     languageId: number,
     language: Partial<UpdateLanguageDto>,
   ): Promise<ReadLanguageDto> {
-    const foundLanguage = await this._languageRepository.findOne(languageId, {
-      where: { status: status.ACTIVE },
-    });
+    const foundLanguage = await this._languageRepository.findOne(languageId);
 
     if (!foundLanguage) {
       throw new HttpException('This language does not exists', HttpStatus.OK);
@@ -103,17 +85,7 @@ export class LanguageService {
   }
 
   async delete(languageId: number): Promise<ReadLanguageDto> {
-    const languageExist = await this._languageRepository.findOne(languageId, {
-      where: { status: status.ACTIVE },
-    });
-
-    if (!languageExist) {
-      throw new HttpException('This language does not exists', HttpStatus.OK);
-    }
-
-    const updatedLanguage = await this._languageRepository.update(languageId, {
-      status: status.INACTIVE,
-    });
+    const updatedLanguage = await this._languageRepository.delete(languageId);
 
     return plainToClass(ReadLanguageDto, updatedLanguage);
   }
