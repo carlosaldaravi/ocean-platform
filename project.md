@@ -69,6 +69,8 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/languages/:languageId**, [DELETE]}
 - Course
   {**/api/course**, [POST]}
+  {**/api/paid/:courseId/:studentId**, [PATCH]}
+  {**/api/cashed/:courseId/:instructorId**, [PATCH]}
 
 ## Relations
 
