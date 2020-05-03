@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  Column,
 } from 'typeorm';
 
 @Entity('course_instructors')
@@ -22,6 +23,9 @@ export class CourseInstructor extends BaseEntity {
     unique: false,
   })
   courseId!: number;
+
+  @Column({ default: false })
+  cashed: boolean;
 
   @CreateDateColumn({ type: 'date', name: 'created_at' })
   createdAt: Date;
