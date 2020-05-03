@@ -8,7 +8,6 @@ import {
   ManyToOne,
   DeleteDateColumn,
 } from 'typeorm';
-import { CalendarType } from './calendar-type.entity';
 import { Course } from '../course/course.entity';
 
 @Entity('course_calendar')
@@ -16,10 +15,10 @@ export class CourseCalendar extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @PrimaryColumn({ name: 'course_id' })
+  @Column({ name: 'course_id' })
   courseId: number;
 
-  @PrimaryColumn({ type: 'date' })
+  @Column({ type: 'date', unique: true })
   date: Date;
 
   @Column('time', { nullable: true })
@@ -34,7 +33,6 @@ export class CourseCalendar extends BaseEntity {
   @ManyToOne(
     type => Course,
     course => course.calendar,
-    { primary: true },
   )
   @JoinColumn({ name: 'course_id' })
   course: Course;
