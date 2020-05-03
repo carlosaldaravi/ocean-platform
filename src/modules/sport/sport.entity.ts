@@ -26,7 +26,7 @@ export class Sport extends BaseEntity {
 
   @OneToMany(
     type => Course,
-    course => course.level,
+    course => course.sport,
   )
   courses: Course[];
 
