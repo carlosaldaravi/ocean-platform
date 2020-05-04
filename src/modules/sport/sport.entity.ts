@@ -9,6 +9,7 @@ import {
 import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
 import { Course } from '../course/course.entity';
+import { Target } from '../target/target.entity';
 
 @Entity('sports')
 export class Sport extends BaseEntity {
@@ -32,4 +33,11 @@ export class Sport extends BaseEntity {
 
   @ManyToMany(type => User)
   users!: User[];
+
+  @OneToMany(
+    type => Target,
+    target => target.sport,
+    { eager: true },
+  )
+  target: Target;
 }
