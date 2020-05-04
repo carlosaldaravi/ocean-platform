@@ -7,6 +7,9 @@ export class UserDetails extends BaseEntity {
   id: number;
 
   @Column({ type: 'varchar', nullable: true })
+  dni: string;
+
+  @Column({ type: 'varchar', nullable: true })
   firstname: string;
 
   @Column({ type: 'varchar', nullable: true })
