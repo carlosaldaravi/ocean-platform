@@ -10,6 +10,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
 } from 'typeorm';
 import { UserDetails } from './user.details.entity';
 import { Role } from '../role/role.entity';
@@ -21,6 +22,7 @@ import { Target } from '../target/target.entity';
 import { StudentTarget } from './student/student-target.entity';
 import { Course } from '../course/course.entity';
 import { Sport } from '../sport/sport.entity';
+import { Level } from '../level/level.entity';
 // import { StudentTarget } from './student/student-target.entity';
 
 @Entity('users')
@@ -94,6 +96,14 @@ export class User extends BaseEntity {
     { eager: true },
   )
   calendar: UserCalendar[];
+
+  @ManyToOne(
+    type => Level,
+    level => level.users,
+    { cascade: true },
+  )
+  @JoinColumn({ name: 'level_id' })
+  level: Level;
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: status;

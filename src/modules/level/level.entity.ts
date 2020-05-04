@@ -35,10 +35,9 @@ export class Level extends BaseEntity {
   )
   courses: Course[];
 
-  // @ManyToOne(
-  //   type => User,
-  //   user => user.date,
-  // )
-  // @JoinColumn({ name: 'user_id' })
-  // user: User;
+  @OneToMany(
+    type => User,
+    user => user.level,
+  )
+  users: User[];
 }
