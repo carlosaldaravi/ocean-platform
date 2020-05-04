@@ -11,6 +11,7 @@ import { StudentController } from './student/student.controller';
 import { StudentService } from './student/student.service';
 import { InstructorService } from './instructor/instructor.service';
 import { InstructorController } from './instructor/instructor.controller';
+import { StudentRepository } from './student/student.repository';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { InstructorController } from './instructor/instructor.controller';
       RoleRepository,
       StudentTargetRepository,
       TargetRepository,
+      StudentRepository,
     ]),
     AuthModule,
   ],
