@@ -6,7 +6,6 @@ import {
   JoinColumn,
   ManyToMany,
   OneToMany,
-  Column,
 } from 'typeorm';
 import { Level } from '../level/level.entity';
 import { Sport } from '../sport/sport.entity';

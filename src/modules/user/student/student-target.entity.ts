@@ -6,9 +6,7 @@ import {
   JoinColumn,
   PrimaryColumn,
   CreateDateColumn,
-  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Target } from '../../target/target.entity';
 import { User } from '../user.entity';
 
 @Entity('student_targets')

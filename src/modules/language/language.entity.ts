@@ -1,13 +1,4 @@
-import {
-  Entity,
-  Column,
-  BaseEntity,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
-import { User } from '../user/user.entity';
-import { status } from '../../shared/entity-status.enum';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('languages')
 export class Language extends BaseEntity {
