@@ -26,6 +26,7 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/users/:userId**, [DELETE]}
 - Student
   {**/api/students**, [GET]}
+  {**/api/students**, [POST]}
 - Instructor
   {**/api/instructors**, [GET]}
 - Auth
@@ -44,7 +45,6 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/targets/:targetId**, [PATCH]}
   {**/api/targets/:targetId**, [DELETE]}
 - Calendar
-  {**/api/calendar/:calendarId**, [GET]}
   {**/api/calendar**, [GET]}
   {**/api/calendar**, [POST]}
   {**/api/calendar/:calendarId**, [PATCH]}

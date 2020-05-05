@@ -25,19 +25,6 @@ export class CalendarService {
     private readonly _calendarRepository: CalendarRepository,
   ) {}
 
-  async get(calendarId: number): Promise<ReadUserCalendarDto> {
-    if (!calendarId) {
-      throw new BadRequestException('calendarId must be sent');
-    }
-    const foundCalendar: UserCalendar = await this._calendarRepository.findOne({
-      id: calendarId,
-    });
-    if (!foundCalendar) {
-      throw new NotFoundException('Calendar does not exist');
-    }
-    return plainToClass(ReadUserCalendarDto, foundCalendar);
-  }
-
   async getAll(): Promise<ReadUserCalendarDto[]> {
     const calendars: UserCalendar[] = await this._calendarRepository
       .createQueryBuilder('calendar')
@@ -84,7 +71,7 @@ export class CalendarService {
       .createQueryBuilder()
       .update(UserCalendar)
       .set(calendar)
-      .where('id = :id', { id: calendarId })
+      // .where('id = :id', { id: calendarId })
       .execute();
 
     return plainToClass(ReadUserCalendarDto, updatedCalendar);

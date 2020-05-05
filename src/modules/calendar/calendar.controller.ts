@@ -27,13 +27,6 @@ import { GetUser } from '../auth/user.decorator';
 export class CalendarController {
   constructor(private readonly _calendarService: CalendarService) {}
 
-  @Get(':calendarId')
-  getCalendar(
-    @Param('calendarId', ParseIntPipe) calendarId: number,
-  ): Promise<ReadUserCalendarDto> {
-    return this._calendarService.get(calendarId);
-  }
-
   @Get()
   async getCalendars(): Promise<ReadUserCalendarDto[]> {
     return this._calendarService.getAll();
