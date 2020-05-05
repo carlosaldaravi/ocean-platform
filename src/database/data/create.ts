@@ -1,6 +1,5 @@
 import { Logger } from '@nestjs/common';
 import { getConnection } from 'typeorm';
-import { gender } from '../../shared/user-gender.enum';
 import { User } from '../../modules/user/user.entity';
 import { Role } from '../../modules/role/role.entity';
 import { Language } from '../../modules/language/language.entity';
@@ -16,7 +15,20 @@ import { targets_DB_DATA } from './targets';
 import { languages_DB_DATA } from './languages';
 import { Level } from '../../modules/level/level.entity';
 import { levels_DB_DATA } from './levels';
-import { UserCalendar } from '../../modules/calendar/user-calendar.entity';
+import { userDetails_DB_DATA } from './user-details';
+import { userCalendar_DB_DATA } from './user-calendar';
+import { CourseType } from 'src/modules/course/course-type.entity';
+import { courseType_DB_DATA } from './course-type';
+import { Course } from 'src/modules/course/course.entity';
+import { course_DB_DATA } from './course';
+import { courseCalendar_DB_DATA } from './course-calendar';
+import { studentTargets_DB_DATA } from './student-targets';
+import { StudentTarget } from 'src/modules/user/student/student-target.entity';
+import { CourseStudent } from 'src/modules/course/course-student.entity';
+import { CourseInstructor } from 'src/modules/course/course-instructor.entity';
+import { courseStudents_DB_DATA } from './course-students';
+import { courseInstructors_DB_DATA } from './course-instructors';
+import { RoleType } from 'src/modules/role/roletype.enum';
 
 // insert data base examples
 
@@ -64,7 +76,7 @@ export const setDefaultValues = async () => {
         .values(sports_DB_DATA)
         .execute();
     }
-    if ((await Target.count()) == 0) {
+    if ((await Sport.count()) > 0 && (await Target.count()) == 0) {
       logger.log(`Adding targets...`);
 
       await getConnection()
@@ -85,135 +97,185 @@ export const setDefaultValues = async () => {
         .values(roles_DB_DATA)
         .execute();
     }
+    if ((await UserDetails.count()) == 0) {
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into('user_details')
+        .values(userDetails_DB_DATA)
+        .execute();
+    }
 
     if ((await User.count()) == 0) {
       logger.log(`Adding users...`);
-
       await getConnection()
         .createQueryBuilder()
         .insert()
         .into('users')
         .values(users_DB_DATA)
         .execute();
+      logger.log(`Adding calendar to users...`);
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into('user_calendar')
+        .values(userCalendar_DB_DATA)
+        .execute();
+      if ((await StudentTarget.count()) == 0) {
+        logger.log(`Adding targets to students...`);
 
-      const generalRole = await Role.findOne({ name: 'GENERAL' });
-      const adminRole = await Role.findOne({ name: 'ADMIN' });
-      const studentRole = await Role.findOne({ name: 'STUDENT' });
-      const instructorRole = await Role.findOne({ name: 'INSTRUCTOR' });
-      const spanishLanguage = await Language.findOne({ name: 'Spanish' });
-      const englishLanguage = await Language.findOne({ name: 'English' });
-      const admin = await User.findOne({ email: 'admin@prueba.com' });
-      if (admin) {
-        const details = new UserDetails();
-        details.firstname = 'Carlos';
-        details.lastname = 'Aldaravi Coll';
-        details.dateBorn = new Date('1987-06-17');
-        details.phone = '653642915';
-        admin.details = details;
-        admin.roles = [generalRole, adminRole];
-        admin.languages = [spanishLanguage];
-        admin.save();
+        await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into('student_targets')
+          .values(studentTargets_DB_DATA)
+          .execute();
       }
-      const student1 = await User.findOne({ email: 'student1@prueba.com' });
-      if (student1) {
-        const details = new UserDetails();
-        details.firstname = 'Student 1';
-        details.dateBorn = new Date('1992-03-02');
-        details.phone = '687787677';
-        details.city = 'Madrid';
-        details.weight = 88;
-        details.footprint = 46;
-        details.gender = gender.MALE;
-        student1.languages = [spanishLanguage, englishLanguage];
-        student1.details = details;
-        student1.roles = [generalRole, studentRole];
-        student1.save();
-      }
-      const student2 = await User.findOne({ email: 'student2@prueba.com' });
-      if (student2) {
-        const details = new UserDetails();
-        details.firstname = 'Student 2';
-        details.dateBorn = new Date('2000-09-23');
-        details.phone = '618725644';
-        details.city = 'Albacete';
-        details.weight = 53;
-        details.footprint = 37;
-        details.gender = gender.FEMALE;
-        details.knownWay = 'Instagram';
-        student2.languages = [spanishLanguage, englishLanguage];
-        student2.details = details;
-        student2.roles = [generalRole, studentRole];
-        student2.save();
-      }
-      const student3 = await User.findOne({ email: 'student3@prueba.com' });
-      if (student3) {
-        const details = new UserDetails();
-        details.firstname = 'Student 3';
-        details.dateBorn = new Date('1982-10-13');
-        details.phone = '662512115';
-        details.city = 'Alicante';
-        details.weight = 80;
-        details.footprint = 44;
-        details.gender = gender.MALE;
-        details.knownWay = 'Internet';
-        details.comments = 'Tiene una lesión en el hombro derecho';
-        student3.languages = [spanishLanguage];
-        student3.details = details;
-        student3.roles = [generalRole, studentRole];
-        student3.save();
-      }
-      const instructor1 = await User.findOne({
-        email: 'instructor1@prueba.com',
+      const spanish = await Language.findOne({ where: { name: 'Spanish' } });
+      const roleGeneral = await Role.findOne({
+        where: { name: RoleType.GENERAL },
       });
-      if (instructor1) {
-        const details = new UserDetails();
-        details.firstname = 'Instructor 1';
-        instructor1.details = details;
-        instructor1.languages = [englishLanguage];
-        instructor1.roles = [generalRole, instructorRole];
-        instructor1.save();
-      }
-      const instructor2 = await User.findOne({
-        email: 'instructor2@prueba.com',
+      const roleStudent = await Role.findOne({
+        where: { name: RoleType.STUDENT },
       });
-      if (instructor2) {
-        const details = new UserDetails();
-        details.firstname = 'Instructor 2';
-        instructor2.details = details;
-        instructor2.languages = [spanishLanguage];
-        instructor2.roles = [generalRole, instructorRole];
-        instructor2.save();
-      }
-      const instructor3 = await User.findOne({
-        email: 'instructor3@prueba.com',
+      const roleInstructor = await Role.findOne({
+        where: { name: RoleType.INSTRUCTOR },
       });
-      if (instructor3) {
-        const details = new UserDetails();
-        details.firstname = 'Instructor 3';
-        instructor3.details = details;
-        instructor3.languages = [spanishLanguage, englishLanguage];
-        instructor3.roles = [generalRole, instructorRole];
-        instructor3.save();
-      }
-      if ((await UserCalendar.count()) == 0) {
-        logger.log(`Adding calendar to student1...`);
+      const kitesurf = await Sport.findOne({ where: { name: 'KiteSurf' } });
+      const admin = await User.findOne(1);
+      const student1 = await User.findOne(2);
+      const student2 = await User.findOne(3);
+      const student3 = await User.findOne(4);
+      const instructor1 = await User.findOne(5);
+      const instructor2 = await User.findOne(6);
+      const instructor3 = await User.findOne(7);
+      logger.log(`Adding languages to users...`);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(admin)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student1)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student2)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student3)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(instructor1)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(instructor2)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(instructor3)
+        .add([spanish]);
+      logger.log(`Adding roles to users...`);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(admin)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student1)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student2)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student3)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(instructor1)
+        .add([roleGeneral, roleInstructor]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(instructor2)
+        .add([roleGeneral, roleInstructor]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(instructor3)
+        .add([roleGeneral, roleInstructor]);
+      logger.log(`Adding sports to users...`);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student1)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student2)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student3)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(instructor1)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(instructor2)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(instructor3)
+        .add([kitesurf]);
+    }
+    if ((await CourseType.count()) == 0) {
+      logger.log(`Adding types of course...`);
 
-        const calendar = new UserCalendar();
-        const calendar2 = new UserCalendar();
-        const student1 = await User.findOne({ email: 'student1@prueba.com' });
-        const avType = await CalendarType.findOne({
-          where: { name: 'AVAILABILITY' },
-        });
-        if (avType && student1) {
-          calendar.typeId = avType.id;
-          calendar.userId = student1.id;
-          calendar.date = new Date('2020-06-20');
-          calendar2.typeId = avType.id;
-          calendar2.userId = student1.id;
-          calendar2.date = new Date('2020-06-21');
-          await calendar.save();
-          await calendar2.save();
-        }
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into('course_type')
+        .values(courseType_DB_DATA)
+        .execute();
+    }
+    if ((await Course.count()) == 0) {
+      logger.log(`Adding courses...`);
+
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into('courses')
+        .values(course_DB_DATA)
+        .execute();
+      logger.log(`Adding calendar to courses...`);
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into('course_calendar')
+        .values(courseCalendar_DB_DATA)
+        .execute();
+      if ((await CourseStudent.count()) == 0) {
+        logger.log(`Adding students to courses...`);
+        await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into('course_students')
+          .values(courseStudents_DB_DATA)
+          .execute();
+      }
+      if ((await CourseInstructor.count()) == 0) {
+        logger.log(`Adding instructors to courses...`);
+        await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into('course_instructors')
+          .values(courseInstructors_DB_DATA)
+          .execute();
       }
     }
   } catch (error) {
