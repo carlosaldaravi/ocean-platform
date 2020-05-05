@@ -30,7 +30,10 @@ export class Target extends BaseEntity {
   @Column({ name: 'sport_id' })
   sportId: number;
 
-  @ManyToMany(type => User)
+  @ManyToMany(
+    type => User,
+    user => user.targets,
+  )
   students!: User[];
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })

@@ -54,7 +54,10 @@ export class User extends BaseEntity {
   })
   languages: Language[];
 
-  @ManyToMany(type => Target)
+  @ManyToMany(
+    type => Target,
+    target => target.students,
+  )
   @JoinTable({
     name: 'student_targets',
     joinColumn: { name: 'student_id', referencedColumnName: 'id' },
