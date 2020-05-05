@@ -2,7 +2,6 @@ import {
   Entity,
   Column,
   BaseEntity,
-  PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
   PrimaryColumn,
@@ -13,16 +12,13 @@ import { CalendarType } from './calendar-type.entity';
 
 @Entity('user_calendar')
 export class UserCalendar extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @PrimaryColumn({ name: 'user_id' })
   userId: number;
 
   @PrimaryColumn({ type: 'date' })
   date: Date;
 
-  @Column({ name: 'type_id', nullable: false, unique: false })
+  @PrimaryColumn({ name: 'type_id', nullable: false, unique: false })
   typeId: number;
 
   @Column('time', { nullable: true })
