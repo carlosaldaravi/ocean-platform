@@ -15,7 +15,6 @@ import {
 import { UserDetails } from './user.details.entity';
 import { Role } from '../role/role.entity';
 import { status } from '../../shared/entity-status.enum';
-// import { StudentTarget } from './student/student-target.entity';
 import { UserCalendar } from '../calendar/user-calendar.entity';
 import { Language } from '../language/language.entity';
 import { Target } from '../target/target.entity';
@@ -23,7 +22,6 @@ import { StudentTarget } from './student/student-target.entity';
 import { Course } from '../course/course.entity';
 import { Sport } from '../sport/sport.entity';
 import { Level } from '../level/level.entity';
-// import { StudentTarget } from './student/student-target.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -40,19 +38,23 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'detail_id' })
   details: UserDetails;
 
-  @ManyToMany(
-    type => Role,
-    role => role.users,
-    { eager: true },
-  )
-  @JoinTable({ name: 'user_roles' })
+  @ManyToMany(type => Role, { eager: true })
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
   roles: Role[];
 
-  @ManyToMany(type => Language, { eager: true })
-  @JoinTable({ name: 'user_languages' })
+  @ManyToMany(type => Language)
+  @JoinTable({
+    name: 'user_languages',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'language_id', referencedColumnName: 'id' },
+  })
   languages: Language[];
 
-  @ManyToMany(type => Target, { eager: true })
+  @ManyToMany(type => Target)
   @JoinTable({
     name: 'student_targets',
     joinColumn: { name: 'student_id', referencedColumnName: 'id' },
@@ -60,7 +62,7 @@ export class User extends BaseEntity {
   })
   targets!: Target[];
 
-  @ManyToMany(type => Course, { eager: true })
+  @ManyToMany(type => Course)
   @JoinTable({
     name: 'course_students',
     joinColumn: { name: 'student_id', referencedColumnName: 'id' },
@@ -68,7 +70,7 @@ export class User extends BaseEntity {
   })
   studentCourses!: Course[];
 
-  @ManyToMany(type => Course, { eager: true })
+  @ManyToMany(type => Course)
   @JoinTable({
     name: 'course_instructors',
     joinColumn: { name: 'instructor_id', referencedColumnName: 'id' },
@@ -76,7 +78,7 @@ export class User extends BaseEntity {
   })
   instrucorCourses!: Course[];
 
-  @ManyToMany(type => Sport, { eager: true })
+  @ManyToMany(type => Sport)
   @JoinTable({
     name: 'user_sports',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
@@ -93,7 +95,6 @@ export class User extends BaseEntity {
   @OneToMany(
     type => UserCalendar,
     calendar => calendar.user,
-    { eager: true },
   )
   calendar: UserCalendar[];
 
