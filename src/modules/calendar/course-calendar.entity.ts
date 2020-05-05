@@ -4,21 +4,18 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   JoinColumn,
-  PrimaryColumn,
   ManyToOne,
   DeleteDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { Course } from '../course/course.entity';
 
 @Entity('course_calendar')
 export class CourseCalendar extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ name: 'course_id' })
+  @PrimaryColumn({ name: 'course_id' })
   courseId: number;
 
-  @Column({ type: 'date', unique: true })
+  @PrimaryColumn({ type: 'date', unique: true })
   date: Date;
 
   @Column('time', { nullable: true })
