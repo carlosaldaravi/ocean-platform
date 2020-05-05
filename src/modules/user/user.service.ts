@@ -18,6 +18,7 @@ import { plainToClass } from 'class-transformer';
 import { CreateStudentTargetDto } from './student/dto/create-student-target.dto';
 import { StudentTargetRepository } from './student/student-target.repository';
 import { TargetRepository } from '../target/target.reposity';
+import { Role } from '../role/role.entity';
 
 @Injectable()
 export class UserService {
@@ -112,8 +113,11 @@ export class UserService {
       throw new NotFoundException('Role does not exist');
     }
 
-    userExist.roles.push(roleExist);
-    await this._userRepository.save(userExist);
+    await this._userRepository
+      .createQueryBuilder()
+      .relation(User, 'roles')
+      .of(userExist)
+      .add(roleExist);
 
     return true;
   }
