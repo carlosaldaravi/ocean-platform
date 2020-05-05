@@ -4,9 +4,7 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   OneToMany,
-  ManyToMany,
 } from 'typeorm';
-import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
 import { Course } from '../course/course.entity';
 import { Target } from '../target/target.entity';
@@ -30,9 +28,6 @@ export class Sport extends BaseEntity {
     course => course.sport,
   )
   courses: Course[];
-
-  @ManyToMany(type => User)
-  users!: User[];
 
   @OneToMany(
     type => Target,
