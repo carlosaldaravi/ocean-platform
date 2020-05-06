@@ -10,6 +10,7 @@ import {
   ReadStudentDto,
   UpdateStudentDetailsDto,
 } from './dto';
+import { ReadTargetDto } from 'src/modules/target/dto';
 
 @Injectable()
 export class StudentService {
@@ -24,6 +25,11 @@ export class StudentService {
   getDataToStart() {
     return this._studentRepository.getDataToStart();
   }
+
+  getTargets(user: User): Promise<ReadTargetDto[]> {
+    return this._studentRepository.getTargets(user);
+  }
+
   createStudent(createStudentDto: CreateStudentDto, user: User): Promise<void> {
     return this._studentRepository.createStudent(createStudentDto, user);
   }

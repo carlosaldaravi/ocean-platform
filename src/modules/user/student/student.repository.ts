@@ -1,4 +1,10 @@
-import { Repository, EntityRepository } from 'typeorm';
+import {
+  Repository,
+  EntityRepository,
+  In,
+  LessThan,
+  LessThanOrEqual,
+} from 'typeorm';
 import { User } from '../user.entity';
 import { ReadStudentDto } from './dto/read-student.dto';
 import { plainToClass } from 'class-transformer';
@@ -10,6 +16,9 @@ import { CreateStudentDto } from './dto';
 import { Sport } from 'src/modules/sport/sport.entity';
 import { Target } from 'src/modules/target/target.entity';
 import { Level } from 'src/modules/level/level.entity';
+import { UserCalendar } from 'src/modules/calendar/user-calendar.entity';
+import { UserDetails } from '../user.details.entity';
+import { StudentTarget } from './student-target.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -46,19 +55,61 @@ export class StudentRepository extends Repository<User> {
     return data;
   }
 
+  async getTargets(user: User): Promise<any> {
+    const targets = await Target.createQueryBuilder('target')
+      .innerJoin('target.students', 'student')
+      .where('student.id = :id', { id: user.id })
+      .getMany();
+
+    // TODO: it is posible to get this in one query?
+
+    const studentTargets = await StudentTarget.find({
+      where: { studentId: user.id },
+    });
+
+    const response = [];
+    // adding who validated the target to the student
+    targets.forEach(target => {
+      studentTargets.forEach(st => {
+        if (target.id === st.targetId) {
+          response.push({ target, validatedBy: st.validatedBy });
+        }
+      });
+    });
+
+    return response;
+
+    // return targets.map(target => plainToClass(ReadTargetDto, target));
+  }
+
   async createStudent(
     createStudentDto: CreateStudentDto,
     user: User,
-  ): Promise<any> {
-    const foundUser = await User.findOne(user.id);
-    foundUser.details = createStudentDto.details;
+  ): Promise<void> {
+    const foundUser: User = await User.findOne(user.id);
+    const level = await Level.findOne(createStudentDto.level.id);
+    const targets = await Target.createQueryBuilder('t')
+      .innerJoin('t.level', 'l')
+      .where('l.order <= :order', { order: level.order })
+      .getMany();
+
+    await this.createQueryBuilder()
+      .update(UserDetails)
+      .set(createStudentDto.details)
+      .where('id = :id', { id: foundUser.id })
+      .execute();
+
+    await UserCalendar.createQueryBuilder()
+      .insert()
+      .into('user_calendar')
+      .values(createStudentDto.calendar)
+      .execute();
+
     foundUser.sports = createStudentDto.sports;
     foundUser.level = createStudentDto.level;
-    foundUser.calendar = createStudentDto.calendar;
+    foundUser.languages = createStudentDto.languages;
+    // foundUser.targets = targets; error with _rid in relation
+
     foundUser.save();
-    return {
-      ok: true,
-      message: 'Student created.',
-    };
   }
 }
