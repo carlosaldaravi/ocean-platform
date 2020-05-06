@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SportRepository } from './sport.reposity';
-import { status } from '../../shared/entity-status.enum';
 import { ReadSportDto, CreateSportDto, UpdateSportDto } from './dto';
 import { plainToClass } from 'class-transformer';
 import { Sport } from './sport.entity';
@@ -24,9 +23,7 @@ export class SportService {
     if (!sportId) {
       throw new BadRequestException('sportId must be sent');
     }
-    const sport: Sport = await this._sportRepository.findOne(sportId, {
-      where: { status: status.ACTIVE },
-    });
+    const sport: Sport = await this._sportRepository.findOne(sportId);
     if (!sport) {
       throw new HttpException('This sport does not exists', HttpStatus.OK);
     }
@@ -34,9 +31,7 @@ export class SportService {
   }
 
   async getAll(): Promise<ReadSportDto[]> {
-    const sports: Sport[] = await this._sportRepository.find({
-      where: { status: status.ACTIVE },
-    });
+    const sports: Sport[] = await this._sportRepository.find();
 
     if (!sports) {
       throw new NotFoundException();
@@ -51,7 +46,7 @@ export class SportService {
     }
 
     const sports: Sport[] = await this._sportRepository.find({
-      where: { status: status.ACTIVE, students: In[studentId] },
+      where: { students: In[studentId] },
     });
 
     return sports.map(sport => plainToClass(ReadSportDto, sport));
@@ -63,13 +58,7 @@ export class SportService {
     });
 
     if (foundSport) {
-      if (foundSport.status === status.INACTIVE) {
-        foundSport.status = status.ACTIVE;
-        await foundSport.save();
-        return plainToClass(ReadSportDto, foundSport);
-      } else {
-        throw new HttpException('This sport already exists', HttpStatus.OK);
-      }
+      throw new HttpException('This sport already exists', HttpStatus.OK);
     } else {
       const savedSport: Sport = await this._sportRepository.save({
         name: sport.name,
@@ -83,9 +72,7 @@ export class SportService {
     sportId: number,
     sport: Partial<UpdateSportDto>,
   ): Promise<ReadSportDto> {
-    const foundSport = await this._sportRepository.findOne(sportId, {
-      where: { status: status.ACTIVE },
-    });
+    const foundSport = await this._sportRepository.findOne(sportId);
 
     if (!foundSport) {
       throw new HttpException('This sport does not exists', HttpStatus.OK);
@@ -99,19 +86,7 @@ export class SportService {
     return plainToClass(ReadSportDto, foundSport);
   }
 
-  async delete(sportId: number): Promise<ReadSportDto> {
-    const sportExist = await this._sportRepository.findOne(sportId, {
-      where: { status: status.ACTIVE },
-    });
-
-    if (!sportExist) {
-      throw new HttpException('This sport does not exists', HttpStatus.OK);
-    }
-
-    const updatedSport = await this._sportRepository.update(sportId, {
-      status: status.INACTIVE,
-    });
-
-    return plainToClass(ReadSportDto, updatedSport);
+  async delete(sportId: number): Promise<void> {
+    await this._sportRepository.delete(sportId);
   }
 }

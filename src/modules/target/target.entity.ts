@@ -7,8 +7,6 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { status } from '../../shared/entity-status.enum';
-// import { StudentTarget } from '../user/student/student-target.entity';
 import { Level } from '../level/level.entity';
 import { User } from '../user/user.entity';
 import { Sport } from '../sport/sport.entity';
@@ -35,9 +33,6 @@ export class Target extends BaseEntity {
     user => user.targets,
   )
   students!: User[];
-
-  @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
-  status: string;
 
   @ManyToOne(
     type => Level,

@@ -54,7 +54,7 @@ export class TargetController {
   @Roles(RoleType.ADMIN)
   deleteTarget(
     @Param('targetId', ParseIntPipe) targetId: number,
-  ): Promise<ReadTargetDto> {
+  ): Promise<void> {
     return this._targetService.delete(targetId);
   }
 }

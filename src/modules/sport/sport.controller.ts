@@ -50,9 +50,7 @@ export class SportController {
 
   @Delete(':sportId')
   @Roles(RoleType.ADMIN)
-  deleteSport(
-    @Param('sportId', ParseIntPipe) sportId: number,
-  ): Promise<ReadSportDto> {
+  deleteSport(@Param('sportId', ParseIntPipe) sportId: number): Promise<void> {
     return this._sportService.delete(sportId);
   }
 }

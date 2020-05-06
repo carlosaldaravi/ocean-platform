@@ -84,9 +84,7 @@ export class LanguageService {
     return plainToClass(ReadLanguageDto, foundLanguage);
   }
 
-  async delete(languageId: number): Promise<ReadLanguageDto> {
-    const updatedLanguage = await this._languageRepository.delete(languageId);
-
-    return plainToClass(ReadLanguageDto, updatedLanguage);
+  async delete(languageId: number): Promise<void> {
+    await this._languageRepository.delete(languageId);
   }
 }

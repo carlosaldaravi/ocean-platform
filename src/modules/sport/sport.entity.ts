@@ -5,7 +5,6 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
-import { status } from '../../shared/entity-status.enum';
 import { Course } from '../course/course.entity';
 import { Target } from '../target/target.entity';
 
@@ -19,9 +18,6 @@ export class Sport extends BaseEntity {
 
   @Column({ type: 'varchar', nullable: true })
   description: string;
-
-  @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
-  status: string;
 
   @OneToMany(
     type => Course,

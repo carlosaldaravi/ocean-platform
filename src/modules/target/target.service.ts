@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TargetRepository } from './target.reposity';
-import { status } from '../../shared/entity-status.enum';
 import { ReadTargetDto, CreateTargetDto, UpdateTargetDto } from './dto';
 import { plainToClass } from 'class-transformer';
 import { Target } from './target.entity';
@@ -25,9 +24,7 @@ export class TargetService {
     if (!targetId) {
       throw new BadRequestException('targetId must be sent');
     }
-    const target: Target = await this._targetRepository.findOne(targetId, {
-      where: { status: status.ACTIVE },
-    });
+    const target: Target = await this._targetRepository.findOne(targetId);
     if (!target) {
       throw new HttpException('This target does not exists', HttpStatus.OK);
     }
@@ -35,9 +32,7 @@ export class TargetService {
   }
 
   async getAll(): Promise<ReadTargetDto[]> {
-    const targets: Target[] = await this._targetRepository.find({
-      where: { status: status.ACTIVE },
-    });
+    const targets: Target[] = await this._targetRepository.find();
 
     if (!targets) {
       throw new NotFoundException();
@@ -52,7 +47,7 @@ export class TargetService {
     }
 
     const targets: Target[] = await this._targetRepository.find({
-      where: { status: status.ACTIVE, students: In[studentId] },
+      where: { students: In[studentId] },
     });
 
     return targets.map(target => plainToClass(ReadTargetDto, target));
@@ -68,13 +63,7 @@ export class TargetService {
     });
 
     if (foundTarget) {
-      if (foundTarget.status === status.INACTIVE) {
-        foundTarget.status = status.ACTIVE;
-        await foundTarget.save();
-        return plainToClass(ReadTargetDto, foundTarget);
-      } else {
-        throw new HttpException('This target already exists', HttpStatus.OK);
-      }
+      throw new HttpException('This target already exists', HttpStatus.OK);
     } else {
       const savedTarget: Target = await this._targetRepository.save({
         name: target.name,
@@ -89,18 +78,14 @@ export class TargetService {
     targetId: number,
     target: Partial<UpdateTargetDto>,
   ): Promise<ReadTargetDto> {
-    const foundTarget = await this._targetRepository.findOne(targetId, {
-      where: { status: status.ACTIVE },
-    });
+    const foundTarget = await this._targetRepository.findOne(targetId);
 
     if (!foundTarget) {
       throw new HttpException('This target does not exists', HttpStatus.OK);
     }
 
     if (target.level) {
-      var level = await Level.findOne(target.level, {
-        where: { status: status.ACTIVE },
-      });
+      var level = await Level.findOne(target.level);
     }
 
     foundTarget.name = target.name;
@@ -113,19 +98,7 @@ export class TargetService {
     return plainToClass(ReadTargetDto, foundTarget);
   }
 
-  async delete(targetId: number): Promise<ReadTargetDto> {
-    const targetExist = await this._targetRepository.findOne(targetId, {
-      where: { status: status.ACTIVE },
-    });
-
-    if (!targetExist) {
-      throw new HttpException('This target does not exists', HttpStatus.OK);
-    }
-
-    const updatedTarget = await this._targetRepository.update(targetId, {
-      status: status.INACTIVE,
-    });
-
-    return plainToClass(ReadTargetDto, updatedTarget);
+  async delete(targetId: number): Promise<void> {
+    await this._targetRepository.delete(targetId);
   }
 }

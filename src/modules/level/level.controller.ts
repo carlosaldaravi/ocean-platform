@@ -50,9 +50,7 @@ export class LevelController {
 
   @Delete(':levelId')
   @Roles(RoleType.ADMIN)
-  deleteLevel(
-    @Param('levelId', ParseIntPipe) levelId: number,
-  ): Promise<ReadLevelDto> {
+  deleteLevel(@Param('levelId', ParseIntPipe) levelId: number): Promise<void> {
     return this._levelService.delete(levelId);
   }
 }

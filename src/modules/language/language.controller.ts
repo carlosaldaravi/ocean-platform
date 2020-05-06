@@ -54,7 +54,7 @@ export class LanguageController {
   @Roles(RoleType.ADMIN)
   deleteLanguage(
     @Param('languageId', ParseIntPipe) languageId: number,
-  ): Promise<ReadLanguageDto> {
+  ): Promise<void> {
     return this._languageService.delete(languageId);
   }
 }
