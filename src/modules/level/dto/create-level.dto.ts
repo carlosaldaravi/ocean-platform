@@ -6,4 +6,7 @@ export class CreateLevelDto {
 
   @IsString()
   readonly name: string;
+
+  @IsNumber()
+  readonly order: number;
 }

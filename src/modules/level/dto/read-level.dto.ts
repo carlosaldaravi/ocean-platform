@@ -10,4 +10,8 @@ export class ReadLevelDto {
   @Expose()
   @IsString()
   readonly name: string;
+
+  @Expose()
+  @IsNumber()
+  readonly order: number;
 }
