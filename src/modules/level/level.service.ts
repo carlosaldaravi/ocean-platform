@@ -7,11 +7,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LevelRepository } from './level.reposity';
-import { status } from '../../shared/entity-status.enum';
 import { ReadLevelDto, CreateLevelDto, UpdateLevelDto } from './dto';
 import { plainToClass } from 'class-transformer';
 import { Level } from './level.entity';
-import { In } from 'typeorm';
 
 @Injectable()
 export class LevelService {
@@ -24,9 +22,7 @@ export class LevelService {
     if (!levelId) {
       throw new BadRequestException('levelId must be sent');
     }
-    const level: Level = await this._levelRepository.findOne(levelId, {
-      where: { status: status.ACTIVE },
-    });
+    const level: Level = await this._levelRepository.findOne(levelId);
     if (!level) {
       throw new HttpException('This level does not exists', HttpStatus.OK);
     }
@@ -34,9 +30,7 @@ export class LevelService {
   }
 
   async getAll(): Promise<ReadLevelDto[]> {
-    const levels: Level[] = await this._levelRepository.find({
-      where: { status: status.ACTIVE },
-    });
+    const levels: Level[] = await this._levelRepository.find();
 
     if (!levels) {
       throw new NotFoundException();
@@ -50,9 +44,7 @@ export class LevelService {
       throw new BadRequestException('Student id must be sent');
     }
 
-    const levels: Level[] = await this._levelRepository.find({
-      where: { status: status.ACTIVE, students: In[studentId] },
-    });
+    const levels: Level[] = await this._levelRepository.find();
 
     return levels.map(level => plainToClass(ReadLevelDto, level));
   }
@@ -63,16 +55,11 @@ export class LevelService {
     });
 
     if (foundLevel) {
-      if (foundLevel.status === status.INACTIVE) {
-        foundLevel.status = status.ACTIVE;
-        await foundLevel.save();
-        return plainToClass(ReadLevelDto, foundLevel);
-      } else {
-        throw new HttpException('This level already exists', HttpStatus.OK);
-      }
+      throw new HttpException('This level already exists', HttpStatus.OK);
     } else {
       const savedLevel: Level = await this._levelRepository.save({
         name: level.name,
+        order: level.order,
       });
       return plainToClass(ReadLevelDto, savedLevel);
     }
@@ -82,34 +69,21 @@ export class LevelService {
     levelId: number,
     level: Partial<UpdateLevelDto>,
   ): Promise<ReadLevelDto> {
-    const foundLevel = await this._levelRepository.findOne(levelId, {
-      where: { status: status.ACTIVE },
-    });
+    const foundLevel = await this._levelRepository.findOne(levelId);
 
     if (!foundLevel) {
       throw new HttpException('This level does not exists', HttpStatus.OK);
     }
 
     foundLevel.name = level.name;
+    foundLevel.order = level.order;
 
     await foundLevel.save();
 
     return plainToClass(ReadLevelDto, foundLevel);
   }
 
-  async delete(levelId: number): Promise<ReadLevelDto> {
-    const levelExist = await this._levelRepository.findOne(levelId, {
-      where: { status: status.ACTIVE },
-    });
-
-    if (!levelExist) {
-      throw new HttpException('This level does not exists', HttpStatus.OK);
-    }
-
-    const updatedLevel = await this._levelRepository.update(levelId, {
-      status: status.INACTIVE,
-    });
-
-    return plainToClass(ReadLevelDto, updatedLevel);
+  async delete(levelId: number): Promise<void> {
+    await this._levelRepository.delete(levelId);
   }
 }
