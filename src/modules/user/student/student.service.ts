@@ -26,6 +26,10 @@ export class StudentService {
     return this._studentRepository.getDataToStart();
   }
 
+  getCourses(user: User): Promise<any> {
+    return this._studentRepository.getCourses(user);
+  }
+
   getTargets(user: User): Promise<ReadTargetDto[]> {
     return this._studentRepository.getTargets(user);
   }

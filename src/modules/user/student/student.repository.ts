@@ -19,6 +19,8 @@ import { Level } from 'src/modules/level/level.entity';
 import { UserCalendar } from 'src/modules/calendar/user-calendar.entity';
 import { UserDetails } from '../user.details.entity';
 import { StudentTarget } from './student-target.entity';
+import { Course } from 'src/modules/course/course.entity';
+import { CourseStudent } from 'src/modules/course/course-student.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -82,16 +84,45 @@ export class StudentRepository extends Repository<User> {
     // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
 
+  async getCourses(user: User): Promise<any> {
+    const courses = await Course.createQueryBuilder('course')
+      .innerJoinAndSelect('course.instructors', 'instructor')
+      .innerJoinAndSelect('instructor.details', 'instructorsDetails')
+      .innerJoinAndSelect('course.sport', 'sport')
+      .innerJoinAndSelect('course.level', 'level')
+      .innerJoinAndSelect('course.type', 'type')
+      .innerJoinAndSelect('course.students', 'student')
+      .innerJoinAndSelect('student.details', 'studentsDetails')
+      .where(qb => {
+        const subQuery = qb
+          .subQuery()
+          .select('course_id')
+          .from(CourseStudent, 'cs')
+          .where('student_id = :id')
+          .getQuery();
+        return 'course.id IN' + subQuery;
+      })
+      .setParameter('id', user.id)
+      .getMany();
+
+    return courses;
+
+    // return targets.map(target => plainToClass(ReadTargetDto, target));
+  }
+
   async createStudent(
     createStudentDto: CreateStudentDto,
     user: User,
   ): Promise<void> {
+    console.log('user: ', user);
+    console.log('createStudentDto: ', createStudentDto);
+
     const foundUser: User = await User.findOne(user.id);
-    const level = await Level.findOne(createStudentDto.level.id);
-    const targets = await Target.createQueryBuilder('t')
-      .innerJoin('t.level', 'l')
-      .where('l.order <= :order', { order: level.order })
-      .getMany();
+    // const level = await Level.findOne(createStudentDto.level.id);
+    // const targets = await Target.createQueryBuilder('t')
+    //   .innerJoin('t.level', 'l')
+    //   .where('l.order <= :order', { order: level.order })
+    //   .getMany();
 
     await this.createQueryBuilder()
       .update(UserDetails)
@@ -99,17 +130,17 @@ export class StudentRepository extends Repository<User> {
       .where('id = :id', { id: foundUser.id })
       .execute();
 
-    await UserCalendar.createQueryBuilder()
-      .insert()
-      .into('user_calendar')
-      .values(createStudentDto.calendar)
-      .execute();
+    // await UserCalendar.createQueryBuilder()
+    //   .insert()
+    //   .into('user_calendar')
+    //   .values(createStudentDto.calendar)
+    //   .execute();
 
-    foundUser.sports = createStudentDto.sports;
-    foundUser.level = createStudentDto.level;
-    foundUser.languages = createStudentDto.languages;
-    // foundUser.targets = targets; error with _rid in relation
+    // foundUser.sports = createStudentDto.sports;
+    // foundUser.level = createStudentDto.level;
+    // foundUser.languages = createStudentDto.languages;
+    // foundUser.targets = targets;
 
-    foundUser.save();
+    User.save(foundUser);
   }
 }

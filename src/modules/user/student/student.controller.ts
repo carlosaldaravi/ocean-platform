@@ -24,6 +24,12 @@ export class StudentController {
     return this._studentService.getDataToStart();
   }
 
+  @Get('/courses')
+  @Roles(RoleType.STUDENT)
+  getCourses(@GetUser() user: User): Promise<any> {
+    return this._studentService.getCourses(user);
+  }
+
   @Get('/targets')
   @Roles(RoleType.STUDENT)
   getTargets(@GetUser() user: User): Promise<ReadTargetDto[]> {
