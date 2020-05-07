@@ -15,6 +15,8 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { CourseModule } from './modules/course/course.module';
+import { TransformInterceptor } from './shared/transform.interceptor';
+import { ErrorsInterceptor } from './shared/errors.interceptors';
 
 @Module({
   imports: [
@@ -39,6 +41,14 @@ import { CourseModule } from './modules/course/course.module';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ErrorsInterceptor,
+    // },
   ],
 })
 export class AppModule {
