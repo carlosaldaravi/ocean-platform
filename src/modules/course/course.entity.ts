@@ -42,10 +42,18 @@ export class Course extends BaseEntity {
   @JoinColumn({ name: 'type_id' })
   type: CourseType;
 
-  @ManyToMany(type => User, { cascade: true })
+  @ManyToMany(
+    type => User,
+    student => student.studentCourses,
+    { cascade: true },
+  )
   students!: User[];
 
-  @ManyToMany(type => User, { cascade: true })
+  @ManyToMany(
+    type => User,
+    instructor => instructor.instructorCourses,
+    { cascade: true },
+  )
   instructors!: User[];
 
   @OneToMany(

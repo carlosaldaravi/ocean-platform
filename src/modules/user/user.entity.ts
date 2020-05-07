@@ -22,6 +22,7 @@ import { StudentTarget } from './student/student-target.entity';
 import { Course } from '../course/course.entity';
 import { Sport } from '../sport/sport.entity';
 import { Level } from '../level/level.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -31,6 +32,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', unique: true })
   email: string;
 
+  @Exclude()
   @Column({ type: 'varchar' })
   password: string;
 
@@ -65,7 +67,10 @@ export class User extends BaseEntity {
   })
   targets!: Target[];
 
-  @ManyToMany(type => Course)
+  @ManyToMany(
+    type => Course,
+    course => course.students,
+  )
   @JoinTable({
     name: 'course_students',
     joinColumn: { name: 'student_id', referencedColumnName: 'id' },
@@ -73,13 +78,16 @@ export class User extends BaseEntity {
   })
   studentCourses!: Course[];
 
-  @ManyToMany(type => Course)
+  @ManyToMany(
+    type => Course,
+    course => course.instructors,
+  )
   @JoinTable({
     name: 'course_instructors',
     joinColumn: { name: 'instructor_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'course_id', referencedColumnName: 'id' },
   })
-  instrucorCourses!: Course[];
+  instructorCourses!: Course[];
 
   @ManyToMany(type => Sport)
   @JoinTable({
