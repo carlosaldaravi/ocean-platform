@@ -9,7 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   setDefaultValues();
-
+  app.enableCors();
   // if (process.env.NODE_ENV === 'development') {
   //   app.enableCors();
   // } else {
