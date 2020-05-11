@@ -1,18 +1,18 @@
 export const levels_DB_DATA = [
   {
-    name: 'Begginer',
+    name: 'Iniciación',
     order: 1,
   },
   {
-    name: 'Intermediate',
+    name: 'Perfeccionamiento',
     order: 2,
   },
   {
-    name: 'Advance',
+    name: 'Avanzado',
     order: 3,
   },
   {
-    name: 'Pro',
+    name: 'Experto',
     order: 4,
   },
 ];

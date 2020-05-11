@@ -132,8 +132,12 @@ export const setDefaultValues = async () => {
           .execute();
       }
       const spanish = await Language.findOne({ where: { name: 'Spanish' } });
+      const english = await Language.findOne({ where: { name: 'English' } });
       const roleGeneral = await Role.findOne({
         where: { name: RoleType.GENERAL },
+      });
+      const roleAdmin = await Role.findOne({
+        where: { name: RoleType.ADMIN },
       });
       const roleStudent = await Role.findOne({
         where: { name: RoleType.STUDENT },
@@ -146,9 +150,36 @@ export const setDefaultValues = async () => {
       const student1 = await User.findOne(2);
       const student2 = await User.findOne(3);
       const student3 = await User.findOne(4);
-      const instructor1 = await User.findOne(5);
-      const instructor2 = await User.findOne(6);
-      const instructor3 = await User.findOne(7);
+      const student4 = await User.findOne(5);
+      const student5 = await User.findOne(6);
+      const student6 = await User.findOne(7);
+      const student7 = await User.findOne(8);
+      const student8 = await User.findOne(9);
+      const student9 = await User.findOne(10);
+      const student10 = await User.findOne(11);
+      const student11 = await User.findOne(12);
+      const student12 = await User.findOne(13);
+      const student13 = await User.findOne(14);
+      const student14 = await User.findOne(15);
+      const student15 = await User.findOne(16);
+      const student16 = await User.findOne(17);
+      const student17 = await User.findOne(18);
+      const student18 = await User.findOne(19);
+      const student19 = await User.findOne(20);
+      const student20 = await User.findOne(21);
+      const student21 = await User.findOne(22);
+      const student22 = await User.findOne(23);
+      const student23 = await User.findOne(24);
+      const student24 = await User.findOne(25);
+      const student25 = await User.findOne(26);
+      const student26 = await User.findOne(27);
+      const student27 = await User.findOne(28);
+      const student28 = await User.findOne(29);
+      const student29 = await User.findOne(30);
+      const student30 = await User.findOne(31);
+      const instructor1 = await User.findOne(32);
+      const instructor2 = await User.findOne(33);
+      const instructor3 = await User.findOne(34);
       logger.log(`Adding languages to users...`);
       await User.createQueryBuilder()
         .relation(User, 'languages')
@@ -168,6 +199,114 @@ export const setDefaultValues = async () => {
         .add([spanish]);
       await User.createQueryBuilder()
         .relation(User, 'languages')
+        .of(student4)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student5)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student6)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student7)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student8)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student9)
+        .add([english]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student10)
+        .add([english]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student11)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student12)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student13)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student14)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student15)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student16)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student17)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student18)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student19)
+        .add([english]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student20)
+        .add([english]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student21)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student22)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student23)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student24)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student25)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student26)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student27)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student28)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student29)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
+        .of(student30)
+        .add([spanish]);
+      await User.createQueryBuilder()
+        .relation(User, 'languages')
         .of(instructor1)
         .add([spanish]);
       await User.createQueryBuilder()
@@ -182,7 +321,7 @@ export const setDefaultValues = async () => {
       await User.createQueryBuilder()
         .relation(User, 'roles')
         .of(admin)
-        .add([roleGeneral, roleStudent]);
+        .add([roleGeneral, roleAdmin]);
       await User.createQueryBuilder()
         .relation(User, 'roles')
         .of(student1)
@@ -194,6 +333,114 @@ export const setDefaultValues = async () => {
       await User.createQueryBuilder()
         .relation(User, 'roles')
         .of(student3)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student4)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student5)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student6)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student7)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student8)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student9)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student10)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student11)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student12)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student13)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student14)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student15)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student16)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student17)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student18)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student19)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student20)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student21)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student22)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student23)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student24)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student25)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student26)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student27)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student28)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student29)
+        .add([roleGeneral, roleStudent]);
+      await User.createQueryBuilder()
+        .relation(User, 'roles')
+        .of(student30)
         .add([roleGeneral, roleStudent]);
       await User.createQueryBuilder()
         .relation(User, 'roles')
@@ -219,6 +466,114 @@ export const setDefaultValues = async () => {
       await User.createQueryBuilder()
         .relation(User, 'sports')
         .of(student3)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student4)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student5)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student6)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student7)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student8)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student9)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student10)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student11)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student12)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student13)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student14)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student15)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student16)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student17)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student18)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student19)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student20)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student21)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student22)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student23)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student24)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student25)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student26)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student27)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student28)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student29)
+        .add([kitesurf]);
+      await User.createQueryBuilder()
+        .relation(User, 'sports')
+        .of(student30)
         .add([kitesurf]);
       await User.createQueryBuilder()
         .relation(User, 'sports')
