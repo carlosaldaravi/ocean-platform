@@ -36,6 +36,12 @@ export class StudentController {
     return this._studentService.getTargets(user);
   }
 
+  @Get('/calendar')
+  @Roles(RoleType.STUDENT)
+  getCalendar(@GetUser() user: User): Promise<ReadTargetDto[]> {
+    return this._studentService.getCalendar(user);
+  }
+
   @Post()
   create(
     @Body() createStudentDto: CreateStudentDto,

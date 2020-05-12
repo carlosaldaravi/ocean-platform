@@ -84,6 +84,12 @@ export class StudentRepository extends Repository<User> {
     // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
 
+  async getCalendar(user: User): Promise<any> {
+    return await UserCalendar.find({ where: { userId: user.id } });
+
+    // return targets.map(target => plainToClass(ReadTargetDto, target));
+  }
+
   async getCourses(user: User): Promise<any> {
     const courses = await Course.createQueryBuilder('course')
       .innerJoinAndSelect('course.instructors', 'instructor')
@@ -99,11 +105,11 @@ export class StudentRepository extends Repository<User> {
           .subQuery()
           .select('course_id')
           .from(CourseStudent, 'cs')
-          .where('student_id = :id')
+          // .where('student_id = :id')
           .getQuery();
         return 'course.id IN' + subQuery;
       })
-      .setParameter('id', user.id)
+      // .setParameter('id', user.id)
       .getMany();
 
     return courses;

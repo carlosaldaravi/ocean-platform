@@ -34,6 +34,10 @@ export class StudentService {
     return this._studentRepository.getTargets(user);
   }
 
+  getCalendar(user: User): Promise<ReadTargetDto[]> {
+    return this._studentRepository.getCalendar(user);
+  }
+
   createStudent(createStudentDto: CreateStudentDto, user: User): Promise<void> {
     return this._studentRepository.createStudent(createStudentDto, user);
   }
