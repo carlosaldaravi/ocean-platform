@@ -6,6 +6,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  JoinTable,
 } from 'typeorm';
 import { Level } from '../level/level.entity';
 import { User } from '../user/user.entity';
@@ -32,6 +33,11 @@ export class Target extends BaseEntity {
     type => User,
     user => user.targets,
   )
+  @JoinTable({
+    name: 'student_targets',
+    joinColumn: { name: 'target_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'student_id', referencedColumnName: 'id' },
+  })
   students!: User[];
 
   @ManyToOne(
