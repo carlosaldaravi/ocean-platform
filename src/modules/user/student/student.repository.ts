@@ -93,6 +93,7 @@ export class StudentRepository extends Repository<User> {
       .innerJoinAndSelect('course.type', 'type')
       .innerJoinAndSelect('course.students', 'student')
       .innerJoinAndSelect('student.details', 'studentsDetails')
+      .innerJoinAndSelect('course.calendar', 'calendar')
       .where(qb => {
         const subQuery = qb
           .subQuery()
@@ -117,24 +118,24 @@ export class StudentRepository extends Repository<User> {
     console.log('user: ', user);
     console.log('createStudentDto: ', createStudentDto);
 
-    const foundUser: User = await User.findOne(user.id);
-    // const level = await Level.findOne(createStudentDto.level.id);
-    // const targets = await Target.createQueryBuilder('t')
-    //   .innerJoin('t.level', 'l')
-    //   .where('l.order <= :order', { order: level.order })
-    //   .getMany();
-
     await this.createQueryBuilder()
       .update(UserDetails)
       .set(createStudentDto.details)
-      .where('id = :id', { id: foundUser.id })
+      .where('id = :id', { id: user.id })
       .execute();
 
-    // await UserCalendar.createQueryBuilder()
-    //   .insert()
-    //   .into('user_calendar')
-    //   .values(createStudentDto.calendar)
-    //   .execute();
+    const foundUser: User = await User.findOne(user.id);
+    const level = await Level.findOne(createStudentDto.level.id);
+    const targets = await Target.createQueryBuilder('t')
+      .innerJoin('t.level', 'l')
+      .where('l.order <= :order', { order: level.order })
+      .getMany();
+
+    await UserCalendar.createQueryBuilder()
+      .insert()
+      .into('user_calendar')
+      .values(createStudentDto.calendar)
+      .execute();
 
     // foundUser.sports = createStudentDto.sports;
     // foundUser.level = createStudentDto.level;
