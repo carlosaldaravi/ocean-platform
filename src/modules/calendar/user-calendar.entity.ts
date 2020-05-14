@@ -12,20 +12,23 @@ import { CalendarType } from './calendar-type.entity';
 
 @Entity('user_calendar')
 export class UserCalendar extends BaseEntity {
-  @PrimaryColumn({ name: 'user_id' })
+  @PrimaryColumn()
+  id: number;
+
+  @Column({ name: 'user_id', unique: false })
   userId: number;
 
-  @PrimaryColumn({ type: 'date' })
-  date: Date;
-
-  @PrimaryColumn({ name: 'type_id', nullable: false, unique: false })
+  @Column({ name: 'type_id', unique: false })
   typeId: number;
 
-  @Column('time', { nullable: true })
-  start_time: Date;
+  @Column()
+  start: Date;
 
-  @Column('time', { nullable: true })
-  end_time: Date;
+  @Column()
+  end: Date;
+
+  @Column()
+  allDay: boolean;
 
   @Column({ nullable: true })
   comments: string;
@@ -45,7 +48,4 @@ export class UserCalendar extends BaseEntity {
   )
   @JoinColumn({ name: 'type_id' })
   type: CalendarType;
-
-  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at' })
-  deletedAt: Date;
 }
