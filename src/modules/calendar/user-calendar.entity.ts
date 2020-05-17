@@ -4,15 +4,14 @@ import {
   BaseEntity,
   ManyToOne,
   JoinColumn,
-  PrimaryColumn,
-  DeleteDateColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { CalendarType } from './calendar-type.entity';
 
 @Entity('user_calendar')
 export class UserCalendar extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ name: 'user_id', unique: false })
@@ -30,13 +29,12 @@ export class UserCalendar extends BaseEntity {
   @Column()
   allDay: boolean;
 
-  @Column({ nullable: true })
-  comments: string;
+  @Column()
+  title: string;
 
   @ManyToOne(
     type => User,
     user => user.calendar,
-    { primary: true },
   )
   @JoinColumn({ name: 'user_id' })
   user: User;
@@ -44,7 +42,6 @@ export class UserCalendar extends BaseEntity {
   @ManyToOne(
     type => CalendarType,
     type => type.calendar,
-    { eager: true },
   )
   @JoinColumn({ name: 'type_id' })
   type: CalendarType;

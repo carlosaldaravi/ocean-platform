@@ -9,6 +9,8 @@ import { CreateStudentDto } from './dto';
 import { RoleType } from 'src/modules/role/roletype.enum';
 import { Roles } from 'src/modules/role/decorators/role.decoratos';
 import { ReadTargetDto } from 'src/modules/target/dto';
+import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
+import { ReadStudentCalendarDto } from './dto/read-student-calendar.dto';
 
 @Controller('students')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -48,5 +50,16 @@ export class StudentController {
     @GetUser() user: User,
   ): Promise<void> {
     return this._studentService.createStudent(createStudentDto, user);
+  }
+
+  @Post('/calendar')
+  createCalendar(
+    @Body() createStudentCalendarDto: CreateStudentCalendarDto,
+    @GetUser() user: User,
+  ): Promise<ReadStudentCalendarDto> {
+    return this._studentService.createStudentCalendar(
+      createStudentCalendarDto,
+      user,
+    );
   }
 }

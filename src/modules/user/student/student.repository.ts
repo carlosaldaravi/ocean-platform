@@ -1,10 +1,4 @@
-import {
-  Repository,
-  EntityRepository,
-  In,
-  LessThan,
-  LessThanOrEqual,
-} from 'typeorm';
+import { Repository, EntityRepository } from 'typeorm';
 import { User } from '../user.entity';
 import { ReadStudentDto } from './dto/read-student.dto';
 import { plainToClass } from 'class-transformer';
@@ -21,6 +15,8 @@ import { UserDetails } from '../user.details.entity';
 import { StudentTarget } from './student-target.entity';
 import { Course } from 'src/modules/course/course.entity';
 import { CourseStudent } from 'src/modules/course/course-student.entity';
+import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
+import { ReadStudentCalendarDto } from './dto/read-student-calendar.dto';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -148,6 +144,24 @@ export class StudentRepository extends Repository<User> {
     // foundUser.languages = createStudentDto.languages;
     // foundUser.targets = targets;
 
-    User.save(foundUser);
+    await User.save(foundUser);
+  }
+  async createStudentCalendar(
+    createStudentCalendarDto: CreateStudentCalendarDto,
+    user: User,
+  ): Promise<any> {
+    createStudentCalendarDto.userId = user.id;
+    createStudentCalendarDto.typeId = 2;
+
+    let uC = await UserCalendar.createQueryBuilder()
+      .insert()
+      .into('user_calendar')
+      .values(createStudentCalendarDto)
+      .returning('*')
+      .execute();
+    console.log(uC.raw);
+
+    return uC.raw[0];
+    // return plainToClass(ReadStudentCalendarDto, uC);
   }
 }

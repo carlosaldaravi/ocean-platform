@@ -17,7 +17,7 @@ export class CreateUserCalendarDto {
 
   @IsString()
   @IsOptional()
-  readonly comments: string;
+  readonly title: string;
 
   @IsString()
   @IsOptional()

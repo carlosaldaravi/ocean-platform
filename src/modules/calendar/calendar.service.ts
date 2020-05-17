@@ -71,7 +71,7 @@ export class CalendarService {
       .createQueryBuilder()
       .update(UserCalendar)
       .set(calendar)
-      // .where('id = :id', { id: calendarId })
+      .where('id = :id', { id: calendarId })
       .execute();
 
     return plainToClass(ReadUserCalendarDto, updatedCalendar);

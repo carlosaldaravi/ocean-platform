@@ -13,18 +13,22 @@ export class ReadUserCalendarDto {
   readonly userId: number;
 
   @Expose()
-  @IsDate()
-  readonly date: Date;
+  @IsNumber()
+  readonly typeId: number;
 
   @Expose()
   @IsDate()
-  readonly start_time: Date;
+  readonly start: Date;
 
   @Expose()
   @IsDate()
-  readonly end_time: Date;
+  readonly end: Date;
 
   @Expose()
   @IsString()
-  readonly comments: string;
+  readonly title: string;
+
+  @Expose()
+  @IsString()
+  readonly allDay: boolean;
 }

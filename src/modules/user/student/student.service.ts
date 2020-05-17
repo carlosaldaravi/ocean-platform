@@ -11,6 +11,8 @@ import {
   UpdateStudentDetailsDto,
 } from './dto';
 import { ReadTargetDto } from 'src/modules/target/dto';
+import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
+import { ReadStudentCalendarDto } from './dto/read-student-calendar.dto';
 
 @Injectable()
 export class StudentService {
@@ -40,5 +42,15 @@ export class StudentService {
 
   createStudent(createStudentDto: CreateStudentDto, user: User): Promise<void> {
     return this._studentRepository.createStudent(createStudentDto, user);
+  }
+
+  createStudentCalendar(
+    createStudentCalendarDto: CreateStudentCalendarDto,
+    user: User,
+  ): Promise<ReadStudentCalendarDto> {
+    return this._studentRepository.createStudentCalendar(
+      createStudentCalendarDto,
+      user,
+    );
   }
 }

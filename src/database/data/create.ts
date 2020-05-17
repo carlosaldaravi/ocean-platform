@@ -114,13 +114,13 @@ export const setDefaultValues = async () => {
         .into('users')
         .values(users_DB_DATA)
         .execute();
-      logger.log(`Adding calendar to users...`);
-      await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into('user_calendar')
-        .values(userCalendar_DB_DATA)
-        .execute();
+      // logger.log(`Adding calendar to users...`);
+      // await getConnection()
+      //   .createQueryBuilder()
+      //   .insert()
+      //   .into('user_calendar')
+      //   .values(userCalendar_DB_DATA)
+      //   .execute();
       if ((await StudentTarget.count()) == 0) {
         logger.log(`Adding targets to students...`);
 

@@ -11,5 +11,5 @@ export class UpdateUserCalendarDto {
   readonly end_time: Date;
 
   @IsString()
-  readonly comments: string;
+  readonly title: string;
 }
