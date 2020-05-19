@@ -60,16 +60,14 @@ export class User extends BaseEntity {
   })
   languages: Language[];
 
-  @ManyToMany(
-    type => Target,
-    target => target.students,
+  @OneToMany(
+    type => StudentTarget,
+    studentTarget => studentTarget.student,
   )
   @JoinTable({
     name: 'student_targets',
-    joinColumn: { name: 'student_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'target_id', referencedColumnName: 'id' },
   })
-  targets!: Target[];
+  targets!: StudentTarget[];
 
   @ManyToMany(
     type => Course,

@@ -7,10 +7,12 @@ import {
   JoinColumn,
   ManyToOne,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { Level } from '../level/level.entity';
 import { User } from '../user/user.entity';
 import { Sport } from '../sport/sport.entity';
+import { StudentTarget } from '../user/student/student-target.entity';
 
 @Entity('targets')
 export class Target extends BaseEntity {
@@ -29,16 +31,14 @@ export class Target extends BaseEntity {
   @Column({ name: 'sport_id' })
   sportId: number;
 
-  @ManyToMany(
-    type => User,
-    user => user.targets,
+  @OneToMany(
+    type => StudentTarget,
+    studentTarget => studentTarget.target,
   )
   @JoinTable({
     name: 'student_targets',
-    joinColumn: { name: 'target_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'student_id', referencedColumnName: 'id' },
   })
-  students!: User[];
+  students!: StudentTarget[];
 
   @ManyToOne(
     type => Level,

@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { User } from '../user.entity';
+import { Target } from 'src/modules/target/target.entity';
 
 @Entity('student_targets')
 export class StudentTarget extends BaseEntity {
@@ -33,6 +34,20 @@ export class StudentTarget extends BaseEntity {
 
   @Column({ nullable: true })
   feedback: string;
+
+  @ManyToOne(
+    type => User,
+    user => user.targets,
+  )
+  @JoinColumn({ name: 'student_id' })
+  student!: User;
+
+  @ManyToOne(
+    type => Target,
+    target => target.students,
+  )
+  @JoinColumn({ name: 'target_id' })
+  target!: Target;
 
   @ManyToOne(type => User)
   @JoinColumn({ name: 'validated_by' })

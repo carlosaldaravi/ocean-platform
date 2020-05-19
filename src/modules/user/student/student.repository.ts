@@ -54,28 +54,30 @@ export class StudentRepository extends Repository<User> {
   }
 
   async getTargets(user: User): Promise<any> {
-    const targets = await Target.createQueryBuilder('target')
-      .innerJoin('target.students', 'student')
-      .where('student.id = :id', { id: user.id })
+    const targets = await StudentTarget.createQueryBuilder('st')
+      .innerJoinAndSelect('st.target', 't')
+      .innerJoinAndSelect('t.sport', 'sport')
+      .innerJoinAndSelect('t.level', 'level')
+      .where('st.student_id = :id', { id: user.id })
       .getMany();
 
     // TODO: it is posible to get this in one query?
 
-    const studentTargets = await StudentTarget.find({
-      where: { studentId: user.id },
-    });
+    // const studentTargets = await StudentTarget.find({
+    //   where: { studentId: user.id },
+    // });
 
-    const response = [];
-    // adding who validated the target to the student
-    targets.forEach(target => {
-      studentTargets.forEach(st => {
-        if (target.id === st.targetId) {
-          response.push({ target, validatedBy: st.validatedBy });
-        }
-      });
-    });
+    // const response = [];
+    // // adding who validated the target to the student
+    // targets.forEach(target => {
+    //   studentTargets.forEach(st => {
+    //     if (target.id === st.targetId) {
+    //       response.push({ target, validatedBy: st.validatedBy });
+    //     }
+    //   });
+    // });
 
-    return response;
+    return targets;
 
     // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
