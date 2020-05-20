@@ -9,6 +9,7 @@ import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
 import { Target } from '../target/target.entity';
 import { Course } from '../course/course.entity';
+import { UserSport } from '../user/user-sports.entity';
 
 @Entity('levels')
 export class Level extends BaseEntity {
@@ -34,8 +35,8 @@ export class Level extends BaseEntity {
   courses: Course[];
 
   @OneToMany(
-    type => User,
-    user => user.level,
+    type => UserSport,
+    userSport => userSport.level,
   )
-  users: User[];
+  userSport: UserSport[];
 }

@@ -29,6 +29,7 @@ import { CourseInstructor } from 'src/modules/course/course-instructor.entity';
 import { courseStudents_DB_DATA } from './course-students';
 import { courseInstructors_DB_DATA } from './course-instructors';
 import { RoleType } from 'src/modules/role/roletype.enum';
+import { userSports_DB_DATA } from './user-sports';
 
 // insert data base examples
 
@@ -114,13 +115,6 @@ export const setDefaultValues = async () => {
         .into('users')
         .values(users_DB_DATA)
         .execute();
-      // logger.log(`Adding calendar to users...`);
-      // await getConnection()
-      //   .createQueryBuilder()
-      //   .insert()
-      //   .into('user_calendar')
-      //   .values(userCalendar_DB_DATA)
-      //   .execute();
       if ((await StudentTarget.count()) == 0) {
         logger.log(`Adding targets to students...`);
 
@@ -129,6 +123,14 @@ export const setDefaultValues = async () => {
           .insert()
           .into('student_targets')
           .values(studentTargets_DB_DATA)
+          .execute();
+
+        logger.log(`Adding sports to students...`);
+        await getConnection()
+          .createQueryBuilder()
+          .insert()
+          .into('user_sports')
+          .values(userSports_DB_DATA)
           .execute();
       }
       const spanish = await Language.findOne({ where: { name: 'Spanish' } });
@@ -454,139 +456,6 @@ export const setDefaultValues = async () => {
         .relation(User, 'roles')
         .of(instructor3)
         .add([roleGeneral, roleInstructor]);
-      logger.log(`Adding sports to users...`);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student1)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student2)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student3)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student4)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student5)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student6)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student7)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student8)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student9)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student10)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student11)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student12)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student13)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student14)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student15)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student16)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student17)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student18)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student19)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student20)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student21)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student22)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student23)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student24)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student25)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student26)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student27)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student28)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student29)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(student30)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(instructor1)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(instructor2)
-        .add([kitesurf]);
-      await User.createQueryBuilder()
-        .relation(User, 'sports')
-        .of(instructor3)
-        .add([kitesurf]);
     }
     if ((await CourseType.count()) == 0) {
       logger.log(`Adding types of course...`);

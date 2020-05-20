@@ -17,12 +17,11 @@ import { Role } from '../role/role.entity';
 import { status } from '../../shared/entity-status.enum';
 import { UserCalendar } from '../calendar/user-calendar.entity';
 import { Language } from '../language/language.entity';
-import { Target } from '../target/target.entity';
 import { StudentTarget } from './student/student-target.entity';
 import { Course } from '../course/course.entity';
-import { Sport } from '../sport/sport.entity';
 import { Level } from '../level/level.entity';
 import { Exclude } from 'class-transformer';
+import { UserSport } from './user-sports.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -91,13 +90,14 @@ export class User extends BaseEntity {
   })
   instructorCourses!: Course[];
 
-  @ManyToMany(type => Sport)
+  @OneToMany(
+    type => UserSport,
+    userSport => userSport.user,
+  )
   @JoinTable({
     name: 'user_sports',
-    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'sport_id', referencedColumnName: 'id' },
   })
-  sports!: Sport[];
+  userSports!: UserSport[];
 
   @OneToMany(
     type => StudentTarget,
@@ -110,14 +110,6 @@ export class User extends BaseEntity {
     calendar => calendar.user,
   )
   calendar: UserCalendar[];
-
-  @ManyToOne(
-    type => Level,
-    level => level.users,
-    { cascade: true },
-  )
-  @JoinColumn({ name: 'level_id' })
-  level: Level;
 
   @Column({ type: 'varchar', default: status.ACTIVE, length: 8 })
   status: status;

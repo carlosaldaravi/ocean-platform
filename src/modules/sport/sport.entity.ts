@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Course } from '../course/course.entity';
 import { Target } from '../target/target.entity';
+import { UserSport } from '../user/user-sports.entity';
 
 @Entity('sports')
 export class Sport extends BaseEntity {
@@ -31,4 +32,11 @@ export class Sport extends BaseEntity {
     { eager: true },
   )
   target: Target;
+
+  @OneToMany(
+    type => UserSport,
+    userSport => userSport.sport,
+    { eager: true },
+  )
+  userSport: UserSport;
 }
