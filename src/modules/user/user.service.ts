@@ -19,6 +19,7 @@ import { CreateStudentTargetDto } from './student/dto/create-student-target.dto'
 import { StudentTargetRepository } from './student/student-target.repository';
 import { TargetRepository } from '../target/target.reposity';
 import { Role } from '../role/role.entity';
+import { ReadSportDto } from '../sport/dto';
 
 @Injectable()
 export class UserService {
@@ -130,5 +131,9 @@ export class UserService {
       createStudentTargetDto,
       user,
     );
+  }
+
+  getSports(user: User): Promise<ReadSportDto[]> {
+    return this._userRepository.getSports(user);
   }
 }

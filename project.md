@@ -18,6 +18,7 @@ Platform to all ocean school to manage students, instructors and courses.
 ## ENDPOINTS:
 
 - User
+  {**/api/users/sports**, [GET]}
   {**/api/users/:userId**, [GET]}
   {**/api/users**, [GET]}
   {**/api/users/:userId**, [PATCH]}

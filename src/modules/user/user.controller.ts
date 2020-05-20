@@ -20,11 +20,17 @@ import { GetUser } from '../auth/user.decorator';
 import { RoleGuard } from '../role/guards/role.guard';
 import { ReadStudentDto } from './student/dto/read-student.dto';
 import { ReadStudentTargetDto } from './student/dto/read-student-target.dto';
+import { ReadSportDto } from '../sport/dto';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class UserController {
   constructor(private readonly _userService: UserService) {}
+
+  @Get('sports')
+  async getSports(@GetUser() user: User): Promise<ReadSportDto[]> {
+    return this._userService.getSports(user);
+  }
 
   @Get(':userId')
   getUser(@Param('userId', ParseIntPipe) userId: number): Promise<ReadUserDto> {
@@ -32,7 +38,6 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard())
   async getUsers(): Promise<ReadUserDto[]> {
     return this._userService.getAll();
   }

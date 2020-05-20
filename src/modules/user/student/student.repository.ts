@@ -1,4 +1,4 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository, EntityRepository, getConnection } from 'typeorm';
 import { User } from '../user.entity';
 import { ReadStudentDto } from './dto/read-student.dto';
 import { plainToClass } from 'class-transformer';
@@ -8,7 +8,6 @@ import { status } from 'src/shared/entity-status.enum';
 import { ReadInstructorDto } from '../instructor/dto/read-instructor.dto';
 import { CreateStudentDto } from './dto';
 import { Sport } from 'src/modules/sport/sport.entity';
-import { Target } from 'src/modules/target/target.entity';
 import { Level } from 'src/modules/level/level.entity';
 import { UserCalendar } from 'src/modules/calendar/user-calendar.entity';
 import { UserDetails } from '../user.details.entity';
@@ -16,7 +15,6 @@ import { StudentTarget } from './student-target.entity';
 import { Course } from 'src/modules/course/course.entity';
 import { CourseStudent } from 'src/modules/course/course-student.entity';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
-import { ReadStudentCalendarDto } from './dto/read-student-calendar.dto';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -58,6 +56,8 @@ export class StudentRepository extends Repository<User> {
       .innerJoinAndSelect('st.target', 't')
       .innerJoinAndSelect('t.sport', 'sport')
       .innerJoinAndSelect('t.level', 'level')
+      .leftJoinAndSelect('st.instructor', 'instructor')
+      .leftJoinAndSelect('instructor.details', 'details')
       .where('st.student_id = :id', { id: user.id })
       .getMany();
 
@@ -129,17 +129,25 @@ export class StudentRepository extends Repository<User> {
       .execute();
 
     const foundUser: User = await User.findOne(user.id);
-    const level = await Level.findOne(createStudentDto.level.id);
-    const targets = await Target.createQueryBuilder('t')
-      .innerJoin('t.level', 'l')
-      .where('l.order <= :order', { order: level.order })
-      .getMany();
+    // const targets = await Target.createQueryBuilder('t')
+    //   .innerJoin('t.level', 'l')
+    //   .where('l.order <= :order', { order: level.order })
+    //   .getMany();
 
-    await UserCalendar.createQueryBuilder()
-      .insert()
-      .into('user_calendar')
-      .values(createStudentDto.calendar)
-      .execute();
+    //   await getManager().transaction(async manager => {
+    //     const userSports = new UserSport();
+    //     userSports.userId = user.id;
+    //     userSports.sportId = createStudentDto.userSports.sportId;
+    //     userSports.levelId = createStudentDto.userSports.levelId;
+
+    //     manager.save(userSports);
+    // });
+
+    await getConnection()
+      .createQueryBuilder()
+      .relation(User, 'userSports')
+      .of(foundUser)
+      .add(createStudentDto.userSports);
 
     // foundUser.sports = createStudentDto.sports;
     // foundUser.level = createStudentDto.level;
@@ -148,6 +156,7 @@ export class StudentRepository extends Repository<User> {
 
     await User.save(foundUser);
   }
+
   async createStudentCalendar(
     createStudentCalendarDto: CreateStudentCalendarDto,
     user: User,

@@ -1,15 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from '../user.repository';
 import { StudentRepository } from './student.repository';
 import { User } from '../user.entity';
 import { RoleType } from '../../role/roletype.enum';
-import { plainToClass } from 'class-transformer';
-import {
-  CreateStudentDto,
-  ReadStudentDto,
-  UpdateStudentDetailsDto,
-} from './dto';
+import { CreateStudentDto, ReadStudentDto } from './dto';
 import { ReadTargetDto } from 'src/modules/target/dto';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
 import { ReadStudentCalendarDto } from './dto/read-student-calendar.dto';

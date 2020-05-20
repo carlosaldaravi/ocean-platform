@@ -6,6 +6,8 @@ import { ReadStudentDto } from './student/dto/read-student.dto';
 import { plainToClass } from 'class-transformer';
 import { ReadUserDto } from './dto';
 import { ReadInstructorDto } from './instructor/dto/read-instructor.dto';
+import { Sport } from '../sport/sport.entity';
+import { ReadSportDto } from '../sport/dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -25,5 +27,14 @@ export class UserRepository extends Repository<User> {
       default:
         return users.map((user: User) => plainToClass(ReadUserDto, user));
     }
+  }
+
+  async getSports(user: User): Promise<ReadSportDto[]> {
+    const sports = await Sport.createQueryBuilder('sport')
+      .innerJoin('sport.userSport', 'uS')
+      .where('uS.user = :id', { id: user.id })
+      .getMany();
+
+    return sports.map((sport: Sport) => plainToClass(ReadSportDto, sport));
   }
 }
