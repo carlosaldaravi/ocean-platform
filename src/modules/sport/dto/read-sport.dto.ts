@@ -21,8 +21,4 @@ export class ReadSportDto {
   @Expose()
   @Type(type => ReadSportLevelDto)
   readonly sportLevel: ReadSportLevelDto[];
-
-  @Expose()
-  @Type(type => ReadTargetDto)
-  readonly targets: ReadTargetDto;
 }
