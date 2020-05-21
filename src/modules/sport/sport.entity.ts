@@ -4,10 +4,12 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   OneToMany,
+  JoinTable,
 } from 'typeorm';
 import { Course } from '../course/course.entity';
 import { Target } from '../target/target.entity';
 import { UserSport } from '../user/user-sports.entity';
+import { SportLevel } from './sport-level.entity';
 
 @Entity('sports')
 export class Sport extends BaseEntity {
@@ -37,4 +39,12 @@ export class Sport extends BaseEntity {
     userSport => userSport.sport,
   )
   userSport: UserSport;
+
+  @OneToMany(
+    type => SportLevel,
+    sportLevel => sportLevel.sport,
+    { eager: true },
+  )
+  @JoinTable({ name: 'sport_levels' })
+  sportLevel: SportLevel[];
 }

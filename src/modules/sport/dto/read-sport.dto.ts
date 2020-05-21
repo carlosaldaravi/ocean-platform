@@ -1,5 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { ReadSportLevelDto } from './read-sport.dto copy';
 
 @Exclude()
 export class ReadSportDto {
@@ -14,4 +15,8 @@ export class ReadSportDto {
   @Expose()
   @IsString()
   readonly description: string;
+
+  @Expose()
+  @Type(type => ReadSportLevelDto)
+  readonly sportLevel: ReadSportLevelDto[];
 }

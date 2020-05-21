@@ -30,6 +30,8 @@ import { courseStudents_DB_DATA } from './course-students';
 import { courseInstructors_DB_DATA } from './course-instructors';
 import { RoleType } from 'src/modules/role/roletype.enum';
 import { userSports_DB_DATA } from './user-sports';
+import { SportLevel } from 'src/modules/sport/sport-level.entity';
+import { sportLevels_DB_DATA } from './sport-levels';
 
 // insert data base examples
 
@@ -75,6 +77,17 @@ export const setDefaultValues = async () => {
         .insert()
         .into('sports')
         .values(sports_DB_DATA)
+        .execute();
+    }
+
+    if ((await SportLevel.count()) == 0) {
+      logger.log(`Adding levels to sports...`);
+
+      await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into('sport_levels')
+        .values(sportLevels_DB_DATA)
         .execute();
     }
     if ((await Sport.count()) > 0 && (await Target.count()) == 0) {

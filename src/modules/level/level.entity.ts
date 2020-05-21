@@ -5,11 +5,10 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
 } from 'typeorm';
-import { User } from '../user/user.entity';
-import { status } from '../../shared/entity-status.enum';
 import { Target } from '../target/target.entity';
 import { Course } from '../course/course.entity';
 import { UserSport } from '../user/user-sports.entity';
+import { SportLevel } from '../sport/sport-level.entity';
 
 @Entity('levels')
 export class Level extends BaseEntity {
@@ -38,5 +37,11 @@ export class Level extends BaseEntity {
     type => UserSport,
     userSport => userSport.level,
   )
-  userSport: UserSport[];
+  userSport!: UserSport[];
+
+  @OneToMany(
+    type => SportLevel,
+    sportLevel => sportLevel.level,
+  )
+  sportLevel!: SportLevel[];
 }
