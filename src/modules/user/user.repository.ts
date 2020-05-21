@@ -32,8 +32,20 @@ export class UserRepository extends Repository<User> {
   async getSports(user: User): Promise<ReadSportDto[]> {
     const sports = await Sport.createQueryBuilder('sport')
       .innerJoin('sport.userSport', 'uS')
+      .innerJoinAndSelect('sport.targets', 'target')
+      .innerJoinAndSelect('sport.sportLevel', 'sportLevel')
+      .innerJoinAndSelect('sportLevel.level', 'level')
+      .innerJoinAndSelect('level.target', 'lT')
+      .innerJoinAndSelect('target.studentTargets', 'sT')
       .where('uS.user = :id', { id: user.id })
+      .orderBy('sport.id', 'DESC')
+      .addOrderBy('sportLevel.order', 'ASC')
+      .addOrderBy('lT.id', 'ASC')
+      .addOrderBy('target.id', 'ASC')
+      .addOrderBy('sT.date', 'DESC')
       .getMany();
+
+    console.log(sports);
 
     return sports.map((sport: Sport) => plainToClass(ReadSportDto, sport));
   }

@@ -37,14 +37,14 @@ export class StudentTarget extends BaseEntity {
 
   @ManyToOne(
     type => User,
-    user => user.targets,
+    student => student.studentTargets,
   )
   @JoinColumn({ name: 'student_id' })
   student!: User;
 
   @ManyToOne(
     type => Target,
-    target => target.students,
+    target => target.studentTargets,
   )
   @JoinColumn({ name: 'target_id' })
   target!: Target;

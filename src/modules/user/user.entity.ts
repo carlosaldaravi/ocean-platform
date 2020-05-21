@@ -66,7 +66,7 @@ export class User extends BaseEntity {
   @JoinTable({
     name: 'student_targets',
   })
-  targets!: StudentTarget[];
+  studentTargets!: StudentTarget[];
 
   @ManyToMany(
     type => Course,

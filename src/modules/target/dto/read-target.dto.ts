@@ -4,6 +4,8 @@ import { ReadRoleDto } from '../../role/dto';
 import { ReadUserDto } from '../../../modules/user/dto';
 import { Level } from '../../level/level.entity';
 import { Sport } from 'src/modules/sport/sport.entity';
+import { ReadLevelDto } from 'src/modules/level/dto';
+import { ReadStudentTargetDto } from 'src/modules/user/student/dto/read-student-target.dto';
 
 @Exclude()
 export class ReadTargetDto {
@@ -16,14 +18,14 @@ export class ReadTargetDto {
   readonly name: string;
 
   @Expose()
-  @Type(type => Level)
-  readonly level: Level;
-
-  @Expose()
   @IsString()
   readonly description: string;
 
   @Expose()
-  @Type(type => Sport)
-  readonly sport: Sport;
+  @Type(type => ReadLevelDto)
+  readonly level: ReadLevelDto;
+
+  @Expose()
+  @Type(type => ReadStudentTargetDto)
+  readonly studentTargets: ReadStudentTargetDto[];
 }

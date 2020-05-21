@@ -2,6 +2,7 @@ import { IsNumber, IsString } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { SportLevel } from '../sport-level.entity';
 import { Level } from 'src/modules/level/level.entity';
+import { ReadTargetDto } from 'src/modules/target/dto';
 
 @Exclude()
 export class ReadSportLevelDto {

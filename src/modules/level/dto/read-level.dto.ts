@@ -1,5 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { ReadTargetDto } from 'src/modules/target/dto';
 
 @Exclude()
 export class ReadLevelDto {
@@ -14,4 +15,8 @@ export class ReadLevelDto {
   @Expose()
   @IsNumber()
   readonly order: number;
+
+  @Expose()
+  @Type(type => ReadTargetDto)
+  readonly level: ReadTargetDto;
 }
