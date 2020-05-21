@@ -21,6 +21,13 @@ import { Roles } from '../role/decorators/role.decoratos';
 export class TargetController {
   constructor(private readonly _targetService: TargetService) {}
 
+  @Get('sport/:sportId')
+  getTargetBySport(
+    @Param('sportId', ParseIntPipe) sportId: number,
+  ): Promise<ReadTargetDto[]> {
+    return this._targetService.getTargetBySport(sportId);
+  }
+
   @Get(':targetId')
   getTarget(
     @Param('targetId', ParseIntPipe) targetId: number,

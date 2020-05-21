@@ -33,7 +33,6 @@ export class TargetService {
 
   async getAll(): Promise<ReadTargetDto[]> {
     const targets: Target[] = await this._targetRepository.find();
-
     if (!targets) {
       throw new NotFoundException();
     }
@@ -48,6 +47,18 @@ export class TargetService {
 
     const targets: Target[] = await this._targetRepository.find({
       where: { students: In[studentId] },
+    });
+
+    return targets.map(target => plainToClass(ReadTargetDto, target));
+  }
+
+  async getTargetBySport(sportId: number): Promise<ReadTargetDto[]> {
+    if (!sportId) {
+      throw new BadRequestException('Sport id must be sent');
+    }
+
+    const targets: Target[] = await this._targetRepository.find({
+      where: { sportId },
     });
 
     return targets.map(target => plainToClass(ReadTargetDto, target));

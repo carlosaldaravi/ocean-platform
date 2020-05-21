@@ -45,6 +45,7 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/roles/:roleId**, [DELETE]}
 - Target
   {**/api/targets/:targetId**, [GET]}
+  {**/api/targets/sport/:sportId**, [GET]}
   {**/api/targets**, [GET]}
   {**/api/targets**, [POST]}
   {**/api/targets/:targetId**, [PATCH]}
