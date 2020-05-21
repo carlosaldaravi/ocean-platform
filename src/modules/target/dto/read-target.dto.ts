@@ -3,6 +3,7 @@ import { Type, Exclude, Expose } from 'class-transformer';
 import { ReadRoleDto } from '../../role/dto';
 import { ReadUserDto } from '../../../modules/user/dto';
 import { Level } from '../../level/level.entity';
+import { Sport } from 'src/modules/sport/sport.entity';
 
 @Exclude()
 export class ReadTargetDto {
@@ -23,6 +24,6 @@ export class ReadTargetDto {
   readonly description: string;
 
   @Expose()
-  @Type(type => ReadUserDto)
-  readonly students: ReadRoleDto[];
+  @Type(type => Sport)
+  readonly sport: Sport;
 }
