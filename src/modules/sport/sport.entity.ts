@@ -29,14 +29,12 @@ export class Sport extends BaseEntity {
   @OneToMany(
     type => Target,
     target => target.sport,
-    { eager: true },
   )
   target: Target;
 
   @OneToMany(
     type => UserSport,
     userSport => userSport.sport,
-    { eager: true },
   )
   userSport: UserSport;
 }
