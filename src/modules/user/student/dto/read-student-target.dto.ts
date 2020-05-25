@@ -1,4 +1,4 @@
-import { IsString, IsDate } from 'class-validator';
+import { IsString, IsDate, IsNumber } from 'class-validator';
 import { User } from '../../user.entity';
 import { Target } from '../../../target/target.entity';
 import { Type, Exclude, Expose } from 'class-transformer';
@@ -16,8 +16,16 @@ export class ReadStudentTargetDto {
   readonly targets: Target;
 
   @Expose()
+  @IsNumber()
+  studentId: number;
+
+  @Expose()
   @IsString()
   feedback: string;
+
+  @Expose()
+  @IsDate()
+  validatedDate: Date;
 
   @Expose()
   @IsDate()
@@ -25,5 +33,5 @@ export class ReadStudentTargetDto {
 
   @Expose()
   @Type(type => ReadUserDto)
-  readonly validatedBy: User;
+  readonly instructor: User;
 }

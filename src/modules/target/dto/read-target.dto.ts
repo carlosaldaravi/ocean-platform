@@ -6,6 +6,7 @@ import { Level } from '../../level/level.entity';
 import { Sport } from 'src/modules/sport/sport.entity';
 import { ReadLevelDto } from 'src/modules/level/dto';
 import { ReadStudentTargetDto } from 'src/modules/user/student/dto/read-student-target.dto';
+import { ReadSportDto } from 'src/modules/sport/dto';
 
 @Exclude()
 export class ReadTargetDto {
@@ -24,6 +25,10 @@ export class ReadTargetDto {
   @Expose()
   @Type(type => ReadLevelDto)
   readonly level: ReadLevelDto;
+
+  @Expose()
+  @Type(type => ReadSportDto)
+  readonly sport: ReadSportDto;
 
   @Expose()
   @Type(type => ReadStudentTargetDto)
