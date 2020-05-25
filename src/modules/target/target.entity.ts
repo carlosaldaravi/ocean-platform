@@ -52,5 +52,5 @@ export class Target extends BaseEntity {
     sport => sport.target,
   )
   @JoinColumn({ name: 'sport_id' })
-  sport: Level;
+  sport: Sport;
 }
