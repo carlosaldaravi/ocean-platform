@@ -8,6 +8,8 @@ import { ReadUserDto } from './dto';
 import { ReadInstructorDto } from './instructor/dto/read-instructor.dto';
 import { Sport } from '../sport/sport.entity';
 import { ReadSportDto } from '../sport/dto';
+import { ReadTargetDto } from '../target/dto';
+import { Target } from '../target/target.entity';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -34,17 +36,9 @@ export class UserRepository extends Repository<User> {
       .innerJoin('sport.userSport', 'uS')
       .innerJoinAndSelect('sport.sportLevel', 'sportLevel')
       .innerJoinAndSelect('sportLevel.level', 'level')
-      .innerJoinAndSelect('level.target', 'lT')
-      .leftJoinAndSelect('lT.studentTargets', 'sT')
-      .leftJoinAndSelect('sT.instructor', 'instructor')
-      .leftJoinAndSelect('instructor.details', 'iDetails')
-      .leftJoinAndSelect('sT.student', 'student')
-      .leftJoinAndSelect('student.details', 'details')
       .where('uS.user = :id')
-      .orderBy('sport.id', 'DESC')
+      .orderBy('sport.id', 'ASC')
       .addOrderBy('sportLevel.order', 'ASC')
-      .addOrderBy('lT.id', 'ASC')
-      .addOrderBy('sT.date', 'DESC')
       .setParameter('id', user.id)
       .getMany();
 

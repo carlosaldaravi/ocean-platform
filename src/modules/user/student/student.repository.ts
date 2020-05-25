@@ -15,6 +15,8 @@ import { StudentTarget } from './student-target.entity';
 import { Course } from 'src/modules/course/course.entity';
 import { CourseStudent } from 'src/modules/course/course-student.entity';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
+import { ReadTargetDto } from 'src/modules/target/dto';
+import { Target } from 'src/modules/target/target.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -51,35 +53,20 @@ export class StudentRepository extends Repository<User> {
     return data;
   }
 
-  async getTargets(user: User): Promise<any> {
-    const targets = await StudentTarget.createQueryBuilder('st')
-      .innerJoinAndSelect('st.target', 't')
-      .innerJoinAndSelect('t.sport', 'sport')
-      .innerJoinAndSelect('t.level', 'level')
-      .leftJoinAndSelect('st.instructor', 'instructor')
-      .leftJoinAndSelect('instructor.details', 'details')
-      .where('st.student_id = :id', { id: user.id })
+  async getTargets(user: User): Promise<ReadTargetDto[]> {
+    const targets = await Target.createQueryBuilder('target')
+      .innerJoinAndSelect('target.sport', 'sport')
+      .innerJoinAndSelect('target.level', 'level')
+      .leftJoinAndSelect('target.studentTargets', 'sT', 'sT.studentId = :id')
+      .leftJoinAndSelect('sT.instructor', 'instructor')
+      .leftJoinAndSelect('instructor.details', 'iD')
+      .innerJoin('sport.userSport', 'uS')
+      .where('uS.user = :id')
+      .orderBy('target.id', 'ASC')
+      .setParameter('id', user.id)
       .getMany();
 
-    // TODO: it is posible to get this in one query?
-
-    // const studentTargets = await StudentTarget.find({
-    //   where: { studentId: user.id },
-    // });
-
-    // const response = [];
-    // // adding who validated the target to the student
-    // targets.forEach(target => {
-    //   studentTargets.forEach(st => {
-    //     if (target.id === st.targetId) {
-    //       response.push({ target, validatedBy: st.validatedBy });
-    //     }
-    //   });
-    // });
-
-    return targets;
-
-    // return targets.map(target => plainToClass(ReadTargetDto, target));
+    return targets.map((sport: Target) => plainToClass(ReadTargetDto, sport));
   }
 
   async getCalendar(user: User): Promise<any> {
