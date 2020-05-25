@@ -173,4 +173,32 @@ export const targets_DB_DATA = [
     description:
       'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
   },
+  {
+    name: 'Prueba 1 de windsurf',
+    levelId: 1,
+    sportId: 2,
+    description:
+      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+  },
+  {
+    name: 'Prueba 2 de windsurf',
+    levelId: 1,
+    sportId: 2,
+    description:
+      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+  },
+  {
+    name: 'Prueba 1 de sup',
+    levelId: 1,
+    sportId: 3,
+    description:
+      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+  },
+  {
+    name: 'Prueba 2 de sup',
+    levelId: 2,
+    sportId: 3,
+    description:
+      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+  },
 ];

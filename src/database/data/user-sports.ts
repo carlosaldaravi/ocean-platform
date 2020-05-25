@@ -5,6 +5,11 @@ export const userSports_DB_DATA = [
     levelId: 1,
   },
   {
+    userId: 2,
+    sportId: 2,
+    levelId: 1,
+  },
+  {
     userId: 3,
     sportId: 1,
     levelId: 1,
