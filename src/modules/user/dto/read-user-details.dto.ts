@@ -1,9 +1,14 @@
-import { IsString } from 'class-validator';
+import { IsString, IsNumber, IsDate } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
 import { gender } from 'src/shared/user-gender.enum';
+import { StudentSize } from '../student/student-size.enum';
 
 @Exclude()
 export class ReadUserDetailsDto {
+  @Expose()
+  @IsString()
+  readonly dni: string;
+
   @Expose()
   @IsString()
   readonly firstname: string;
@@ -19,4 +24,32 @@ export class ReadUserDetailsDto {
   @Expose()
   @IsString()
   readonly gender: gender;
+
+  @Expose()
+  @IsString()
+  readonly city: string;
+
+  @Expose()
+  @IsString()
+  readonly size: StudentSize;
+
+  @Expose()
+  @IsNumber()
+  readonly weight: number;
+
+  @Expose()
+  @IsNumber()
+  readonly footprint: number;
+
+  @Expose()
+  @IsDate()
+  readonly dateBorn: Date;
+
+  @Expose()
+  @IsString()
+  readonly knownWay: string;
+
+  @Expose()
+  @IsString()
+  readonly comments: string;
 }

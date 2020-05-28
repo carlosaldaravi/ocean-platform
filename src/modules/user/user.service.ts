@@ -34,13 +34,18 @@ export class UserService {
     private readonly _targetRepository: TargetRepository,
   ) {}
   async get(userId: number): Promise<ReadUserDto> {
-    if (!userId) {
-      throw new BadRequestException('Id must be sent');
-    }
-
-    const user: User = await this._userRepository.findOne(userId, {
-      where: { status: status.ACTIVE },
-    });
+    const user: User = await this._userRepository
+      .createQueryBuilder('user')
+      .innerJoinAndSelect('user.details', 'details')
+      .innerJoinAndSelect('user.roles', 'roles')
+      .leftJoinAndSelect('user.userSports', 'uS')
+      .leftJoinAndSelect('uS.sport', 'sport')
+      .leftJoinAndSelect('uS.level', 'level')
+      .leftJoinAndSelect('user.languages', 'languages')
+      .where('user.status = :status')
+      .andWhere('user.id = :id')
+      .setParameters({ status: status.ACTIVE, id: userId })
+      .getOne();
 
     if (!user) {
       throw new HttpException('User not found as student', HttpStatus.OK);
