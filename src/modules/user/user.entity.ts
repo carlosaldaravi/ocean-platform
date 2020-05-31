@@ -51,7 +51,7 @@ export class User extends BaseEntity {
   })
   roles: Role[];
 
-  @ManyToMany(type => Language)
+  @ManyToMany(type => Language, { onUpdate: 'CASCADE' })
   @JoinTable({
     name: 'user_languages',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
@@ -93,6 +93,7 @@ export class User extends BaseEntity {
   @OneToMany(
     type => UserSport,
     userSport => userSport.user,
+    { onUpdate: 'CASCADE' },
   )
   @JoinTable({
     name: 'user_sports',
