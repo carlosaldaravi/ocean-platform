@@ -90,6 +90,53 @@ export class UserService {
     }
   }
 
+  async updateHimSelf(user: User, updateUser: UpdateUserDto): Promise<any> {
+    try {
+      // const foundUser: User = await this._userRepository.findOne({
+      //   where: { email: user.email },
+      // });
+      // foundUser.email = updateUser.email;
+      // foundUser.languages = updateUser.languages;
+      // foundUser.details = updateUser.details;
+      // foundUser.userSports = updateUser.userSports;
+      // const updatedUser = await this._userRepository.save(foundUser);
+
+      // if (!updatedUser) {
+      //   throw new InternalServerErrorException();
+      // }
+      console.log(updateUser);
+
+      const actualDetailsRelation = await this._userRepository
+        .createQueryBuilder()
+        .relation(User, 'languages')
+        .of(user)
+        .loadMany();
+
+      await this._userRepository
+        .createQueryBuilder()
+        .relation(User, 'languages')
+        .of(user)
+        .addAndRemove(updateUser.languages, actualDetailsRelation);
+
+      // console.log(actualDetailsRelation);
+
+      // await this._userRepository
+      //   .createQueryBuilder()
+      //   .update(User)
+      //   .set(updateUser)
+      //   .where('email = :email', { email: user.email })
+      //   .execute();
+
+      // return plainToClass(ReadUserDto, updatedUser);
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('Email already exists');
+      } else {
+        throw new InternalServerErrorException(error);
+      }
+    }
+  }
+
   async delete(userId: number): Promise<void> {
     const userExist = await this._userRepository.findOne(userId, {
       where: { status: status.ACTIVE },

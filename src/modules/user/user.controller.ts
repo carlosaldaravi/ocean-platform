@@ -12,7 +12,7 @@ import {
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { ReadUserDto } from './dto';
+import { ReadUserDto, UpdateUserDto } from './dto';
 import { CreateStudentTargetDto } from './student/dto/create-student-target.dto';
 import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
@@ -45,9 +45,17 @@ export class UserController {
   @Patch(':userId')
   updateUser(
     @Param('userId', ParseIntPipe) userId: number,
-    @Body() user: User,
+    @Body() user: UpdateUserDto,
   ): Promise<ReadUserDto> {
     return this._userService.update(userId, user);
+  }
+
+  @Patch()
+  updateUserHimSelf(
+    @GetUser() user: User,
+    @Body() updateUser: UpdateUserDto,
+  ): Promise<ReadUserDto> {
+    return this._userService.updateHimSelf(user, updateUser);
   }
 
   @Post('setRole/:userId/:roleId')

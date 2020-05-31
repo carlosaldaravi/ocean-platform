@@ -21,6 +21,7 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/users/sports**, [GET]}
   {**/api/users/:userId**, [GET]}
   {**/api/users**, [GET]}
+  {**/api/users**, [PATCH]}
   {**/api/users/:userId**, [PATCH]}
   {**/api/users/setRole/:userId/:roleId**, [POST]}
   {**/api/users/setTargets**, [POST]}
