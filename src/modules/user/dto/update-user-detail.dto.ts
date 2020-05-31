@@ -1,59 +1,52 @@
-import { IsString, IsNumber, IsDate } from 'class-validator';
-import { Exclude, Expose } from 'class-transformer';
-import { gender } from 'src/shared/user-gender.enum';
+import { IsString, IsNumber, IsOptional, IsDate } from 'class-validator';
 import { StudentSize } from '../student/student-size.enum';
+import { gender } from 'src/shared/user-gender.enum';
 
-@Exclude()
-export class ReadUserDetailsDto {
-  @Expose()
+export class UpdateUserDetailsDto {
   @IsNumber()
+  @IsOptional()
   readonly id: number;
 
-  @Expose()
   @IsString()
   readonly dni: string;
 
-  @Expose()
   @IsString()
+  @IsOptional()
   readonly firstname: string;
 
-  @Expose()
   @IsString()
+  @IsOptional()
   readonly lastname: string;
 
-  @Expose()
   @IsString()
+  @IsOptional()
   readonly phone: string;
 
-  @Expose()
   @IsString()
-  readonly gender: gender;
-
-  @Expose()
-  @IsString()
+  @IsOptional()
   readonly city: string;
 
-  @Expose()
   @IsString()
+  @IsOptional()
   readonly size: StudentSize;
 
-  @Expose()
   @IsNumber()
+  @IsOptional()
   readonly weight: number;
 
-  @Expose()
   @IsNumber()
+  @IsOptional()
   readonly footprint: number;
 
-  @Expose()
   @IsDate()
+  @IsOptional()
   readonly dateBorn: Date;
 
-  @Expose()
-  @IsString()
-  readonly knownWay: string;
+  @IsNumber()
+  @IsOptional()
+  readonly comments: number;
 
-  @Expose()
   @IsString()
-  readonly comments: string;
+  @IsOptional()
+  readonly gender: gender;
 }
