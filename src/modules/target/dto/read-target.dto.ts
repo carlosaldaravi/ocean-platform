@@ -1,12 +1,8 @@
-import { IsNumber, IsEmail, IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { Type, Exclude, Expose } from 'class-transformer';
-import { ReadRoleDto } from '../../role/dto';
-import { ReadUserDto } from '../../../modules/user/dto';
-import { Level } from '../../level/level.entity';
-import { Sport } from 'src/modules/sport/sport.entity';
-import { ReadLevelDto } from 'src/modules/level/dto';
-import { ReadStudentTargetDto } from 'src/modules/user/student/dto/read-student-target.dto';
-import { ReadSportDto } from 'src/modules/sport/dto';
+import { ReadLevelDto } from '../../level/dto';
+import { ReadStudentTargetDto } from '../../user/student/dto/read-student-target.dto';
+import { ReadSportDto } from '../../sport/dto';
 
 @Exclude()
 export class ReadTargetDto {

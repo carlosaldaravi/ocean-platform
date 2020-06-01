@@ -1,7 +1,7 @@
 import { IsNumber, IsString } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { Level } from 'src/modules/level/level.entity';
-import { Sport } from 'src/modules/sport/sport.entity';
+import { Level } from '../../level/level.entity';
+import { Sport } from '../../sport/sport.entity';
 import { CourseType } from '../course-type.entity';
 
 @Exclude()

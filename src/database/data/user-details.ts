@@ -1,5 +1,5 @@
 import { StudentSize } from '../../modules/user/student/student-size.enum';
-import { gender } from 'src/shared/user-gender.enum';
+import { gender } from '../../shared/user-gender.enum';
 
 export const userDetails_DB_DATA = [
   {

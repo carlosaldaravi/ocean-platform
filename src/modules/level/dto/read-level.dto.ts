@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { ReadTargetDto } from 'src/modules/target/dto';
+import { ReadTargetDto } from '../../target/dto';
 
 @Exclude()
 export class ReadLevelDto {

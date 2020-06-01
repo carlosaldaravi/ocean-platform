@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsOptional, IsDate } from 'class-validator';
 import { StudentSize } from '../student/student-size.enum';
-import { gender } from 'src/shared/user-gender.enum';
+import { gender } from '../../../shared/user-gender.enum';
 
 export class UpdateUserDetailsDto {
   @IsNumber()

@@ -3,20 +3,19 @@ import { User } from '../user.entity';
 import { ReadStudentDto } from './dto/read-student.dto';
 import { plainToClass } from 'class-transformer';
 import { ReadUserDto } from '../dto';
-import { RoleType } from 'src/modules/role/roletype.enum';
-import { status } from 'src/shared/entity-status.enum';
+import { RoleType } from '../../role/roletype.enum';
+import { status } from '../../../shared/entity-status.enum';
 import { ReadInstructorDto } from '../instructor/dto/read-instructor.dto';
 import { CreateStudentDto } from './dto';
-import { Sport } from 'src/modules/sport/sport.entity';
-import { Level } from 'src/modules/level/level.entity';
-import { UserCalendar } from 'src/modules/calendar/user-calendar.entity';
+import { Sport } from '../../sport/sport.entity';
+import { Level } from '../../level/level.entity';
+import { UserCalendar } from '../../calendar/user-calendar.entity';
 import { UserDetails } from '../user.details.entity';
-import { StudentTarget } from './student-target.entity';
-import { Course } from 'src/modules/course/course.entity';
-import { CourseStudent } from 'src/modules/course/course-student.entity';
+import { Course } from '../../course/course.entity';
+import { CourseStudent } from '../../course/course-student.entity';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
-import { ReadTargetDto } from 'src/modules/target/dto';
-import { Target } from 'src/modules/target/target.entity';
+import { ReadTargetDto } from '../../target/dto';
+import { Target } from '../../target/target.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -77,12 +76,14 @@ export class StudentRepository extends Repository<User> {
 
   async getCourses(user: User): Promise<any> {
     const courses = await Course.createQueryBuilder('course')
-      .innerJoinAndSelect('course.instructors', 'instructor')
+      .innerJoinAndSelect('course.courseInstructors', 'ci')
+      .innerJoinAndSelect('ci.instructor', 'instructor')
       .innerJoinAndSelect('instructor.details', 'instructorsDetails')
       .innerJoinAndSelect('course.sport', 'sport')
       .innerJoinAndSelect('course.level', 'level')
       .innerJoinAndSelect('course.type', 'type')
-      .innerJoinAndSelect('course.students', 'student')
+      .innerJoinAndSelect('course.courseStudents', 'cs')
+      .innerJoinAndSelect('cs.student', 'student')
       .innerJoinAndSelect('student.details', 'studentsDetails')
       .innerJoinAndSelect('course.calendar', 'calendar')
       .where(qb => {

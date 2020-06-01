@@ -1,7 +1,7 @@
 import { IsEmail, IsString } from 'class-validator';
 import { status } from '../../../shared/entity-status.enum';
 import { Type } from 'class-transformer';
-import { Language } from 'src/modules/language/language.entity';
+import { Language } from '../../language/language.entity';
 import { UserSport } from '../user-sports.entity';
 import { UserDetails } from '../user.details.entity';
 

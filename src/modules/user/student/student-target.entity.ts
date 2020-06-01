@@ -8,7 +8,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { User } from '../user.entity';
-import { Target } from 'src/modules/target/target.entity';
+import { Target } from '../../target/target.entity';
 
 @Entity('student_targets')
 export class StudentTarget extends BaseEntity {

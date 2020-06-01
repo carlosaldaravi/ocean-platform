@@ -1,9 +1,7 @@
 import { IsNumber, IsString } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ReadSportLevelDto } from './read-sport-level.dto';
-import { ReadTargetDto } from 'src/modules/target/dto';
-import { ReadStudentTargetDto } from 'src/modules/user/student/dto/read-student-target.dto';
-import { Target } from 'src/modules/target/target.entity';
+import { Target } from '../../target/target.entity';
 
 @Exclude()
 export class ReadSportDto {

@@ -17,20 +17,20 @@ import { Level } from '../../modules/level/level.entity';
 import { levels_DB_DATA } from './levels';
 import { userDetails_DB_DATA } from './user-details';
 import { userCalendar_DB_DATA } from './user-calendar';
-import { CourseType } from 'src/modules/course/course-type.entity';
+import { CourseType } from '../../modules/course/course-type.entity';
 import { courseType_DB_DATA } from './course-type';
-import { Course } from 'src/modules/course/course.entity';
+import { Course } from '../../modules/course/course.entity';
 import { course_DB_DATA } from './course';
 import { courseCalendar_DB_DATA } from './course-calendar';
 import { studentTargets_DB_DATA } from './student-targets';
-import { StudentTarget } from 'src/modules/user/student/student-target.entity';
-import { CourseStudent } from 'src/modules/course/course-student.entity';
-import { CourseInstructor } from 'src/modules/course/course-instructor.entity';
+import { StudentTarget } from '../../modules/user/student/student-target.entity';
+import { CourseStudent } from '../../modules/course/course-student.entity';
+import { CourseInstructor } from '../../modules/course/course-instructor.entity';
 import { courseStudents_DB_DATA } from './course-students';
 import { courseInstructors_DB_DATA } from './course-instructors';
-import { RoleType } from 'src/modules/role/roletype.enum';
+import { RoleType } from '../../modules/role/roletype.enum';
 import { userSports_DB_DATA } from './user-sports';
-import { SportLevel } from 'src/modules/sport/sport-level.entity';
+import { SportLevel } from '../../modules/sport/sport-level.entity';
 import { sportLevels_DB_DATA } from './sport-levels';
 
 // insert data base examples

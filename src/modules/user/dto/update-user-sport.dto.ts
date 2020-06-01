@@ -1,7 +1,7 @@
 import { IsNumber } from 'class-validator';
 import { Type, Exclude, Expose } from 'class-transformer';
-import { ReadSportDto } from 'src/modules/sport/dto';
-import { ReadLevelDto } from 'src/modules/level/dto';
+import { ReadSportDto } from '../../sport/dto';
+import { ReadLevelDto } from '../../level/dto';
 
 @Exclude()
 export class UpdateUserSportDto {

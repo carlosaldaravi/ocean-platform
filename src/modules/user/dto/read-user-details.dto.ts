@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsDate } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
-import { gender } from 'src/shared/user-gender.enum';
+import { gender } from '../../../shared/user-gender.enum';
 import { StudentSize } from '../student/student-size.enum';
 
 @Exclude()

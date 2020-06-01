@@ -1,4 +1,4 @@
-import { StudentSize } from 'src/modules/user/student/student-size.enum';
+import { StudentSize } from '../../modules/user/student/student-size.enum';
 
 export const users_DB_DATA = [
   {
