@@ -20,6 +20,10 @@ import { StudentTargetRepository } from './student/student-target.repository';
 import { TargetRepository } from '../target/target.reposity';
 import { Role } from '../role/role.entity';
 import { ReadSportDto } from '../sport/dto';
+import { UserSport } from './user-sports.entity';
+import { Course } from '../course/course.entity';
+import { Raw } from 'typeorm';
+import { networkInterfaces } from 'os';
 
 @Injectable()
 export class UserService {
@@ -187,5 +191,35 @@ export class UserService {
 
   getSports(user: User): Promise<ReadSportDto[]> {
     return this._userRepository.getSports(user);
+  }
+
+  async deleteUserSport(userSport: UserSport, user: User) {
+    console.log('eliminando deporte');
+    console.log(userSport);
+    let userCourses = await Course.createQueryBuilder('course')
+      .innerJoin('course.courseStudents', 'course_students')
+      .innerJoin('course.calendar', 'course_calendar')
+      .where('course.sport_id = :sportId')
+      .andWhere('course_students.student_id = :id')
+      .andWhere('course_students.student_id = :id')
+      .andWhere('course_calendar.date > :today')
+      .setParameters({
+        sportId: userSport.sportId,
+        id: user.id,
+        today: '2020-06-01',
+      })
+      .getCount();
+
+    console.log('total: ', userCourses);
+    if (userCourses === 0) {
+      await this._userRepository
+        .createQueryBuilder()
+        .delete()
+        .from(UserSport)
+        .where('user_id = :userId')
+        .andWhere('sport_id = :sportId')
+        .setParameters({ userId: user.id, sportId: userSport.sportId })
+        .execute();
+    }
   }
 }

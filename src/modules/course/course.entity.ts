@@ -4,12 +4,11 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
-  ManyToMany,
   OneToMany,
+  JoinTable,
 } from 'typeorm';
 import { Level } from '../level/level.entity';
 import { Sport } from '../sport/sport.entity';
-import { User } from '../user/user.entity';
 import { CourseCalendar } from '../calendar/course-calendar.entity';
 import { CourseType } from './course-type.entity';
 import { CourseStudent } from './course-student.entity';
@@ -46,9 +45,12 @@ export class Course extends BaseEntity {
 
   @OneToMany(
     type => CourseStudent,
-    student => student.course,
+    courseStudent => courseStudent.course,
     { cascade: true },
   )
+  @JoinTable({
+    name: 'course_students',
+  })
   courseStudents!: CourseStudent[];
 
   @OneToMany(
@@ -56,6 +58,9 @@ export class Course extends BaseEntity {
     courseInstructor => courseInstructor.course,
     { cascade: true },
   )
+  @JoinTable({
+    name: 'course_instructors',
+  })
   courseInstructors!: CourseInstructor[];
 
   @OneToMany(

@@ -21,6 +21,7 @@ import { RoleGuard } from '../role/guards/role.guard';
 import { ReadStudentDto } from './student/dto/read-student.dto';
 import { ReadStudentTargetDto } from './student/dto/read-student-target.dto';
 import { ReadSportDto } from '../sport/dto';
+import { UserSport } from './user-sports.entity';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -73,6 +74,11 @@ export class UserController {
     @GetUser() user: User,
   ): Promise<ReadStudentTargetDto[]> {
     return this._userService.setTargetsToUsers(createStudentTargetDto, user);
+  }
+
+  @Delete('sport')
+  deleteUserSport(@Body() userSport: UserSport, @GetUser() user: User) {
+    return this._userService.deleteUserSport(userSport, user);
   }
 
   @Delete(':userId')

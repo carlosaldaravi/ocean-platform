@@ -79,9 +79,9 @@ export class User extends BaseEntity {
   })
   courseStudents!: CourseStudent[];
 
-  @ManyToMany(
+  @OneToMany(
     type => CourseInstructor,
-    course => course.instructor,
+    courseInstructor => courseInstructor.instructor,
   )
   @JoinTable({
     name: 'course_instructors',
