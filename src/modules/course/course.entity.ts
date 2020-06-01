@@ -12,6 +12,8 @@ import { Sport } from '../sport/sport.entity';
 import { User } from '../user/user.entity';
 import { CourseCalendar } from '../calendar/course-calendar.entity';
 import { CourseType } from './course-type.entity';
+import { CourseStudent } from './course-student.entity';
+import { CourseInstructor } from './course-instructor.entity';
 // import { CourseType } from './course-type.entity';
 
 @Entity('courses')
@@ -42,19 +44,19 @@ export class Course extends BaseEntity {
   @JoinColumn({ name: 'type_id' })
   type: CourseType;
 
-  @ManyToMany(
-    type => User,
-    student => student.studentCourses,
+  @OneToMany(
+    type => CourseStudent,
+    student => student.course,
     { cascade: true },
   )
-  students!: User[];
+  courseStudents!: CourseStudent[];
 
-  @ManyToMany(
-    type => User,
-    instructor => instructor.instructorCourses,
+  @OneToMany(
+    type => CourseInstructor,
+    courseInstructor => courseInstructor.course,
     { cascade: true },
   )
-  instructors!: User[];
+  courseInstructors!: CourseInstructor[];
 
   @OneToMany(
     type => CourseCalendar,

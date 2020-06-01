@@ -6,7 +6,11 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Column,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import { User } from '../user/user.entity';
+import { Course } from './course.entity';
 
 @Entity('course_students')
 export class CourseStudent extends BaseEntity {
@@ -26,6 +30,20 @@ export class CourseStudent extends BaseEntity {
 
   @Column({ default: false })
   paid: boolean;
+
+  @ManyToOne(
+    type => User,
+    student => student.courseStudents,
+  )
+  @JoinColumn({ name: 'student_id' })
+  student!: User;
+
+  @ManyToOne(
+    type => Course,
+    course => course.courseStudents,
+  )
+  @JoinColumn({ name: 'course_id' })
+  course!: Course;
 
   @CreateDateColumn({ type: 'date', name: 'created_at' })
   createdAt: Date;

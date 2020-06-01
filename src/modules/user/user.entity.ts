@@ -22,6 +22,8 @@ import { Course } from '../course/course.entity';
 import { Level } from '../level/level.entity';
 import { Exclude } from 'class-transformer';
 import { UserSport } from './user-sports.entity';
+import { CourseStudent } from '../course/course-student.entity';
+import { CourseInstructor } from '../course/course-instructor.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -68,27 +70,23 @@ export class User extends BaseEntity {
   })
   studentTargets!: StudentTarget[];
 
-  @ManyToMany(
-    type => Course,
-    course => course.students,
+  @OneToMany(
+    type => CourseStudent,
+    courseStudent => courseStudent.student,
   )
   @JoinTable({
     name: 'course_students',
-    joinColumn: { name: 'student_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'course_id', referencedColumnName: 'id' },
   })
-  studentCourses!: Course[];
+  courseStudents!: CourseStudent[];
 
   @ManyToMany(
-    type => Course,
-    course => course.instructors,
+    type => CourseInstructor,
+    course => course.instructor,
   )
   @JoinTable({
     name: 'course_instructors',
-    joinColumn: { name: 'instructor_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'course_id', referencedColumnName: 'id' },
   })
-  instructorCourses!: Course[];
+  courseInstructors!: CourseInstructor[];
 
   @OneToMany(
     type => UserSport,
