@@ -206,11 +206,10 @@ export class UserService {
       .setParameters({
         sportId: userSport.sportId,
         id: user.id,
-        today: '2020-06-01',
+        today: new Date(),
       })
       .getCount();
-
-    console.log('total: ', userCourses);
+    let error = true;
     if (userCourses === 0) {
       await this._userRepository
         .createQueryBuilder()
@@ -220,6 +219,10 @@ export class UserService {
         .andWhere('sport_id = :sportId')
         .setParameters({ userId: user.id, sportId: userSport.sportId })
         .execute();
+      error = false;
     }
+    return {
+      error,
+    };
   }
 }
