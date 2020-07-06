@@ -15,6 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../role/guards/role.guard';
 import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('sports')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -29,6 +30,7 @@ export class SportController {
   }
 
   @Get()
+  @ApiBearerAuth()
   async getSports(): Promise<ReadSportDto[]> {
     return this._sportService.getAll();
   }

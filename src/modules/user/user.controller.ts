@@ -22,6 +22,7 @@ import { ReadStudentDto } from './student/dto/read-student.dto';
 import { ReadStudentTargetDto } from './student/dto/read-student-target.dto';
 import { ReadSportDto } from '../sport/dto';
 import { UserSport } from './user-sports.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -77,6 +78,7 @@ export class UserController {
   }
 
   @Delete('sport')
+  @ApiBearerAuth()
   deleteUserSport(@Body() userSport: UserSport, @GetUser() user: User) {
     return this._userService.deleteUserSport(userSport, user);
   }
