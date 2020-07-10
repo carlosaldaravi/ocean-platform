@@ -6,6 +6,8 @@ export class ConfigService {
 
   constructor() {
     const isDevelopmentEnv = process.env.NODE_ENV !== 'production';
+    console.log('EN EL CONFIG.SERVICE.TS');
+    console.log('isDevelopmentEnv? ', isDevelopmentEnv);
 
     if (isDevelopmentEnv) {
       const envFilePath = __dirname + '/../../.env';
