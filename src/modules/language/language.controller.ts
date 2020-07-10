@@ -17,7 +17,6 @@ import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
 
 @Controller('languages')
-@UseGuards(AuthGuard('jwt'), RoleGuard)
 export class LanguageController {
   constructor(private readonly _languageService: LanguageService) {}
 
@@ -34,6 +33,7 @@ export class LanguageController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   createLanguage(
     @Body() language: Partial<CreateLanguageDto>,
@@ -42,6 +42,7 @@ export class LanguageController {
   }
 
   @Patch(':languageId')
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   updateLanguage(
     @Param('languageId', ParseIntPipe) languageId: number,
@@ -51,6 +52,7 @@ export class LanguageController {
   }
 
   @Delete(':languageId')
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   deleteLanguage(
     @Param('languageId', ParseIntPipe) languageId: number,
