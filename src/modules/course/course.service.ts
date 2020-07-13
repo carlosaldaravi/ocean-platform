@@ -90,7 +90,7 @@ export class CourseService {
     });
     course.paid = true;
     course.save();
-    return plainToClass(Course, course);
+    return plainToClass(ReadCourseDto, course);
   }
 
   async instructorCashed(
@@ -105,6 +105,6 @@ export class CourseService {
     });
     course.cashed = true;
     course.save();
-    return plainToClass(Course, course);
+    return plainToClass(ReadCourseDto, course);
   }
 }
