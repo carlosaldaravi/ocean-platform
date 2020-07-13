@@ -21,6 +21,7 @@ import { Roles } from '../role/decorators/role.decoratos';
 import { RoleType } from '../role/roletype.enum';
 import { User } from '../user/user.entity';
 import { GetUser } from '../auth/user.decorator';
+import { ReadCourseCalendarDto } from './dto/read-course-calendar.dto';
 
 @Controller('calendar')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -30,6 +31,10 @@ export class CalendarController {
   @Get()
   async getCalendars(): Promise<ReadUserCalendarDto[]> {
     return this._calendarService.getAll();
+  }
+  @Get('courses')
+  async getCoursesCalendar(): Promise<ReadCourseCalendarDto[]> {
+    return this._calendarService.getCoursesCalendar();
   }
 
   @Post()
