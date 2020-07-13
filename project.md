@@ -53,6 +53,7 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/targets/:targetId**, [DELETE]}
 - Calendar
   {**/api/calendar**, [GET]}
+  {**/api/calendar/courses**, [GET]}
   {**/api/calendar**, [POST]}
   {**/api/calendar/:calendarId**, [PATCH]}
   {**/api/calendar/:calendarId**, [DELETE]}
@@ -75,6 +76,9 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/languages/:languageId**, [PATCH]}
   {**/api/languages/:languageId**, [DELETE]}
 - Course
+  {**/api/course**, [GET]}
+  {**/api/course/:id**, [GET]}
+  {**/api/course/new**, [GET]}
   {**/api/course**, [POST]}
   {**/api/paid/:courseId/:studentId**, [PATCH]}
   {**/api/cashed/:courseId/:instructorId**, [PATCH]}

@@ -17,12 +17,17 @@ import { UserCalendar } from './user-calendar.entity';
 import { In } from 'typeorm';
 import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
+import { CourseCalendar } from './course-calendar.entity';
+import { CourseCalendarRepository } from './course-calendar.reposity';
+import { Course } from '../course/course.entity';
+import { ReadCourseCalendarDto } from './dto/read-course-calendar.dto';
 
 @Injectable()
 export class CalendarService {
   constructor(
     @InjectRepository(CalendarRepository)
     private readonly _calendarRepository: CalendarRepository,
+    private readonly _courseCalendarRepository: CourseCalendarRepository,
   ) {}
 
   async getAll(): Promise<ReadUserCalendarDto[]> {
@@ -38,6 +43,24 @@ export class CalendarService {
 
     return calendars.map((calendar: UserCalendar) =>
       plainToClass(ReadUserCalendarDto, calendar),
+    );
+  }
+
+  async getCoursesCalendar(): Promise<ReadCourseCalendarDto[]> {
+    const calendars: CourseCalendar[] = await this._courseCalendarRepository
+      .createQueryBuilder('course_calendar')
+      .innerJoinAndSelect('course_calendar.course', 'course')
+      .innerJoinAndSelect('course.level', 'level')
+      .innerJoinAndSelect('course.sport', 'sport')
+      .innerJoinAndSelect('course.type', 'type')
+      .getMany();
+
+    if (!calendars) {
+      throw new NotFoundException();
+    }
+
+    return calendars.map((calendar: CourseCalendar) =>
+      plainToClass(ReadCourseCalendarDto, calendar),
     );
   }
 
