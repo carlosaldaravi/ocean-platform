@@ -21,6 +21,11 @@ import { CreateCourseCalendarDto } from '../calendar/dto';
 export class CourseController {
   constructor(private _courseService: CourseService) {}
 
+  @Get('new')
+  getNewCourse(): Promise<any> {
+    return this._courseService.getNewCourse();
+  }
+
   @Get(':courseId')
   getCourse(
     @Param('courseId', ParseIntPipe) courseId: number,
@@ -35,10 +40,10 @@ export class CourseController {
 
   @Post()
   @Roles(RoleType.ADMIN)
-  createCourse(@Body() body: any): Promise<ReadCourseDto> {
-    const course: Partial<CreateCourseDto> = body.course;
-    const calendar: Partial<CreateCourseCalendarDto> = body.calendar;
-    return this._courseService.create(course, calendar);
+  createCourse(
+    @Body() course: Partial<CreateCourseDto>,
+  ): Promise<ReadCourseDto> {
+    return this._courseService.create(course);
   }
 
   @Patch('paid/:courseId/:studentId')
