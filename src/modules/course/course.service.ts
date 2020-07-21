@@ -57,23 +57,14 @@ export class CourseService {
       })
       .save();
     course.calendar.courseId = savedCourse.id;
-    const savedCalendar = await CourseCalendar.save(course.calendar);
-    // calendar.courseId = savedCourse.id;
-    // await CourseCalendar.save(calendar);
 
-    let courses = [];
-    // for (let i = 0; i < course.studentId.length; i++) {
-    //   courses.push({
-    //     courseId: savedCourse.id,
-    //     studentId: course.studentId[i],
-    //   });
-    // }
-
-    // await CourseStudent.createQueryBuilder()
-    //   .insert()
-    //   .into(CourseStudent)
-    //   .values(courses)
-    //   .execute();
+    let cC = await CourseCalendar.createQueryBuilder()
+      .insert()
+      .into('course_calendar')
+      .values(course.calendar)
+      .returning('*')
+      .execute();
+    console.log(cC.raw);
 
     // await CourseInstructor.createQueryBuilder()
     //   .insert()
@@ -81,6 +72,7 @@ export class CourseService {
     //   .values({ courseId: savedCourse.id, instructorId: course.instructorId })
     //   .execute();
 
+    return cC.raw[0];
     return plainToClass(ReadCourseDto, savedCourse);
   }
 

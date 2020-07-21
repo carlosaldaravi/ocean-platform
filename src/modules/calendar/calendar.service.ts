@@ -46,6 +46,26 @@ export class CalendarService {
     );
   }
 
+  async getCourseCalendar(courseId: number): Promise<ReadCourseCalendarDto> {
+    let foundCourseCalendar = await this._courseCalendarRepository
+      .createQueryBuilder('course_calendar')
+      .innerJoinAndSelect('course_calendar.course', 'course')
+      .innerJoinAndSelect('course.level', 'level')
+      .innerJoinAndSelect('course.sport', 'sport')
+      .innerJoinAndSelect('course.type', 'type')
+      .leftJoinAndSelect('course.courseStudents', 'course_students')
+      .leftJoinAndSelect('course_students.student', 'student')
+      .leftJoinAndSelect('student.details', 'student_details')
+      .leftJoinAndSelect('course.courseInstructors', 'course_instructors')
+      .leftJoinAndSelect('course_instructors.instructor', 'instructor')
+      .leftJoinAndSelect('instructor.details', 'instructor_details')
+      .where('course_calendar.course_id = :id', { id: courseId })
+      .getOne();
+    console.log(foundCourseCalendar);
+
+    return plainToClass(ReadCourseCalendarDto, foundCourseCalendar);
+  }
+
   async getCoursesCalendar(): Promise<ReadCourseCalendarDto[]> {
     const calendars: CourseCalendar[] = await this._courseCalendarRepository
       .createQueryBuilder('course_calendar')

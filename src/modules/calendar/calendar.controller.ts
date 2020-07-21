@@ -28,12 +28,20 @@ import { ReadCourseCalendarDto } from './dto/read-course-calendar.dto';
 export class CalendarController {
   constructor(private readonly _calendarService: CalendarService) {}
 
+  @Get('course/:courseId')
+  getCourseCalendar(
+    @Param('courseId', ParseIntPipe) courseId: number,
+  ): Promise<ReadCourseCalendarDto> {
+    return this._calendarService.getCourseCalendar(courseId);
+  }
+
   @Get()
-  async getCalendars(): Promise<ReadUserCalendarDto[]> {
+  getCalendars(): Promise<ReadUserCalendarDto[]> {
     return this._calendarService.getAll();
   }
+
   @Get('courses')
-  async getCoursesCalendar(): Promise<ReadCourseCalendarDto[]> {
+  getCoursesCalendar(): Promise<ReadCourseCalendarDto[]> {
     return this._calendarService.getCoursesCalendar();
   }
 

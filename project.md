@@ -54,6 +54,7 @@ Platform to all ocean school to manage students, instructors and courses.
 - Calendar
   {**/api/calendar**, [GET]}
   {**/api/calendar/courses**, [GET]}
+  {**/api/calendar/course/courseId**, [GET]}
   {**/api/calendar**, [POST]}
   {**/api/calendar/:calendarId**, [PATCH]}
   {**/api/calendar/:calendarId**, [DELETE]}

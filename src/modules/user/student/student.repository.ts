@@ -16,6 +16,7 @@ import { CourseStudent } from '../../course/course-student.entity';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
 import { ReadTargetDto } from '../../target/dto';
 import { Target } from '../../target/target.entity';
+import { CourseCalendar } from 'src/modules/calendar/course-calendar.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -69,7 +70,27 @@ export class StudentRepository extends Repository<User> {
   }
 
   async getCalendar(user: User): Promise<any> {
-    return await UserCalendar.find({ where: { userId: user.id } });
+    let foundUser = await User.createQueryBuilder('user')
+      .innerJoinAndSelect('user.userSports', 'userSports')
+      .where('user.id = :id', { id: user.id })
+      .getOne();
+    let userSportsIds = foundUser.userSports.map(sport => sport.sportId);
+    console.log('user: ', foundUser);
+    console.log('userSportsIds: ', userSportsIds);
+    let courseCalendar = await CourseCalendar.createQueryBuilder(
+      'courseCalendar',
+    )
+      .innerJoinAndSelect('courseCalendar.course', 'course')
+      .innerJoinAndSelect('course.sport', 'sport')
+      .innerJoinAndSelect('course.level', 'level')
+      .where('course.sport_id IN (:...ids)', { ids: userSportsIds })
+      .getMany();
+
+    console.log(courseCalendar);
+
+    let userCalendar = await UserCalendar.find({ where: { userId: user.id } });
+
+    return [...courseCalendar, ...userCalendar];
 
     // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
