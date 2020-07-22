@@ -17,6 +17,8 @@ import { CourseStudent } from './course-student.entity';
 import { CourseInstructor } from './course-instructor.entity';
 import { Sport } from '../sport/sport.entity';
 import { CourseType } from './course-type.entity';
+import { User } from '../user/user.entity';
+import { status } from '../../shared/entity-status.enum';
 
 @Injectable()
 export class CourseService {
@@ -58,13 +60,22 @@ export class CourseService {
       .save();
     course.calendar.courseId = savedCourse.id;
 
+    let cI = await CourseInstructor.createQueryBuilder()
+      .insert()
+      .into('course_instructors')
+      .values({
+        courseId: savedCourse.id,
+        instructorId: course.instructor.id,
+      })
+      .returning('*')
+      .execute();
+
     let cC = await CourseCalendar.createQueryBuilder()
       .insert()
       .into('course_calendar')
       .values(course.calendar)
       .returning('*')
       .execute();
-    console.log(cC.raw);
 
     // await CourseInstructor.createQueryBuilder()
     //   .insert()
@@ -84,10 +95,36 @@ export class CourseService {
 
     const courseTypes = await CourseType.find();
 
+    const instructors = await User.createQueryBuilder('u')
+      .leftJoinAndSelect('u.details', 'd')
+      .leftJoinAndSelect('u.roles', 'r')
+      .where('r.name = :name', { name: 'INSTRUCTOR' })
+      .andWhere('u.status = :status', { status: status.ACTIVE })
+      .getMany();
+
     return {
       sports,
       courseTypes,
+      instructors,
     };
+  }
+
+  async addStudent(
+    courseId: number,
+    studentId: number,
+  ): Promise<ReadCourseDto> {
+    const course = await CourseStudent.create({
+      courseId,
+      studentId,
+    }).save();
+    return plainToClass(ReadCourseDto, course);
+  }
+
+  async delStudent(courseId: number, studentId: number): Promise<void> {
+    const course = await CourseStudent.delete({
+      courseId,
+      studentId,
+    });
   }
 
   async studentPaid(

@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { RoleGuard } from '../role/guards/role.guard';
@@ -46,6 +47,14 @@ export class CourseController {
     return this._courseService.create(course);
   }
 
+  @Patch('add/:courseId/:studentId')
+  addStudent(
+    @Param('courseId', ParseIntPipe) courseId: number,
+    @Param('studentId', ParseIntPipe) studentId: number,
+  ): Promise<ReadCourseDto> {
+    return this._courseService.addStudent(courseId, studentId);
+  }
+
   @Patch('paid/:courseId/:studentId')
   studentPaid(
     @Param('courseId', ParseIntPipe) courseId: number,
@@ -60,5 +69,13 @@ export class CourseController {
     @Param('instructorId', ParseIntPipe) instructorId: number,
   ): Promise<ReadCourseDto> {
     return this._courseService.instructorCashed(courseId, instructorId);
+  }
+
+  @Delete('del/:courseId/:studentId')
+  delStudent(
+    @Param('courseId', ParseIntPipe) courseId: number,
+    @Param('studentId', ParseIntPipe) studentId: number,
+  ): Promise<void> {
+    return this._courseService.delStudent(courseId, studentId);
   }
 }

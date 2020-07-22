@@ -66,6 +66,7 @@ export class Course extends BaseEntity {
   @OneToMany(
     type => CourseCalendar,
     calendar => calendar.course,
+    { cascade: true },
   )
   calendar: CourseCalendar[];
 }
