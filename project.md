@@ -77,12 +77,14 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/languages/:languageId**, [PATCH]}
   {**/api/languages/:languageId**, [DELETE]}
 - Course
-  {**/api/course**, [GET]}
-  {**/api/course/:id**, [GET]}
-  {**/api/course/new**, [GET]}
-  {**/api/course**, [POST]}
-  {**/api/paid/:courseId/:studentId**, [PATCH]}
-  {**/api/cashed/:courseId/:instructorId**, [PATCH]}
+  {**/api/courses**, [GET]}
+  {**/api/courses/:id**, [GET]}
+  {**/api/courses/new**, [GET]}
+  {**/api/courses**, [POST]}
+  {**/api/courses/add/:courseId/:studentId**, [PATCH]}
+  {**/api/courses/del/:courseId/:studentId**, [DELETE]}
+  {**/api/courses/paid/:courseId/:studentId**, [PATCH]}
+  {**/api/courses/cashed/:courseId/:instructorId**, [PATCH]}
 
 ## Relations
 

@@ -21,6 +21,8 @@ import { CourseCalendar } from './course-calendar.entity';
 import { CourseCalendarRepository } from './course-calendar.reposity';
 import { Course } from '../course/course.entity';
 import { ReadCourseCalendarDto } from './dto/read-course-calendar.dto';
+import { CourseStudent } from '../course/course-student.entity';
+import { CourseInstructor } from '../course/course-instructor.entity';
 
 @Injectable()
 export class CalendarService {
@@ -46,7 +48,7 @@ export class CalendarService {
     );
   }
 
-  async getCourseCalendar(courseId: number): Promise<ReadCourseCalendarDto> {
+  async getCourseCalendar(courseId: number): Promise<any> {
     let foundCourseCalendar = await this._courseCalendarRepository
       .createQueryBuilder('course_calendar')
       .innerJoinAndSelect('course_calendar.course', 'course')
@@ -56,13 +58,14 @@ export class CalendarService {
       .leftJoinAndSelect('course.courseStudents', 'course_students')
       .leftJoinAndSelect('course_students.student', 'student')
       .leftJoinAndSelect('student.details', 'student_details')
-      .leftJoinAndSelect('course.courseInstructors', 'course_instructors')
-      .leftJoinAndSelect('course_instructors.instructor', 'instructor')
+      .leftJoinAndSelect('course.courseInstructors', 'courseInstructors')
+      .leftJoinAndSelect('courseInstructors.instructor', 'instructor')
       .leftJoinAndSelect('instructor.details', 'instructor_details')
       .where('course_calendar.course_id = :id', { id: courseId })
       .getOne();
     console.log(foundCourseCalendar);
-
+    console.log(foundCourseCalendar.course.courseInstructors[0]);
+    return foundCourseCalendar;
     return plainToClass(ReadCourseCalendarDto, foundCourseCalendar);
   }
 
@@ -118,6 +121,25 @@ export class CalendarService {
       .execute();
 
     return plainToClass(ReadUserCalendarDto, updatedCalendar);
+  }
+
+  async deleteCourseCalendar(courseCalendarId: number): Promise<void> {
+    await CourseCalendar.createQueryBuilder()
+      .delete()
+      .from(CourseCalendar)
+      .where('course_id = :id', { id: courseCalendarId })
+      .execute();
+    await CourseStudent.createQueryBuilder()
+      .delete()
+      .from(CourseStudent)
+      .where('course_id = :id', { id: courseCalendarId })
+      .execute();
+    await CourseInstructor.createQueryBuilder()
+      .delete()
+      .from(CourseInstructor)
+      .where('course_id = :id', { id: courseCalendarId })
+      .execute();
+    await Course.delete(courseCalendarId);
   }
 
   async delete(calendarId: number): Promise<void> {

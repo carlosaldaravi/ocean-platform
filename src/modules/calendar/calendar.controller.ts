@@ -61,6 +61,13 @@ export class CalendarController {
     return this._calendarService.update(calendarId, calendar);
   }
 
+  @Delete('/course/:courseCalendarId')
+  deleteCourseCalendar(
+    @Param('courseCalendarId', ParseIntPipe) courseCalendarId: number,
+  ) {
+    return this._calendarService.deleteCourseCalendar(courseCalendarId);
+  }
+
   @Delete(':calendarId')
   deleteCalendar(@Param('calendarId', ParseIntPipe) calendarId: number) {
     return this._calendarService.delete(calendarId);
