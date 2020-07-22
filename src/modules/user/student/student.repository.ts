@@ -112,11 +112,11 @@ export class StudentRepository extends Repository<User> {
           .subQuery()
           .select('course_id')
           .from(CourseStudent, 'cs')
-          // .where('student_id = :id')
+          .where('student_id = :id')
           .getQuery();
         return 'course.id IN' + subQuery;
       })
-      // .setParameter('id', user.id)
+      .setParameter('id', user.id)
       .getMany();
 
     return courses;
