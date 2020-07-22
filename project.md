@@ -35,6 +35,7 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/students/calendar**, [POST]}
 - Instructor
   {**/api/instructors**, [GET]}
+  {**/api/instructors/courses**, [GET]}
 - Auth
   {**/api/auth/signup**, [POST]}
   {**/api/auth/signin**, [POST]}
