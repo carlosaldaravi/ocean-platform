@@ -2,6 +2,7 @@ import { IsNumber, IsEmail } from 'class-validator';
 import { Type, Exclude, Expose } from 'class-transformer';
 import { ReadRoleDto } from '../../../role/dto';
 import { ReadInstructorDetailsDto } from './read-instructor-detail.dto';
+import { status } from 'src/shared/entity-status.enum';
 
 @Exclude()
 export class ReadInstructorDto {
@@ -12,6 +13,10 @@ export class ReadInstructorDto {
   @Expose()
   @IsEmail()
   readonly email: string;
+
+  @Expose()
+  @IsEmail()
+  readonly status: status;
 
   @Expose()
   @Type(type => ReadInstructorDetailsDto)

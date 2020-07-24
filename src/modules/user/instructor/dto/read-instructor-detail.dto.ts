@@ -1,5 +1,6 @@
 import { IsString, IsDate } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
+import { gender } from 'src/shared/user-gender.enum';
 
 @Exclude()
 export class ReadInstructorDetailsDto {
@@ -22,4 +23,8 @@ export class ReadInstructorDetailsDto {
   @Expose()
   @IsString()
   readonly city: string;
+
+  @Expose()
+  @IsString()
+  readonly gender: gender;
 }
