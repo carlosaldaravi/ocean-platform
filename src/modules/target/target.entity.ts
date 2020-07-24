@@ -41,7 +41,7 @@ export class Target extends BaseEntity {
 
   @ManyToOne(
     type => Level,
-    level => level.target,
+    level => level.targets,
     { eager: true },
   )
   @JoinColumn({ name: 'level_id' })
