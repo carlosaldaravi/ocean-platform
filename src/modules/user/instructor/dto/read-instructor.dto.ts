@@ -3,6 +3,8 @@ import { Type, Exclude, Expose } from 'class-transformer';
 import { ReadRoleDto } from '../../../role/dto';
 import { ReadInstructorDetailsDto } from './read-instructor-detail.dto';
 import { status } from 'src/shared/entity-status.enum';
+import { ReadSportDto } from 'src/modules/sport/dto';
+import { ReadUserSportDto } from '../../dto/read-user-sport.dto';
 
 @Exclude()
 export class ReadInstructorDto {
@@ -25,4 +27,8 @@ export class ReadInstructorDto {
   @Expose()
   @Type(type => ReadRoleDto)
   readonly roles: ReadRoleDto[];
+
+  @Expose()
+  @Type(type => ReadUserSportDto)
+  readonly userSports: ReadUserSportDto[];
 }

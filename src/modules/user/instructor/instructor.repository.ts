@@ -1,20 +1,7 @@
 import { Repository, EntityRepository, getConnection } from 'typeorm';
 import { User } from '../user.entity';
-import { plainToClass } from 'class-transformer';
-import { ReadUserDto } from '../dto';
-import { RoleType } from '../../role/roletype.enum';
-import { status } from '../../../shared/entity-status.enum';
-import { ReadInstructorDto } from './dto/read-instructor.dto';
-import { Sport } from '../../sport/sport.entity';
-import { Level } from '../../level/level.entity';
-import { UserCalendar } from '../../calendar/user-calendar.entity';
-import { UserDetails } from '../user.details.entity';
 import { Course } from '../../course/course.entity';
 import { CourseInstructor } from '../../course/course-instructor.entity';
-import { ReadTargetDto } from '../../target/dto';
-import { Target } from '../../target/target.entity';
-import { CourseCalendar } from 'src/modules/calendar/course-calendar.entity';
-import { CourseStudent } from 'src/modules/course/course-student.entity';
 
 @EntityRepository(User)
 export class InstructorRepository extends Repository<User> {
