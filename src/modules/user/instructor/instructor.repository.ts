@@ -42,9 +42,13 @@ export class InstructorRepository extends Repository<User> {
       .innerJoinAndSelect('course.sport', 'sport')
       .innerJoinAndSelect('course.level', 'level')
       .innerJoinAndSelect('course.type', 'type')
+      .leftJoinAndSelect('level.targets', 'targets')
       .leftJoinAndSelect('course.courseStudents', 'cs')
       .leftJoinAndSelect('cs.student', 'student')
       .leftJoinAndSelect('student.details', 'studentsDetails')
+      .leftJoinAndSelect('student.studentTargets', 'student_targets')
+      .leftJoinAndSelect('student_targets.target', 'target')
+      .leftJoinAndSelect('target.level', 'target_level')
       .innerJoinAndSelect('course.calendar', 'calendar')
       .where(qb => {
         const subQuery = qb
@@ -55,6 +59,7 @@ export class InstructorRepository extends Repository<User> {
           .getQuery();
         return 'course.id IN' + subQuery;
       })
+      .andWhere('targets.sport_id = sport.id')
       .setParameter('id', user.id)
       .getMany();
 
