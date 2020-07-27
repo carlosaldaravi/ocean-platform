@@ -17,6 +17,7 @@ import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
 import { ReadTargetDto } from '../../target/dto';
 import { Target } from '../../target/target.entity';
 import { CourseCalendar } from 'src/modules/calendar/course-calendar.entity';
+import { Language } from 'src/modules/language/language.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -39,8 +40,18 @@ export class StudentRepository extends Repository<User> {
   }
 
   async getDataToStart() {
-    const sports = await Sport.find({ where: { status: status.ACTIVE } });
-    const levels = await Level.find({ where: { status: status.ACTIVE } });
+    const sports = await Sport.createQueryBuilder('sport')
+      .leftJoinAndSelect('sport.sportLevels', 'sportLevels')
+      .leftJoinAndSelect('sportLevels.level', 'level')
+      .leftJoinAndSelect('sport.targets', 'targets')
+      .orderBy({
+        'sport.id': 'ASC',
+        'level.id': 'ASC',
+        'targets.id': 'ASC',
+      })
+      .getMany();
+    const levels = await Level.find();
+    const languages = await Language.find();
 
     let data = {
       ok: true,
@@ -48,6 +59,7 @@ export class StudentRepository extends Repository<User> {
       data: {
         sports,
         levels,
+        languages,
       },
     };
     return data;
