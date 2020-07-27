@@ -9,6 +9,12 @@ export const databaseProviders = [
     imports: [ConfigModule],
     inject: [ConfigService],
     async useFactory(config: ConfigService) {
+      console.log('process.env.HOST: ', process.env.HOST);
+      console.log('process.env.PORT: ', process.env.PORT);
+      console.log('process.env.DATABASE: ', process.env.DATABASE);
+      console.log('process.env.USERNAME: ', process.env.USERNAME);
+      console.log('process.env.PASSWORD: ', process.env.PASSWORD);
+
       return {
         // ssl: true,
         type: 'postgres' as 'postgres',
