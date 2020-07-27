@@ -37,7 +37,7 @@ export class StudentService {
     return this._studentRepository.getCalendar(user);
   }
 
-  createStudent(createStudentDto: CreateStudentDto, user: User): Promise<void> {
+  createStudent(createStudentDto: CreateStudentDto, user: User): Promise<any> {
     return this._studentRepository.createStudent(createStudentDto, user);
   }
 

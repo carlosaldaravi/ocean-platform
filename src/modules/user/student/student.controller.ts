@@ -48,7 +48,7 @@ export class StudentController {
   create(
     @Body() createStudentDto: CreateStudentDto,
     @GetUser() user: User,
-  ): Promise<void> {
+  ): Promise<any> {
     return this._studentService.createStudent(createStudentDto, user);
   }
 

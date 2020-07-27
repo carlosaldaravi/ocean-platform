@@ -1,4 +1,9 @@
-import { Repository, EntityRepository, getConnection } from 'typeorm';
+import {
+  Repository,
+  EntityRepository,
+  getConnection,
+  getManager,
+} from 'typeorm';
 import { User } from '../user.entity';
 import { ReadStudentDto } from './dto/read-student.dto';
 import { plainToClass } from 'class-transformer';
@@ -18,6 +23,9 @@ import { ReadTargetDto } from '../../target/dto';
 import { Target } from '../../target/target.entity';
 import { CourseCalendar } from 'src/modules/calendar/course-calendar.entity';
 import { Language } from 'src/modules/language/language.entity';
+import { UserSport } from '../user-sports.entity';
+import { Role } from 'src/modules/role/role.entity';
+import { StudentTarget } from './student-target.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -87,8 +95,7 @@ export class StudentRepository extends Repository<User> {
       .where('user.id = :id', { id: user.id })
       .getOne();
     let userSportsIds = foundUser.userSports.map(sport => sport.sportId);
-    console.log('user: ', foundUser);
-    console.log('userSportsIds: ', userSportsIds);
+
     let courseCalendar = await CourseCalendar.createQueryBuilder(
       'courseCalendar',
     )
@@ -97,8 +104,6 @@ export class StudentRepository extends Repository<User> {
       .innerJoinAndSelect('course.level', 'level')
       .where('course.sport_id IN (:...ids)', { ids: userSportsIds })
       .getMany();
-
-    console.log(courseCalendar);
 
     let userCalendar = await UserCalendar.find({ where: { userId: user.id } });
 
@@ -136,13 +141,7 @@ export class StudentRepository extends Repository<User> {
     // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
 
-  async createStudent(
-    createStudentDto: CreateStudentDto,
-    user: User,
-  ): Promise<void> {
-    console.log('user: ', user);
-    console.log('createStudentDto: ', createStudentDto);
-
+  async createStudent(createStudentDto: any, user: User): Promise<any> {
     await this.createQueryBuilder()
       .update(UserDetails)
       .set(createStudentDto.details)
@@ -150,32 +149,54 @@ export class StudentRepository extends Repository<User> {
       .execute();
 
     const foundUser: User = await User.findOne(user.id);
-    // const targets = await Target.createQueryBuilder('t')
-    //   .innerJoin('t.level', 'l')
-    //   .where('l.order <= :order', { order: level.order })
-    //   .getMany();
+    const studentRole: Role = await Role.findOne({
+      where: { name: 'STUDENT' },
+    });
 
-    //   await getManager().transaction(async manager => {
-    //     const userSports = new UserSport();
-    //     userSports.userId = user.id;
-    //     userSports.sportId = createStudentDto.userSports.sportId;
-    //     userSports.levelId = createStudentDto.userSports.levelId;
+    await this.createQueryBuilder()
+      .relation(User, 'roles')
+      .of(foundUser)
+      .add(studentRole);
 
-    //     manager.save(userSports);
-    // });
+    createStudentDto.userSports.forEach(async uSport => {
+      await getManager().transaction(async manager => {
+        const userSports = new UserSport();
+        userSports.userId = user.id;
+        userSports.sportId = uSport.id;
+        let level = uSport.sportLevels.find(sl => sl.checked == true);
+        userSports.levelId = level.sportLevel.levelId;
+
+        const targets: Target[] = await Target.find({
+          where: { levelId: userSports.levelId, sportId: userSports.sportId },
+        });
+
+        targets.forEach(async target => {
+          await getManager().transaction(async manager => {
+            const studentTarget = new StudentTarget();
+            studentTarget.studentId = user.id;
+            studentTarget.targetId = target.id;
+            manager.save(studentTarget);
+          });
+        });
+
+        manager.save(userSports);
+      });
+    });
 
     await getConnection()
       .createQueryBuilder()
-      .relation(User, 'userSports')
+      .relation(User, 'languages')
       .of(foundUser)
-      .add(createStudentDto.userSports);
+      .add(createStudentDto.languages);
 
-    // foundUser.sports = createStudentDto.sports;
-    // foundUser.level = createStudentDto.level;
-    // foundUser.languages = createStudentDto.languages;
-    // foundUser.targets = targets;
-
-    await User.save(foundUser);
+    const newUser: User = await User.createQueryBuilder('user')
+      .innerJoinAndSelect('user.details', 'details')
+      .innerJoinAndSelect('user.roles', 'roles')
+      .where('user.id = :id')
+      .setParameter('id', user.id)
+      .getOne();
+    return { user: newUser };
+    // return plainToClass(ReadStudentDto, { user: newUser });
   }
 
   async createStudentCalendar(
@@ -191,7 +212,6 @@ export class StudentRepository extends Repository<User> {
       .values(createStudentCalendarDto)
       .returning('*')
       .execute();
-    console.log(uC.raw);
 
     return uC.raw[0];
     // return plainToClass(ReadStudentCalendarDto, uC);
