@@ -21,7 +21,9 @@ import { Configuration } from '../../config/config.keys';
       inject: [ConfigService],
       useFactory(config: ConfigService) {
         return {
-          secret: config.get(Configuration.JWT_SECRET),
+          secret: config.get(
+            process.env.JWT_SECRET || Configuration.JWT_SECRET,
+          ),
           signOptions: {
             expiresIn: 43765456786,
           },
