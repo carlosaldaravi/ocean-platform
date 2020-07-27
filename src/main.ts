@@ -23,7 +23,7 @@ async function bootstrap() {
   // app.enableCors({ origin: serverConfig.origin });
   // logger.log(`Accepting requests from origin "${serverConfig.origin}"`);
   // }
-  await app.listen(AppModule.port);
+  await app.listen(AppModule.port, '0.0.0.0');
   logger.log(`Application listening on port ${AppModule.port}`);
 }
 bootstrap();
