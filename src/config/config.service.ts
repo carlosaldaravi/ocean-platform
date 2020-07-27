@@ -21,7 +21,6 @@ export class ConfigService {
         PORT: process.env.PORT,
       };
     }
-    console.log('envConfig: ', this.envConfig);
   }
 
   get(key: string): string {
