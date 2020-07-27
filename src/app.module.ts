@@ -59,8 +59,6 @@ export class AppModule {
   static port: number | string;
 
   constructor(private readonly _configService: ConfigService) {
-    console.log('PORT LISTEN: ', this._configService.get(Configuration.PORT));
-
     AppModule.port = this._configService.get(Configuration.PORT);
   }
 }

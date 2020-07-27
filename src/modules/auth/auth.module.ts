@@ -20,10 +20,12 @@ import { Configuration } from '../../config/config.keys';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory(config: ConfigService) {
+        console.log('process.env.JWT_SECRET', process.env.JWT_SECRET);
+        console.log('Configuration.JWT_SECRET', Configuration.JWT_SECRET);
+
         return {
-          secret: config.get(
-            process.env.JWT_SECRET || Configuration.JWT_SECRET,
-          ),
+          secret:
+            process.env.JWT_SECRET || config.get(Configuration.JWT_SECRET),
           signOptions: {
             expiresIn: 43765456786,
           },
