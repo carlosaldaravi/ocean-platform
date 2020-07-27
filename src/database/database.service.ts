@@ -13,7 +13,7 @@ export const databaseProviders = [
         // ssl: true,
         type: 'postgres' as 'postgres',
         host: process.env.HOST || config.get(Configuration.HOST),
-        port: 5444,
+        port: 5432,
         database: process.env.DATABASE || config.get(Configuration.DATABASE),
         username: process.env.USERNAME || config.get(Configuration.USERNAME),
         password: process.env.PASSWORD || config.get(Configuration.PASSWORD),
