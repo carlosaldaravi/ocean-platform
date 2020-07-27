@@ -53,5 +53,5 @@ export class Sport extends BaseEntity {
     { eager: true },
   )
   @JoinTable({ name: 'sport_levels' })
-  sportLevel: SportLevel[];
+  sportLevels: SportLevel[];
 }
