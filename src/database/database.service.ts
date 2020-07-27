@@ -9,12 +9,6 @@ export const databaseProviders = [
     imports: [ConfigModule],
     inject: [ConfigService],
     async useFactory(config: ConfigService) {
-      console.log('process.env.HOST: ', process.env.HOST);
-      console.log('process.env.PORT: ', process.env.PORT);
-      console.log('process.env.DATABASE: ', process.env.DATABASE);
-      console.log('process.env.USERNAME: ', process.env.USERNAME);
-      console.log('process.env.PASSWORD: ', process.env.PASSWORD);
-
       return {
         // ssl: true,
         type: 'postgres' as 'postgres',
@@ -23,7 +17,7 @@ export const databaseProviders = [
         database: process.env.DATABASE || config.get(Configuration.DATABASE),
         username: process.env.USERNAME || config.get(Configuration.USERNAME),
         password: process.env.PASSWORD || config.get(Configuration.PASSWORD),
-        synchronize: false,
+        synchronize: true,
         logging: true,
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         migrations: [__dirname + '/migrations/{.ts,.js}'],
