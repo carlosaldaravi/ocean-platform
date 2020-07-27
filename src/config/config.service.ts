@@ -6,9 +6,6 @@ export class ConfigService {
 
   constructor() {
     const isDevelopmentEnv = process.env.NODE_ENV !== 'production';
-    console.log('EN EL CONFIG.SERVICE.TS');
-    console.log('isDevelopmentEnv? ', isDevelopmentEnv);
-
     if (isDevelopmentEnv) {
       const envFilePath = __dirname + '/../../.env';
       const existsPath = fs.existsSync(envFilePath);
@@ -24,6 +21,7 @@ export class ConfigService {
         PORT: process.env.PORT,
       };
     }
+    console.log('envConfig: ', this.envConfig);
   }
 
   get(key: string): string {
