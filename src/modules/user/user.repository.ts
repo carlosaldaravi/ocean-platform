@@ -15,8 +15,10 @@ import { Target } from '../target/target.entity';
 export class UserRepository extends Repository<User> {
   async findUsersByRole(role: RoleType): Promise<any[]> {
     const users = await this.createQueryBuilder('u')
-      .leftJoinAndSelect('u.details', 'd')
       .leftJoinAndSelect('u.roles', 'r')
+      .leftJoinAndSelect('u.userSports', 'uS')
+      .leftJoinAndSelect('uS.sport', 's')
+      .leftJoinAndSelect('u.details', 'd')
       .where('r.name = :name', { name: role })
       .andWhere('u.status = :status', { status: status.ACTIVE })
       .getMany();

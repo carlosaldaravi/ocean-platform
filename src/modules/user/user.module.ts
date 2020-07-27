@@ -12,6 +12,7 @@ import { StudentService } from './student/student.service';
 import { InstructorService } from './instructor/instructor.service';
 import { InstructorController } from './instructor/instructor.controller';
 import { StudentRepository } from './student/student.repository';
+import { InstructorRepository } from './instructor/instructor.repository';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { StudentRepository } from './student/student.repository';
       StudentTargetRepository,
       TargetRepository,
       StudentRepository,
+      InstructorRepository,
     ]),
     AuthModule,
   ],

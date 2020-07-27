@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { RoleGuard } from '../role/guards/role.guard';
@@ -20,6 +21,11 @@ import { CreateCourseCalendarDto } from '../calendar/dto';
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class CourseController {
   constructor(private _courseService: CourseService) {}
+
+  @Get('new')
+  getNewCourse(): Promise<any> {
+    return this._courseService.getNewCourse();
+  }
 
   @Get(':courseId')
   getCourse(
@@ -35,10 +41,18 @@ export class CourseController {
 
   @Post()
   @Roles(RoleType.ADMIN)
-  createCourse(@Body() body: any): Promise<ReadCourseDto> {
-    const course: Partial<CreateCourseDto> = body.course;
-    const calendar: Partial<CreateCourseCalendarDto> = body.calendar;
-    return this._courseService.create(course, calendar);
+  createCourse(
+    @Body() course: Partial<CreateCourseDto>,
+  ): Promise<ReadCourseDto> {
+    return this._courseService.create(course);
+  }
+
+  @Patch('add/:courseId/:studentId')
+  addStudent(
+    @Param('courseId', ParseIntPipe) courseId: number,
+    @Param('studentId', ParseIntPipe) studentId: number,
+  ): Promise<ReadCourseDto> {
+    return this._courseService.addStudent(courseId, studentId);
   }
 
   @Patch('paid/:courseId/:studentId')
@@ -55,5 +69,13 @@ export class CourseController {
     @Param('instructorId', ParseIntPipe) instructorId: number,
   ): Promise<ReadCourseDto> {
     return this._courseService.instructorCashed(courseId, instructorId);
+  }
+
+  @Delete('del/:courseId/:studentId')
+  delStudent(
+    @Param('courseId', ParseIntPipe) courseId: number,
+    @Param('studentId', ParseIntPipe) studentId: number,
+  ): Promise<void> {
+    return this._courseService.delStudent(courseId, studentId);
   }
 }

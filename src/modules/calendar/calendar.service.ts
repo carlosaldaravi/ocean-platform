@@ -17,12 +17,19 @@ import { UserCalendar } from './user-calendar.entity';
 import { In } from 'typeorm';
 import { User } from '../user/user.entity';
 import { status } from '../../shared/entity-status.enum';
+import { CourseCalendar } from './course-calendar.entity';
+import { CourseCalendarRepository } from './course-calendar.reposity';
+import { Course } from '../course/course.entity';
+import { ReadCourseCalendarDto } from './dto/read-course-calendar.dto';
+import { CourseStudent } from '../course/course-student.entity';
+import { CourseInstructor } from '../course/course-instructor.entity';
 
 @Injectable()
 export class CalendarService {
   constructor(
     @InjectRepository(CalendarRepository)
     private readonly _calendarRepository: CalendarRepository,
+    private readonly _courseCalendarRepository: CourseCalendarRepository,
   ) {}
 
   async getAll(): Promise<ReadUserCalendarDto[]> {
@@ -38,6 +45,45 @@ export class CalendarService {
 
     return calendars.map((calendar: UserCalendar) =>
       plainToClass(ReadUserCalendarDto, calendar),
+    );
+  }
+
+  async getCourseCalendar(courseId: number): Promise<any> {
+    let foundCourseCalendar = await this._courseCalendarRepository
+      .createQueryBuilder('course_calendar')
+      .innerJoinAndSelect('course_calendar.course', 'course')
+      .innerJoinAndSelect('course.level', 'level')
+      .innerJoinAndSelect('course.sport', 'sport')
+      .innerJoinAndSelect('course.type', 'type')
+      .leftJoinAndSelect('course.courseStudents', 'course_students')
+      .leftJoinAndSelect('course_students.student', 'student')
+      .leftJoinAndSelect('student.details', 'student_details')
+      .leftJoinAndSelect('course.courseInstructors', 'courseInstructors')
+      .leftJoinAndSelect('courseInstructors.instructor', 'instructor')
+      .leftJoinAndSelect('instructor.details', 'instructor_details')
+      .where('course_calendar.course_id = :id', { id: courseId })
+      .getOne();
+    console.log(foundCourseCalendar);
+    console.log(foundCourseCalendar.course.courseInstructors[0]);
+    return foundCourseCalendar;
+    return plainToClass(ReadCourseCalendarDto, foundCourseCalendar);
+  }
+
+  async getCoursesCalendar(): Promise<ReadCourseCalendarDto[]> {
+    const calendars: CourseCalendar[] = await this._courseCalendarRepository
+      .createQueryBuilder('course_calendar')
+      .innerJoinAndSelect('course_calendar.course', 'course')
+      .innerJoinAndSelect('course.level', 'level')
+      .innerJoinAndSelect('course.sport', 'sport')
+      .innerJoinAndSelect('course.type', 'type')
+      .getMany();
+
+    if (!calendars) {
+      throw new NotFoundException();
+    }
+
+    return calendars.map((calendar: CourseCalendar) =>
+      plainToClass(ReadCourseCalendarDto, calendar),
     );
   }
 
@@ -75,6 +121,25 @@ export class CalendarService {
       .execute();
 
     return plainToClass(ReadUserCalendarDto, updatedCalendar);
+  }
+
+  async deleteCourseCalendar(courseCalendarId: number): Promise<void> {
+    await CourseCalendar.createQueryBuilder()
+      .delete()
+      .from(CourseCalendar)
+      .where('course_id = :id', { id: courseCalendarId })
+      .execute();
+    await CourseStudent.createQueryBuilder()
+      .delete()
+      .from(CourseStudent)
+      .where('course_id = :id', { id: courseCalendarId })
+      .execute();
+    await CourseInstructor.createQueryBuilder()
+      .delete()
+      .from(CourseInstructor)
+      .where('course_id = :id', { id: courseCalendarId })
+      .execute();
+    await Course.delete(courseCalendarId);
   }
 
   async delete(calendarId: number): Promise<void> {

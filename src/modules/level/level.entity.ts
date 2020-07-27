@@ -25,7 +25,7 @@ export class Level extends BaseEntity {
     type => Target,
     target => target.level,
   )
-  target: Target;
+  targets: Target[];
 
   @OneToMany(
     type => Course,

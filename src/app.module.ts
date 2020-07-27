@@ -1,3 +1,5 @@
+import { StatsModule } from './modules/stats/stats.module';
+import { StatsService } from './modules/stats/stats.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
@@ -20,6 +22,7 @@ import { ErrorsInterceptor } from './shared/errors.interceptors';
 
 @Module({
   imports: [
+    StatsModule,
     ConfigModule,
     DatabaseModule,
     UserModule,
@@ -33,6 +36,7 @@ import { ErrorsInterceptor } from './shared/errors.interceptors';
     CourseModule,
   ],
   providers: [
+    StatsService,
     {
       provide: APP_FILTER,
       useClass: HttpErrorFilter,

@@ -16,6 +16,8 @@ import { CourseStudent } from '../../course/course-student.entity';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
 import { ReadTargetDto } from '../../target/dto';
 import { Target } from '../../target/target.entity';
+import { CourseCalendar } from 'src/modules/calendar/course-calendar.entity';
+import { Language } from 'src/modules/language/language.entity';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -38,8 +40,18 @@ export class StudentRepository extends Repository<User> {
   }
 
   async getDataToStart() {
-    const sports = await Sport.find({ where: { status: status.ACTIVE } });
-    const levels = await Level.find({ where: { status: status.ACTIVE } });
+    const sports = await Sport.createQueryBuilder('sport')
+      .leftJoinAndSelect('sport.sportLevels', 'sportLevels')
+      .leftJoinAndSelect('sportLevels.level', 'level')
+      .leftJoinAndSelect('sport.targets', 'targets')
+      .orderBy({
+        'sport.id': 'ASC',
+        'level.id': 'ASC',
+        'targets.id': 'ASC',
+      })
+      .getMany();
+    const levels = await Level.find();
+    const languages = await Language.find();
 
     let data = {
       ok: true,
@@ -47,6 +59,7 @@ export class StudentRepository extends Repository<User> {
       data: {
         sports,
         levels,
+        languages,
       },
     };
     return data;
@@ -69,7 +82,27 @@ export class StudentRepository extends Repository<User> {
   }
 
   async getCalendar(user: User): Promise<any> {
-    return await UserCalendar.find({ where: { userId: user.id } });
+    let foundUser = await User.createQueryBuilder('user')
+      .innerJoinAndSelect('user.userSports', 'userSports')
+      .where('user.id = :id', { id: user.id })
+      .getOne();
+    let userSportsIds = foundUser.userSports.map(sport => sport.sportId);
+    console.log('user: ', foundUser);
+    console.log('userSportsIds: ', userSportsIds);
+    let courseCalendar = await CourseCalendar.createQueryBuilder(
+      'courseCalendar',
+    )
+      .innerJoinAndSelect('courseCalendar.course', 'course')
+      .innerJoinAndSelect('course.sport', 'sport')
+      .innerJoinAndSelect('course.level', 'level')
+      .where('course.sport_id IN (:...ids)', { ids: userSportsIds })
+      .getMany();
+
+    console.log(courseCalendar);
+
+    let userCalendar = await UserCalendar.find({ where: { userId: user.id } });
+
+    return [...courseCalendar, ...userCalendar];
 
     // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
@@ -91,11 +124,11 @@ export class StudentRepository extends Repository<User> {
           .subQuery()
           .select('course_id')
           .from(CourseStudent, 'cs')
-          // .where('student_id = :id')
+          .where('student_id = :id')
           .getQuery();
         return 'course.id IN' + subQuery;
       })
-      // .setParameter('id', user.id)
+      .setParameter('id', user.id)
       .getMany();
 
     return courses;

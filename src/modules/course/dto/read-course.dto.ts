@@ -1,8 +1,10 @@
 import { IsNumber, IsString } from 'class-validator';
 import { Exclude, Expose, Type } from 'class-transformer';
-import { Level } from '../../level/level.entity';
-import { Sport } from '../../sport/sport.entity';
-import { CourseType } from '../course-type.entity';
+import { ReadLevelDto } from 'src/modules/level/dto';
+import { ReadSportDto } from 'src/modules/sport/dto';
+import { ReadCourseTypeDto } from '../type/dto';
+import { ReadStudentDto } from 'src/modules/user/student/dto';
+import { ReadInstructorDto } from 'src/modules/user/instructor/dto/read-instructor.dto';
 
 @Exclude()
 export class ReadCourseDto {
@@ -11,14 +13,22 @@ export class ReadCourseDto {
   readonly id: number;
 
   @Expose()
-  @Type(type => Level)
-  readonly level: Level;
+  @Type(type => ReadLevelDto)
+  readonly level: ReadLevelDto;
 
   @Expose()
-  @Type(type => Sport)
-  readonly sport: Sport;
+  @Type(type => ReadSportDto)
+  readonly sport: ReadSportDto;
 
   @Expose()
-  @Type(type => CourseType)
-  readonly type: CourseType;
+  @Type(type => ReadCourseTypeDto)
+  readonly type: ReadCourseTypeDto;
+
+  @Expose()
+  @Type(type => ReadStudentDto)
+  readonly courseStudents: ReadStudentDto[];
+
+  @Expose()
+  @Type(type => ReadInstructorDto)
+  readonly courseInstructors: ReadInstructorDto[];
 }

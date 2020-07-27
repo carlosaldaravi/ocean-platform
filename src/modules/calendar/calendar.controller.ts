@@ -21,15 +21,28 @@ import { Roles } from '../role/decorators/role.decoratos';
 import { RoleType } from '../role/roletype.enum';
 import { User } from '../user/user.entity';
 import { GetUser } from '../auth/user.decorator';
+import { ReadCourseCalendarDto } from './dto/read-course-calendar.dto';
 
 @Controller('calendar')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class CalendarController {
   constructor(private readonly _calendarService: CalendarService) {}
 
+  @Get('course/:courseId')
+  getCourseCalendar(
+    @Param('courseId', ParseIntPipe) courseId: number,
+  ): Promise<ReadCourseCalendarDto> {
+    return this._calendarService.getCourseCalendar(courseId);
+  }
+
   @Get()
-  async getCalendars(): Promise<ReadUserCalendarDto[]> {
+  getCalendars(): Promise<ReadUserCalendarDto[]> {
     return this._calendarService.getAll();
+  }
+
+  @Get('courses')
+  getCoursesCalendar(): Promise<ReadCourseCalendarDto[]> {
+    return this._calendarService.getCoursesCalendar();
   }
 
   @Post()
@@ -46,6 +59,13 @@ export class CalendarController {
     @Body() calendar: Partial<UpdateUserCalendarDto>,
   ): Promise<ReadUserCalendarDto> {
     return this._calendarService.update(calendarId, calendar);
+  }
+
+  @Delete('/course/:courseCalendarId')
+  deleteCourseCalendar(
+    @Param('courseCalendarId', ParseIntPipe) courseCalendarId: number,
+  ) {
+    return this._calendarService.deleteCourseCalendar(courseCalendarId);
   }
 
   @Delete(':calendarId')

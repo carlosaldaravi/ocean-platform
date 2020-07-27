@@ -15,6 +15,10 @@ import { CreateCourseCalendarDto } from '../calendar/dto';
 import { Level } from '../level/level.entity';
 import { CourseStudent } from './course-student.entity';
 import { CourseInstructor } from './course-instructor.entity';
+import { Sport } from '../sport/sport.entity';
+import { CourseType } from './course-type.entity';
+import { User } from '../user/user.entity';
+import { status } from '../../shared/entity-status.enum';
 
 @Injectable()
 export class CourseService {
@@ -44,38 +48,83 @@ export class CourseService {
 
     return courses.map((course: Course) => plainToClass(ReadCourseDto, course));
   }
-  async create(course: any, calendar: any): Promise<ReadCourseDto> {
+  async create(course: any): Promise<ReadCourseDto> {
+    console.log(course);
+
     const savedCourse = await this._courseRepository
       .create({
-        level: course.levelId,
-        sport: course.sportId,
-        type: course.typeId,
+        level: course.level.id,
+        sport: course.sport.id,
+        type: course.type.id,
       })
       .save();
-    calendar.courseId = savedCourse.id;
-    await CourseCalendar.save(calendar);
+    course.calendar.courseId = savedCourse.id;
 
-    let courses = [];
-    for (let i = 0; i < course.studentId.length; i++) {
-      courses.push({
+    let cI = await CourseInstructor.createQueryBuilder()
+      .insert()
+      .into('course_instructors')
+      .values({
         courseId: savedCourse.id,
-        studentId: course.studentId[i],
-      });
-    }
-
-    await CourseStudent.createQueryBuilder()
-      .insert()
-      .into(CourseStudent)
-      .values(courses)
+        instructorId: course.instructor.id,
+      })
+      .returning('*')
       .execute();
 
-    await CourseInstructor.createQueryBuilder()
+    let cC = await CourseCalendar.createQueryBuilder()
       .insert()
-      .into(CourseInstructor)
-      .values({ courseId: savedCourse.id, instructorId: course.instructorId })
+      .into('course_calendar')
+      .values(course.calendar)
+      .returning('*')
       .execute();
 
+    // await CourseInstructor.createQueryBuilder()
+    //   .insert()
+    //   .into(CourseInstructor)
+    //   .values({ courseId: savedCourse.id, instructorId: course.instructorId })
+    //   .execute();
+
+    return cC.raw[0];
     return plainToClass(ReadCourseDto, savedCourse);
+  }
+
+  async getNewCourse() {
+    const sports = await Sport.createQueryBuilder('sport')
+      .innerJoinAndSelect('sport.sportLevel', 'sportLevel')
+      .innerJoinAndSelect('sportLevel.level', 'level')
+      .getMany();
+
+    const courseTypes = await CourseType.find();
+
+    const instructors = await User.createQueryBuilder('u')
+      .leftJoinAndSelect('u.details', 'd')
+      .leftJoinAndSelect('u.roles', 'r')
+      .where('r.name = :name', { name: 'INSTRUCTOR' })
+      .andWhere('u.status = :status', { status: status.ACTIVE })
+      .getMany();
+
+    return {
+      sports,
+      courseTypes,
+      instructors,
+    };
+  }
+
+  async addStudent(
+    courseId: number,
+    studentId: number,
+  ): Promise<ReadCourseDto> {
+    const course = await CourseStudent.create({
+      courseId,
+      studentId,
+    }).save();
+    return plainToClass(ReadCourseDto, course);
+  }
+
+  async delStudent(courseId: number, studentId: number): Promise<void> {
+    const course = await CourseStudent.delete({
+      courseId,
+      studentId,
+    });
   }
 
   async studentPaid(
@@ -90,7 +139,7 @@ export class CourseService {
     });
     course.paid = true;
     course.save();
-    return plainToClass(Course, course);
+    return plainToClass(ReadCourseDto, course);
   }
 
   async instructorCashed(
@@ -105,6 +154,6 @@ export class CourseService {
     });
     course.cashed = true;
     course.save();
-    return plainToClass(Course, course);
+    return plainToClass(ReadCourseDto, course);
   }
 }

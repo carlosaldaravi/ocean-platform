@@ -31,6 +31,9 @@ export class CourseInstructor extends BaseEntity {
   @Column({ default: false })
   cashed: boolean;
 
+  @Column({ default: 30 })
+  rateMoney: number;
+
   @ManyToOne(
     type => User,
     instructor => instructor.courseInstructors,

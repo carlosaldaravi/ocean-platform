@@ -15,14 +15,17 @@ export class CourseCalendar extends BaseEntity {
   @PrimaryColumn({ name: 'course_id' })
   courseId: number;
 
-  @PrimaryColumn({ type: 'date', unique: true })
-  date: Date;
+  @PrimaryColumn()
+  start: Date;
 
-  @Column('time', { nullable: true })
-  start_time: Date;
+  @Column()
+  end: Date;
 
-  @Column('time', { nullable: true })
-  end_time: Date;
+  @Column({ default: false })
+  allDay: boolean;
+
+  @Column({ default: 'Curso' })
+  title: string;
 
   @Column({ nullable: true })
   comments: string;

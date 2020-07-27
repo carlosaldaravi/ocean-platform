@@ -35,6 +35,7 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/students/calendar**, [POST]}
 - Instructor
   {**/api/instructors**, [GET]}
+  {**/api/instructors/courses**, [GET]}
 - Auth
   {**/api/auth/signup**, [POST]}
   {**/api/auth/signin**, [POST]}
@@ -53,6 +54,8 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/targets/:targetId**, [DELETE]}
 - Calendar
   {**/api/calendar**, [GET]}
+  {**/api/calendar/courses**, [GET]}
+  {**/api/calendar/course/courseId**, [GET]}
   {**/api/calendar**, [POST]}
   {**/api/calendar/:calendarId**, [PATCH]}
   {**/api/calendar/:calendarId**, [DELETE]}
@@ -75,9 +78,14 @@ Platform to all ocean school to manage students, instructors and courses.
   {**/api/languages/:languageId**, [PATCH]}
   {**/api/languages/:languageId**, [DELETE]}
 - Course
-  {**/api/course**, [POST]}
-  {**/api/paid/:courseId/:studentId**, [PATCH]}
-  {**/api/cashed/:courseId/:instructorId**, [PATCH]}
+  {**/api/courses**, [GET]}
+  {**/api/courses/:id**, [GET]}
+  {**/api/courses/new**, [GET]}
+  {**/api/courses**, [POST]}
+  {**/api/courses/add/:courseId/:studentId**, [PATCH]}
+  {**/api/courses/del/:courseId/:studentId**, [DELETE]}
+  {**/api/courses/paid/:courseId/:studentId**, [PATCH]}
+  {**/api/courses/cashed/:courseId/:instructorId**, [PATCH]}
 
 ## Relations
 

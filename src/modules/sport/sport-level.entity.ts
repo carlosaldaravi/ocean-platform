@@ -30,7 +30,7 @@ export class SportLevel extends BaseEntity {
 
   @ManyToOne(
     type => Sport,
-    sport => sport.sportLevel,
+    sport => sport.sportLevels,
   )
   @JoinColumn({ name: 'sport_id' })
   sport!: Sport;
