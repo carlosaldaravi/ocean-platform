@@ -10,6 +10,7 @@ import { CourseInstructor } from '../../course/course-instructor.entity';
 import { CreateInstructorDto } from './dto/create-instructor.dto';
 import { UserDetails } from '../user.details.entity';
 import { UserSport } from '../user-sports.entity';
+import { Role } from 'src/modules/role/role.entity';
 
 @EntityRepository(User)
 export class InstructorRepository extends Repository<User> {
@@ -70,6 +71,15 @@ export class InstructorRepository extends Repository<User> {
       where: { email: createInstructorDto.email },
     });
 
+    const instructorRole: Role = await Role.findOne({
+      where: { name: 'INSTRUCTOR' },
+    });
+
+    await this.createQueryBuilder()
+      .relation(User, 'roles')
+      .of(foundUser)
+      .add(instructorRole);
+
     await this.createQueryBuilder()
       .update(UserDetails)
       .set(createInstructorDto.details)
@@ -82,6 +92,7 @@ export class InstructorRepository extends Repository<User> {
         languages.push({ id: language.id, name: language.name });
       }
     });
+
     createInstructorDto.sports.forEach(async sport => {
       if (sport.checked) {
         await getManager().transaction(async manager => {
@@ -98,6 +109,6 @@ export class InstructorRepository extends Repository<User> {
       .createQueryBuilder()
       .relation(User, 'languages')
       .of(foundUser)
-      .add(createInstructorDto.languages);
+      .add(languages);
   }
 }
