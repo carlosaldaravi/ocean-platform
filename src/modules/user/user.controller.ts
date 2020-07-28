@@ -34,6 +34,11 @@ export class UserController {
     return this._userService.getSports(user);
   }
 
+  @Get('email/:email')
+  getUserByEmail(@Param('email') email: string): Promise<ReadUserDto> {
+    return this._userService.getByEmail(email);
+  }
+
   @Get(':userId')
   getUser(@Param('userId', ParseIntPipe) userId: number): Promise<ReadUserDto> {
     return this._userService.get(userId);

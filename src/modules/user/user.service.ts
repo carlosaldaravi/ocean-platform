@@ -58,6 +58,16 @@ export class UserService {
     return plainToClass(ReadUserDto, user);
   }
 
+  async getByEmail(email: string): Promise<ReadUserDto> {
+    const user: User = await this._userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new HttpException('User not found as student', HttpStatus.OK);
+    }
+
+    return plainToClass(ReadUserDto, user);
+  }
+
   async getAll(): Promise<ReadUserDto[]> {
     const users: User[] = await this._userRepository.find({
       where: { status: status.ACTIVE },

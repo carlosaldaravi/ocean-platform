@@ -5,6 +5,7 @@ import { ReadInstructorDto } from './dto/read-instructor.dto';
 import { User } from '../user.entity';
 import { RoleType } from '../../role/roletype.enum';
 import { InstructorRepository } from './instructor.repository';
+import { CreateInstructorDto } from './dto/create-instructor.dto';
 
 @Injectable()
 export class InstructorService {
@@ -20,5 +21,9 @@ export class InstructorService {
 
   getCourses(user: User): Promise<any> {
     return this._instructorRepository.getCourses(user);
+  }
+
+  createInstructor(createInstructorDto: CreateInstructorDto): Promise<void> {
+    return this._instructorRepository.createInstructor(createInstructorDto);
   }
 }

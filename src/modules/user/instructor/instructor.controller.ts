@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Post, Body } from '@nestjs/common';
 import { ReadInstructorDto } from './dto/read-instructor.dto';
 import { InstructorService } from './instructor.service';
 import { Roles } from 'src/modules/role/decorators/role.decoratos';
@@ -7,6 +7,7 @@ import { GetUser } from 'src/modules/auth/user.decorator';
 import { User } from '../user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/modules/role/guards/role.guard';
+import { CreateInstructorDto } from './dto/create-instructor.dto';
 
 @Controller('instructors')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
@@ -20,5 +21,13 @@ export class InstructorController {
   @Roles(RoleType.INSTRUCTOR)
   getCourses(@GetUser() user: User): Promise<any> {
     return this._instructorService.getCourses(user);
+  }
+
+  @Post()
+  @Roles(RoleType.ADMIN)
+  createInstructor(
+    @Body() createInstructorDto: CreateInstructorDto,
+  ): Promise<void> {
+    return this._instructorService.createInstructor(createInstructorDto);
   }
 }

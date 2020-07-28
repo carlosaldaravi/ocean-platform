@@ -1,7 +1,15 @@
-import { Repository, EntityRepository, getConnection } from 'typeorm';
+import {
+  Repository,
+  EntityRepository,
+  getConnection,
+  getManager,
+} from 'typeorm';
 import { User } from '../user.entity';
 import { Course } from '../../course/course.entity';
 import { CourseInstructor } from '../../course/course-instructor.entity';
+import { CreateInstructorDto } from './dto/create-instructor.dto';
+import { UserDetails } from '../user.details.entity';
+import { UserSport } from '../user-sports.entity';
 
 @EntityRepository(User)
 export class InstructorRepository extends Repository<User> {
@@ -53,5 +61,43 @@ export class InstructorRepository extends Repository<User> {
     return courses;
 
     // return targets.map(target => plainToClass(ReadTargetDto, target));
+  }
+
+  async createInstructor(createInstructorDto: any): Promise<void> {
+    console.log('createInstructorDto: ', createInstructorDto);
+
+    const foundUser: User = await User.findOne({
+      where: { email: createInstructorDto.email },
+    });
+
+    await this.createQueryBuilder()
+      .update(UserDetails)
+      .set(createInstructorDto.details)
+      .where('id = :id', { id: foundUser.id })
+      .execute();
+
+    let languages = [];
+    createInstructorDto.languages.forEach(language => {
+      if (language.checked) {
+        languages.push({ id: language.id, name: language.name });
+      }
+    });
+    createInstructorDto.sports.forEach(async sport => {
+      if (sport.checked) {
+        await getManager().transaction(async manager => {
+          const userSport = new UserSport();
+          userSport.userId = foundUser.id;
+          userSport.sportId = sport.id;
+          userSport.levelId = 1;
+          manager.save(userSport);
+        });
+      }
+    });
+
+    await getConnection()
+      .createQueryBuilder()
+      .relation(User, 'languages')
+      .of(foundUser)
+      .add(createInstructorDto.languages);
   }
 }
