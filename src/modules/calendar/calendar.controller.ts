@@ -17,13 +17,14 @@ import {
 import { CalendarService } from './calendar.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../role/guards/role.guard';
-import { Roles } from '../role/decorators/role.decoratos';
-import { RoleType } from '../role/roletype.enum';
 import { User } from '../user/user.entity';
 import { GetUser } from '../auth/user.decorator';
 import { ReadCourseCalendarDto } from './dto/read-course-calendar.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('calendar')
+@ApiTags('Calendar')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class CalendarController {
   constructor(private readonly _calendarService: CalendarService) {}

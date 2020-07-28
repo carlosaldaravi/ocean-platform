@@ -16,8 +16,11 @@ import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
 import { ReadCourseDto, CreateCourseDto } from './dto';
 import { CreateCourseCalendarDto } from '../calendar/dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('courses')
+@ApiTags('Courses')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class CourseController {
   constructor(private _courseService: CourseService) {}

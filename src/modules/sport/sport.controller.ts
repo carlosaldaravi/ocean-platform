@@ -15,10 +15,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../role/guards/role.guard';
 import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('sports')
-@UseGuards(AuthGuard('jwt'), RoleGuard)
+@ApiTags('Sports')
 export class SportController {
   constructor(private readonly _sportService: SportService) {}
 
@@ -30,19 +30,23 @@ export class SportController {
   }
 
   @Get()
-  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Sports list' })
   async getSports(): Promise<ReadSportDto[]> {
     return this._sportService.getAll();
   }
 
   @Post()
   @Roles(RoleType.ADMIN)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   createSport(@Body() sport: Partial<CreateSportDto>): Promise<ReadSportDto> {
     return this._sportService.create(sport);
   }
 
   @Patch(':sportId')
   @Roles(RoleType.ADMIN)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   updateSport(
     @Param('sportId', ParseIntPipe) sportId: number,
     @Body() sport: Partial<UpdateSportDto>,
@@ -52,6 +56,8 @@ export class SportController {
 
   @Delete(':sportId')
   @Roles(RoleType.ADMIN)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   deleteSport(@Param('sportId', ParseIntPipe) sportId: number): Promise<void> {
     return this._sportService.delete(sportId);
   }

@@ -19,8 +19,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../../role/guards/role.guard';
 import { RoleType } from '../../role/roletype.enum';
 import { Roles } from '../../role/decorators/role.decoratos';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('course-type')
+@ApiTags('Course Types')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class CourseTypeController {
   constructor(private readonly _courseTypeService: CourseTypeService) {}

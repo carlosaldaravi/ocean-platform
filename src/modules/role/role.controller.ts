@@ -15,8 +15,11 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from './guards/role.guard';
 import { Roles } from './decorators/role.decoratos';
 import { RoleType } from './roletype.enum';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('roles')
+@ApiTags('Roles')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class RoleController {
   constructor(private readonly _roleService: RoleService) {}

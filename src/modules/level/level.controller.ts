@@ -15,9 +15,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../role/guards/role.guard';
 import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('levels')
-@UseGuards(AuthGuard('jwt'), RoleGuard)
+@ApiTags('Levels')
 export class LevelController {
   constructor(private readonly _levelService: LevelService) {}
 
@@ -34,12 +35,16 @@ export class LevelController {
   }
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   createLevel(@Body() level: Partial<CreateLevelDto>): Promise<ReadLevelDto> {
     return this._levelService.create(level);
   }
 
   @Patch(':levelId')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   updateLevel(
     @Param('levelId', ParseIntPipe) levelId: number,
@@ -49,6 +54,8 @@ export class LevelController {
   }
 
   @Delete(':levelId')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   deleteLevel(@Param('levelId', ParseIntPipe) levelId: number): Promise<void> {
     return this._levelService.delete(levelId);

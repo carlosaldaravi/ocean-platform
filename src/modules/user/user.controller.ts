@@ -22,9 +22,11 @@ import { ReadStudentDto } from './student/dto/read-student.dto';
 import { ReadStudentTargetDto } from './student/dto/read-student-target.dto';
 import { ReadSportDto } from '../sport/dto';
 import { UserSport } from './user-sports.entity';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('users')
+@ApiTags('Users')
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class UserController {
   constructor(private readonly _userService: UserService) {}
@@ -45,6 +47,7 @@ export class UserController {
   }
 
   @Get()
+  @ApiOkResponse({ description: 'Users list' })
   async getUsers(): Promise<ReadUserDto[]> {
     return this._userService.getAll();
   }
@@ -83,7 +86,6 @@ export class UserController {
   }
 
   @Delete('sport')
-  @ApiBearerAuth()
   deleteUserSport(@Body() userSport: UserSport, @GetUser() user: User) {
     return this._userService.deleteUserSport(userSport, user);
   }

@@ -7,9 +7,12 @@ import { GetUser } from 'src/modules/auth/user.decorator';
 import { User } from '../user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/modules/role/guards/role.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateInstructorDto } from './dto/create-instructor.dto';
 
 @Controller('instructors')
+@ApiTags('Instructors')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class InstructorController {
   constructor(private readonly _instructorService: InstructorService) {}

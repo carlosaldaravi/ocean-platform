@@ -11,8 +11,11 @@ import { Roles } from '../../role/decorators/role.decoratos';
 import { ReadTargetDto } from '../../target/dto';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
 import { ReadStudentCalendarDto } from './dto/read-student-calendar.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('students')
+@ApiTags('Students')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RoleGuard)
 export class StudentController {
   constructor(private readonly _studentService: StudentService) {}

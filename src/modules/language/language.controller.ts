@@ -15,8 +15,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../role/guards/role.guard';
 import { RoleType } from '../role/roletype.enum';
 import { Roles } from '../role/decorators/role.decoratos';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('languages')
+@ApiTags('Languages')
 export class LanguageController {
   constructor(private readonly _languageService: LanguageService) {}
 
@@ -33,6 +35,7 @@ export class LanguageController {
   }
 
   @Post()
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   createLanguage(
@@ -42,6 +45,7 @@ export class LanguageController {
   }
 
   @Patch(':languageId')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   updateLanguage(
@@ -52,6 +56,7 @@ export class LanguageController {
   }
 
   @Delete(':languageId')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), RoleGuard)
   @Roles(RoleType.ADMIN)
   deleteLanguage(

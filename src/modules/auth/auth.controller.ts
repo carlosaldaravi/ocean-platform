@@ -12,9 +12,11 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiBody,
+  ApiTags,
 } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private readonly _authService: AuthService) {}
   @Post('/signup')
