@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CalendarService } from '../calendar.service';
+// import { Test, TestingModule } from '@nestjs/testing';
+// import { CalendarService } from '../calendar.service';
 
-describe('CalendarService', () => {
-  let service: CalendarService;
+// describe('CalendarService', () => {
+//   let service: CalendarService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [CalendarService],
-    }).compile();
+//   beforeEach(async () => {
+//     const module: TestingModule = await Test.createTestingModule({
+//       providers: [CalendarService],
+//     }).compile();
 
-    service = module.get<CalendarService>(CalendarService);
-  });
+//     service = module.get<CalendarService>(CalendarService);
+//   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
+//   it('should be defined', () => {
+//     expect(service).toBeDefined();
+//   });
+// });

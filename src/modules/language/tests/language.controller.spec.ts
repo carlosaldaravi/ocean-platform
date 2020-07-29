@@ -1,18 +1,19 @@
 // import { Test, TestingModule } from '@nestjs/testing';
-// import { AuthController } from '../auth.controller';
+// import { LanguageController } from '../language.controller';
 
-// describe('Auth Controller', () => {
-//   let controller: AuthController;
+// describe('Language Controller', () => {
+//   let controller: LanguageController;
 
 //   beforeEach(async () => {
 //     const module: TestingModule = await Test.createTestingModule({
-//       controllers: [AuthController],
+//       controllers: [LanguageController],
 //     }).compile();
 
-//     controller = module.get<AuthController>(AuthController);
+//     controller = module.get<LanguageController>(LanguageController);
 //   });
 
 //   it('should be defined', () => {
 //     expect(controller).toBeDefined();
 //   });
+
 // });
