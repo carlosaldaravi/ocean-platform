@@ -1,20 +1,24 @@
 import { IsString, IsNumber, IsDate } from 'class-validator';
-import { Type } from 'class-transformer';
-import { ReadTargetDto } from '../../../target/dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateStudentTargetDto {
   @IsNumber()
+  @ApiProperty({ type: Number, description: 'number' })
   studentId: number;
 
-  @Type(type => ReadTargetDto)
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'number' })
   stargetId: number;
 
   @IsString()
+  @ApiProperty({ type: String, description: 'string', default: null })
   feedback: string;
 
   @IsNumber()
+  @ApiProperty({ type: Number, description: 'number', default: null })
   validatedBy: number;
 
   @IsDate()
+  @ApiProperty({ type: Date, description: 'date', default: null })
   validatedDate: Date;
 }

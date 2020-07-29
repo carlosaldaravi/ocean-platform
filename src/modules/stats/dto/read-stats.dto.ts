@@ -1,75 +1,70 @@
-import { IsNumber, IsString, IsOptional } from 'class-validator';
-import { Type, Exclude, Expose } from 'class-transformer';
-import { ReadLevelDto } from '../../level/dto';
+import { IsNumber } from 'class-validator';
+import { Exclude, Expose } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Exclude()
 export class ReadStatsDto {
-  @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalStudents: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalInstructors: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalCourses: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalWon: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   averageStudentYears: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   averageStudentMaleYears: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   averageStudentFemaleYears: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalMale: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalFemale: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   studentLessYears: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   studentMoreYears: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalProfits: number;
 
   @Expose()
-  @IsOptional()
-  @IsString()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'Number' })
   totalCosts: number;
-
-  // @Expose()
-  // @Type(type => ReadLevelDto)
-  // readonly level: ReadLevelDto;
 }

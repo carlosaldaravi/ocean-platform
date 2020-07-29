@@ -1,20 +1,26 @@
 import { Type } from 'class-transformer';
-import { UserCalendar } from '../../../calendar/user-calendar.entity';
-import { UserDetails } from '../../user.details.entity';
 import { Language } from '../../../language/language.entity';
-import { UserSport } from '../../user-sports.entity';
 import { Sport } from 'src/modules/sport/sport.entity';
+import { ReadUserDetailsDto } from '../../dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { ReadUserSportDto } from '../../dto/read-user-sport.dto';
+import { ReadSportDto } from 'src/modules/sport/dto';
+import { ReadLanguageDto } from 'src/modules/language/dto';
 
 export class CreateStudentDto {
-  @Type(type => UserDetails)
-  details: UserDetails;
+  @Type(type => ReadUserDetailsDto)
+  @ApiProperty({ type: ReadUserDetailsDto, description: 'ReadUserDetailsDto' })
+  details: ReadUserDetailsDto;
 
-  @Type(type => UserSport)
-  userSports: UserSport[];
+  @Type(type => ReadUserSportDto)
+  @ApiProperty({ type: [ReadUserSportDto], description: 'ReadUserSportDto' })
+  userSports: ReadUserSportDto[];
 
-  @Type(type => Sport)
-  sports: Sport[];
+  @Type(type => ReadSportDto)
+  @ApiProperty({ type: [ReadSportDto], description: 'ReadSportDto' })
+  sports: ReadSportDto[];
 
-  @Type(type => Language)
-  languages: Language[];
+  @Type(type => ReadLanguageDto)
+  @ApiProperty({ type: [ReadLanguageDto], description: 'ReadLanguageDto' })
+  languages: ReadLanguageDto[];
 }
