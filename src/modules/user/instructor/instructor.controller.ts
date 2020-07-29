@@ -7,7 +7,7 @@ import { GetUser } from 'src/modules/auth/user.decorator';
 import { User } from '../user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from 'src/modules/role/guards/role.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { CreateInstructorDto } from './dto/create-instructor.dto';
 
 @Controller('instructors')
@@ -28,6 +28,7 @@ export class InstructorController {
 
   @Post()
   @Roles(RoleType.ADMIN)
+  @ApiOkResponse({ description: 'Created instructor' })
   createInstructor(
     @Body() createInstructorDto: CreateInstructorDto,
   ): Promise<void> {

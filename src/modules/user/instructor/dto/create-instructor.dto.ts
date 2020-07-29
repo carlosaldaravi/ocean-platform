@@ -22,10 +22,6 @@ export class CreateInstructorDto {
   })
   details: ReadInstructorDetailsDto;
 
-  @Type(type => ReadUserSportDto)
-  @ApiProperty({ type: [ReadUserSportDto], description: 'ReadUserSportDto' })
-  userSports: ReadUserSportDto[];
-
   @Type(type => ReadSportDto)
   @ApiProperty({ type: [ReadSportDto], description: 'ReadSportDto' })
   sports: ReadSportDto[];
