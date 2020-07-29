@@ -25,7 +25,7 @@ export class ReadSportDto {
   @Expose()
   @Type(type => ReadSportLevelDto)
   @ApiProperty({ type: [ReadSportLevelDto], description: 'readSportLevelDto' })
-  readonly sportLevel: ReadSportLevelDto[];
+  readonly sportLevels: ReadSportLevelDto[];
 
   @Expose()
   @Type(type => ReadTargetDto)

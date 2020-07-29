@@ -36,11 +36,11 @@ export class UserRepository extends Repository<User> {
   async getSports(user: User): Promise<ReadSportDto[]> {
     const sports = await Sport.createQueryBuilder('sport')
       .innerJoin('sport.userSport', 'uS')
-      .innerJoinAndSelect('sport.sportLevel', 'sportLevel')
-      .innerJoinAndSelect('sportLevel.level', 'level')
+      .innerJoinAndSelect('sport.sportLevels', 'sportLevels')
+      .innerJoinAndSelect('sportLevels.level', 'level')
       .where('uS.user = :id')
       .orderBy('sport.id', 'ASC')
-      .addOrderBy('sportLevel.order', 'ASC')
+      .addOrderBy('sportLevels.order', 'ASC')
       .setParameter('id', user.id)
       .getMany();
 

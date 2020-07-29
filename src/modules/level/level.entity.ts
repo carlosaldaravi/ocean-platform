@@ -43,5 +43,5 @@ export class Level extends BaseEntity {
     type => SportLevel,
     sportLevel => sportLevel.level,
   )
-  sportLevel!: SportLevel[];
+  sportLevels!: SportLevel[];
 }

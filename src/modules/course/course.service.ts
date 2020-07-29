@@ -89,8 +89,8 @@ export class CourseService {
 
   async getNewCourse() {
     const sports = await Sport.createQueryBuilder('sport')
-      .innerJoinAndSelect('sport.sportLevel', 'sportLevel')
-      .innerJoinAndSelect('sportLevel.level', 'level')
+      .innerJoinAndSelect('sport.sportLevels', 'sportLevels')
+      .innerJoinAndSelect('sportLevels.level', 'level')
       .getMany();
 
     const courseTypes = await CourseType.find();
