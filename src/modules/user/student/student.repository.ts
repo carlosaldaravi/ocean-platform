@@ -142,13 +142,14 @@ export class StudentRepository extends Repository<User> {
   }
 
   async createStudent(createStudentDto: any, user: User): Promise<any> {
+    const foundUser: User = await User.findOne(user.id);
+
     await this.createQueryBuilder()
       .update(UserDetails)
       .set(createStudentDto.details)
-      .where('id = :id', { id: user.id })
+      .where('id = :id', { id: foundUser.details.id })
       .execute();
 
-    const foundUser: User = await User.findOne(user.id);
     const studentRole: Role = await Role.findOne({
       where: { name: 'STUDENT' },
     });
@@ -195,8 +196,22 @@ export class StudentRepository extends Repository<User> {
       .where('user.id = :id')
       .setParameter('id', user.id)
       .getOne();
-    return { user: newUser };
-    // return plainToClass(ReadStudentDto, { user: newUser });
+
+    return {
+      user: newUser,
+    };
+
+    // debería devolver esto
+
+    // const payload: IJwtPayload = {
+    //   id: user.id,
+    //   email: user.email,
+    //   roles: user.roles.map(r => r.name as RoleType),
+    // };
+
+    // const token = this._jwtService.sign(payload);
+
+    // return plainToClass(LoggedInDto, { token, user });
   }
 
   async createStudentCalendar(
