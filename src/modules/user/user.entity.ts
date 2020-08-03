@@ -34,7 +34,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Exclude()
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', select: false })
   password: string;
 
   @OneToOne(type => UserDetails, { cascade: true, eager: true })

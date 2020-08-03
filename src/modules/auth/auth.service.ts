@@ -33,7 +33,14 @@ export class AuthService {
 
   async signin(signinDto: SigninDto): Promise<LoggedInDto> {
     const { email, password } = signinDto;
-    const user: User = await this._authRepository.findOne({ where: { email } });
+    // const user: User = await this._authRepository.findOne({ where: { email } });
+    const user: User = await User.createQueryBuilder('user')
+      .innerJoinAndSelect('user.details', 'details')
+      .innerJoinAndSelect('user.roles', 'roles')
+      .where('user.email = :email')
+      .setParameter('email', email)
+      .addSelect('user.password')
+      .getOne();
 
     if (!user) {
       throw new NotFoundException('User does not exist');
