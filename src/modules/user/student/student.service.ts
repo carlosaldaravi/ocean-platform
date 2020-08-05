@@ -8,6 +8,7 @@ import { ReadTargetDto } from '../../target/dto';
 import { CreateStudentCalendarDto } from './dto/create-student-calendar.dto';
 import { ReadStudentCalendarDto } from './dto/read-student-calendar.dto';
 import { UserRepository } from '../user.repository';
+import { AuthService } from 'src/modules/auth/auth.service';
 
 @Injectable()
 export class StudentService {
@@ -16,6 +17,7 @@ export class StudentService {
     private readonly _userRepository: UserRepository,
     @InjectRepository(StudentRepository)
     private readonly _studentRepository: StudentRepository,
+    private authService: AuthService,
   ) {}
   getAll(): Promise<ReadStudentDto[]> {
     return this._userRepository.findUsersByRole(RoleType.STUDENT);
@@ -38,7 +40,11 @@ export class StudentService {
   }
 
   createStudent(createStudentDto: CreateStudentDto, user: User): Promise<any> {
-    return this._studentRepository.createStudent(createStudentDto, user);
+    return this._studentRepository.createStudent(
+      createStudentDto,
+      user,
+      this.authService,
+    );
   }
 
   createStudentCalendar(

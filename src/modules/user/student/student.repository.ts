@@ -26,6 +26,7 @@ import { Language } from 'src/modules/language/language.entity';
 import { UserSport } from '../user-sports.entity';
 import { Role } from 'src/modules/role/role.entity';
 import { StudentTarget } from './student-target.entity';
+import { AuthService } from 'src/modules/auth/auth.service';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -141,7 +142,11 @@ export class StudentRepository extends Repository<User> {
     // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
 
-  async createStudent(createStudentDto: any, user: User): Promise<any> {
+  async createStudent(
+    createStudentDto: any,
+    user: User,
+    authService,
+  ): Promise<any> {
     const foundUser: User = await User.findOne(user.id);
 
     await this.createQueryBuilder()
@@ -197,21 +202,9 @@ export class StudentRepository extends Repository<User> {
       .setParameter('id', user.id)
       .getOne();
 
-    return {
-      user: newUser,
-    };
+    const token = authService.reloadToken(newUser);
 
-    // debería devolver esto
-
-    // const payload: IJwtPayload = {
-    //   id: user.id,
-    //   email: user.email,
-    //   roles: user.roles.map(r => r.name as RoleType),
-    // };
-
-    // const token = this._jwtService.sign(payload);
-
-    // return plainToClass(LoggedInDto, { token, user });
+    return { token: token.token, user: newUser };
   }
 
   async createStudentCalendar(

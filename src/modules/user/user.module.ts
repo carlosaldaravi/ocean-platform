@@ -13,6 +13,12 @@ import { InstructorService } from './instructor/instructor.service';
 import { InstructorController } from './instructor/instructor.controller';
 import { StudentRepository } from './student/student.repository';
 import { InstructorRepository } from './instructor/instructor.repository';
+import { AuthService } from '../auth/auth.service';
+import { AuthRepository } from '../auth/auth.repository';
+import { JwtService, JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from 'src/config/config.module';
+import { ConfigService } from 'src/config/config.service';
+import { Configuration } from 'src/config/config.keys';
 
 @Module({
   imports: [
@@ -23,10 +29,24 @@ import { InstructorRepository } from './instructor/instructor.repository';
       TargetRepository,
       StudentRepository,
       InstructorRepository,
+      AuthRepository,
     ]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory(config: ConfigService) {
+        return {
+          secret:
+            process.env.JWT_SECRET || config.get(Configuration.JWT_SECRET),
+          signOptions: {
+            expiresIn: 43765456786,
+          },
+        };
+      },
+    }),
     AuthModule,
   ],
-  providers: [UserService, StudentService, InstructorService],
+  providers: [UserService, StudentService, InstructorService, AuthService],
   controllers: [UserController, StudentController, InstructorController],
 })
 export class UserModule {}
