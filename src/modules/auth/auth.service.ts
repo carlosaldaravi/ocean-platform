@@ -62,4 +62,16 @@ export class AuthService {
 
     return plainToClass(LoggedInDto, { token, user });
   }
+
+  reloadToken(user) {
+    const payload: IJwtPayload = {
+      id: user.id,
+      email: user.email,
+      roles: user.roles.map(r => r.name as RoleType),
+    };
+
+    const token = this._jwtService.sign(payload);
+
+    return plainToClass(LoggedInDto, { token, user });
+  }
 }
