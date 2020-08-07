@@ -32,7 +32,12 @@ export class TargetService {
   }
 
   async getAll(): Promise<ReadTargetDto[]> {
-    const targets: Target[] = await this._targetRepository.find();
+    // const targets: Target[] = await this._targetRepository.find();
+    const targets: Target[] = await this._targetRepository
+      .createQueryBuilder('target')
+      .innerJoinAndSelect('target.level', 'level')
+      .innerJoinAndSelect('target.sport', 'sport')
+      .getMany();
     if (!targets) {
       throw new NotFoundException();
     }
