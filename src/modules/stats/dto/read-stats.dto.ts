@@ -4,6 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Exclude()
 export class ReadStatsDto {
+  @Expose()
   @IsNumber()
   @ApiProperty({ type: Number, description: 'Number' })
   totalStudents: number;
