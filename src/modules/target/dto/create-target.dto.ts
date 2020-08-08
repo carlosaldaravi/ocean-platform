@@ -11,9 +11,13 @@ export class CreateTargetDto {
   @ApiProperty({ type: String, description: 'string' })
   readonly name: string;
 
-  @IsString()
+  @IsNumber()
   @ApiProperty({ type: Number, description: 'number' })
-  readonly level: number;
+  readonly levelId: number;
+
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'number' })
+  readonly sportId: number;
 
   @IsString()
   @ApiProperty({ type: String, description: 'string' })

@@ -70,24 +70,24 @@ export class TargetService {
   }
 
   async create(target: Partial<CreateTargetDto>): Promise<ReadTargetDto> {
-    const level = await Level.findOne(target.level);
-    if (!level) {
-      throw new HttpException('This target does not exists', HttpStatus.OK);
-    }
-    const foundTarget: Target = await this._targetRepository.findOne({
-      where: { name: target.name },
+    const savedTarget: Target = await this._targetRepository.save({
+      name: target.name,
+      levelId: target.levelId,
+      sportId: target.sportId,
+      description: target.description,
     });
 
-    if (foundTarget) {
-      throw new HttpException('This target already exists', HttpStatus.OK);
-    } else {
-      const savedTarget: Target = await this._targetRepository.save({
-        name: target.name,
-        levelId: level.id,
-        description: target.description,
-      });
-      return plainToClass(ReadTargetDto, savedTarget);
-    }
+    console.log('id: ', savedTarget);
+
+    const foundTarget: Target = await this._targetRepository
+      .createQueryBuilder('target')
+      .innerJoinAndSelect('target.level', 'level')
+      .innerJoinAndSelect('target.sport', 'sport')
+      .where('target.id = :id')
+      .setParameter('id', savedTarget.id)
+      .getOne();
+
+    return plainToClass(ReadTargetDto, foundTarget);
   }
 
   async update(
@@ -100,13 +100,7 @@ export class TargetService {
       throw new HttpException('This target does not exists', HttpStatus.OK);
     }
 
-    if (target.level) {
-      var level = await Level.findOne(target.level);
-    }
-
     foundTarget.name = target.name;
-    foundTarget.levelId = level.id;
-    foundTarget.level = level;
     foundTarget.description = target.description;
 
     await foundTarget.save();
