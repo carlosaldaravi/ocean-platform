@@ -55,7 +55,9 @@ export class InstructorRepository extends Repository<User> {
           .getQuery();
         return 'course.id IN' + subQuery;
       })
-      .andWhere('targets.sport_id = sport.id')
+      .andWhere('target.sportId = sport.id')
+      .andWhere('target.levelId = level.id')
+      .andWhere('targets.sportId = sport.id')
       .setParameter('id', user.id)
       .getMany();
 

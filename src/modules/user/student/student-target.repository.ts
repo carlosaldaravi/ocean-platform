@@ -7,13 +7,15 @@ import { ReadStudentTargetDto } from './dto/read-student-target.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { status } from '../../../shared/entity-status.enum';
 import { RoleType } from '../../../modules/role/roletype.enum';
+import { validate, ValidateBy } from 'class-validator';
+import { Target } from 'src/modules/target/target.entity';
 
 @EntityRepository(StudentTarget)
 export class StudentTargetRepository extends Repository<StudentTarget> {
   async setTargetsToUsers(
     createStudentTargetDto: Partial<CreateStudentTargetDto[]>,
     user: User,
-  ): Promise<ReadStudentTargetDto> {
+  ): Promise<any> {
     const validatedBy = await User.createQueryBuilder('u')
       .leftJoinAndSelect('u.details', 'd')
       .leftJoinAndSelect('u.roles', 'r')
@@ -29,14 +31,39 @@ export class StudentTargetRepository extends Repository<StudentTarget> {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    createStudentTargetDto.forEach(element => {
-      element.validatedBy = validatedBy.id;
+    createStudentTargetDto.forEach(async element => {
+      await StudentTarget.createQueryBuilder()
+        .update(StudentTarget)
+        .set({ validatedBy: validatedBy.id, validatedDate: new Date() })
+        .where('studentId = :studentId')
+        .andWhere('targetId = :targetId')
+        .setParameters({
+          studentId: element.studentId,
+          targetId: element.targetId,
+        })
+        .execute();
     });
-    const studentTargets = await StudentTarget.createQueryBuilder()
-      .insert()
-      .into(StudentTarget)
-      .values(createStudentTargetDto)
-      .execute();
-    return plainToClass(ReadStudentTargetDto, studentTargets);
+
+    //get studenttargets of level changed
+
+    const target = await Target.createQueryBuilder('target')
+      .where('target.id = :id')
+      .setParameter('id', createStudentTargetDto[0].targetId)
+      .getOne();
+
+    const updatedStudent = await User.createQueryBuilder('student')
+      .innerJoinAndSelect('student.details', 'details')
+      .innerJoinAndSelect('student.studentTargets', 'student_targets')
+      .innerJoinAndSelect('student_targets.target', 'target')
+      .innerJoinAndSelect('target.level', 'level')
+      .where('student.id = :studentId')
+      .andWhere('level.id = :levelId')
+      .setParameters({
+        studentId: createStudentTargetDto[0].studentId,
+        levelId: target.levelId,
+      })
+      .getOne();
+
+    return updatedStudent;
   }
 }

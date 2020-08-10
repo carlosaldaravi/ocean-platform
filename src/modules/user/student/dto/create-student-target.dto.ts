@@ -8,7 +8,7 @@ export class CreateStudentTargetDto {
 
   @IsNumber()
   @ApiProperty({ type: Number, description: 'number' })
-  stargetId: number;
+  targetId: number;
 
   @IsString()
   @ApiProperty({ type: String, description: 'string', default: null })
