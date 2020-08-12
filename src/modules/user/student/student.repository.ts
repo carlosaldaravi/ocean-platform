@@ -134,6 +134,7 @@ export class StudentRepository extends Repository<User> {
           .getQuery();
         return 'course.id IN' + subQuery;
       })
+      .orderBy('calendar.start', 'DESC')
       .setParameter('id', user.id)
       .getMany();
 
