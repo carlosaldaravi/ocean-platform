@@ -6,7 +6,7 @@ export const roles_DB_DATA = [
     name: 'ADMIN',
   },
   {
-    name: 'STUDENT',
+    name: 'ALUMNO',
   },
   {
     name: 'INSTRUCTOR',

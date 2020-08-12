@@ -33,7 +33,7 @@ export class StatsService {
 
     let totalCourses = await Course.createQueryBuilder('course').getCount();
     let totalStudents = users.filter(user =>
-      user.roles.some(role => role.name === 'STUDENT'),
+      user.roles.some(role => role.name === 'ALUMNO'),
     );
 
     totalStudents.forEach(student =>

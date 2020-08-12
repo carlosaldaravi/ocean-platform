@@ -1,10 +1,10 @@
 export const sports_DB_DATA = [
   {
-    name: 'KiteSurf',
+    name: 'Kitesurf',
     description: 'Grupos de 2 a 4 alumnos por instructor',
   },
   {
-    name: 'WindSurf',
+    name: 'Windsurf',
     description: 'Grupos de 4 a 6 alumnos por instructor',
   },
   {

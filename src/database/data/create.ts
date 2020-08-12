@@ -146,8 +146,8 @@ export const setDefaultValues = async () => {
           .values(userSports_DB_DATA)
           .execute();
       }
-      const spanish = await Language.findOne({ where: { name: 'Spanish' } });
-      const english = await Language.findOne({ where: { name: 'English' } });
+      const spanish = await Language.findOne({ where: { name: 'Español' } });
+      const english = await Language.findOne({ where: { name: 'Inglés' } });
       const roleGeneral = await Role.findOne({
         where: { name: RoleType.GENERAL },
       });
@@ -160,7 +160,7 @@ export const setDefaultValues = async () => {
       const roleInstructor = await Role.findOne({
         where: { name: RoleType.INSTRUCTOR },
       });
-      const kitesurf = await Sport.findOne({ where: { name: 'KiteSurf' } });
+      const kitesurf = await Sport.findOne({ where: { name: 'Kitesurf' } });
       const admin = await User.findOne(1);
       const student1 = await User.findOne(2);
       const student2 = await User.findOne(3);

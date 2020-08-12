@@ -1,20 +1,20 @@
 export const languages_DB_DATA = [
   {
-    name: 'Spanish',
+    name: 'Español',
   },
   {
-    name: 'English',
+    name: 'Inglés',
   },
   {
-    name: 'French',
+    name: 'Francés',
   },
   {
-    name: 'Portuguese',
+    name: 'Portugués',
   },
   {
-    name: 'Russian',
+    name: 'Ruso',
   },
   {
-    name: 'German',
+    name: 'Alemán',
   },
 ];

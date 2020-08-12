@@ -73,7 +73,7 @@ export const courseStudents_DB_DATA = [
   },
   {
     courseId: 6,
-    studentId: 2,
+    studentId: 8,
   },
   {
     courseId: 6,
@@ -89,7 +89,7 @@ export const courseStudents_DB_DATA = [
   },
   {
     courseId: 7,
-    studentId: 2,
+    studentId: 12,
   },
   {
     courseId: 7,

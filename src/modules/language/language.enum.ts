@@ -1,6 +1,8 @@
 export enum RoleType {
-  SPANISH = 'SPANISH',
-  ENGLISH = 'ENGLISH',
-  FRENCH = 'FRENCH',
-  GERMAN = 'GERMAN',
+  SPANISH = 'Español',
+  ENGLISH = 'Inglés',
+  FRENCH = 'Francés',
+  GERMAN = 'Alemán',
+  RUSSIAN = 'Ruso',
+  PORTUGUESE = 'Portugués',
 }

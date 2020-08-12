@@ -156,7 +156,7 @@ export class StudentRepository extends Repository<User> {
       .execute();
 
     const studentRole: Role = await Role.findOne({
-      where: { name: 'STUDENT' },
+      where: { name: 'ALUMNO' },
     });
 
     await this.createQueryBuilder()
