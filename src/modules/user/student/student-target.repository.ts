@@ -31,10 +31,15 @@ export class StudentTargetRepository extends Repository<StudentTarget> {
         HttpStatus.UNAUTHORIZED,
       );
     }
+
     createStudentTargetDto.forEach(async element => {
       await StudentTarget.createQueryBuilder()
         .update(StudentTarget)
-        .set({ validatedBy: validatedBy.id, validatedDate: new Date() })
+        .set({
+          validatedBy: element.validatedBy,
+          validatedDate: element.validatedDate,
+          feedback: element.feedback,
+        })
         .where('studentId = :studentId')
         .andWhere('targetId = :targetId')
         .setParameters({
