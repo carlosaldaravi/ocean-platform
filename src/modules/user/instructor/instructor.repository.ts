@@ -38,8 +38,8 @@ export class InstructorRepository extends Repository<User> {
       .innerJoinAndSelect('course.sport', 'sport')
       .innerJoinAndSelect('course.level', 'level')
       .innerJoinAndSelect('course.type', 'type')
-      .leftJoinAndSelect('level.targets', 'targets')
       .leftJoinAndSelect('course.courseStudents', 'cs')
+      .leftJoinAndSelect('level.targets', 'targets')
       .leftJoinAndSelect('cs.student', 'student')
       .leftJoinAndSelect('student.details', 'studentsDetails')
       .leftJoinAndSelect('student.studentTargets', 'student_targets')
@@ -58,6 +58,7 @@ export class InstructorRepository extends Repository<User> {
       .andWhere('target.sportId = sport.id')
       .andWhere('target.levelId = level.id')
       .andWhere('targets.sportId = sport.id')
+      .orderBy('calendar.start', 'DESC')
       .setParameter('id', user.id)
       .getMany();
 

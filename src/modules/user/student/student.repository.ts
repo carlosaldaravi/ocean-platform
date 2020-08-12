@@ -125,6 +125,9 @@ export class StudentRepository extends Repository<User> {
       .innerJoinAndSelect('cs.student', 'student')
       .innerJoinAndSelect('student.details', 'studentsDetails')
       .innerJoinAndSelect('course.calendar', 'calendar')
+      .leftJoinAndSelect('student.studentTargets', 'student_targets')
+      .leftJoinAndSelect('student_targets.target', 'target')
+      .leftJoinAndSelect('target.level', 'target_level')
       .where(qb => {
         const subQuery = qb
           .subQuery()
@@ -134,6 +137,8 @@ export class StudentRepository extends Repository<User> {
           .getQuery();
         return 'course.id IN' + subQuery;
       })
+      .andWhere('target.sportId = sport.id')
+      .andWhere('target.levelId = level.id')
       .orderBy('calendar.start', 'DESC')
       .setParameter('id', user.id)
       .getMany();
