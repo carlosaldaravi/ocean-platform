@@ -154,4 +154,34 @@ export const userSports_DB_DATA = [
     sportId: 1,
     levelId: 1,
   },
+  {
+    userId: 32,
+    sportId: 1,
+    levelId: 1,
+  },
+  {
+    userId: 33,
+    sportId: 1,
+    levelId: 1,
+  },
+  {
+    userId: 33,
+    sportId: 3,
+    levelId: 1,
+  },
+  {
+    userId: 34,
+    sportId: 1,
+    levelId: 1,
+  },
+  {
+    userId: 34,
+    sportId: 2,
+    levelId: 1,
+  },
+  {
+    userId: 34,
+    sportId: 3,
+    levelId: 1,
+  },
 ];
