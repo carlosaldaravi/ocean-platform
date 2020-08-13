@@ -17,7 +17,7 @@ export const databaseProviders = [
         database: process.env.DATABASE || config.get(Configuration.DATABASE),
         username: process.env.USERNAME || config.get(Configuration.USERNAME),
         password: process.env.PASSWORD || config.get(Configuration.PASSWORD),
-        synchronize: false,
+        synchronize: true,
         logging: true,
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         migrations: [__dirname + '/migrations/{.ts,.js}'],
