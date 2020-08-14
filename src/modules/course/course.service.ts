@@ -49,8 +49,6 @@ export class CourseService {
     return courses.map((course: Course) => plainToClass(ReadCourseDto, course));
   }
   async create(course: any): Promise<ReadCourseDto> {
-    console.log(course);
-
     const savedCourse = await this._courseRepository
       .create({
         level: course.level.id,
@@ -98,6 +96,8 @@ export class CourseService {
     const instructors = await User.createQueryBuilder('u')
       .leftJoinAndSelect('u.details', 'd')
       .leftJoinAndSelect('u.roles', 'r')
+      .leftJoinAndSelect('u.userSports', 'us')
+      .leftJoinAndSelect('us.sport', 's')
       .where('r.name = :name', { name: 'INSTRUCTOR' })
       .andWhere('u.status = :status', { status: status.ACTIVE })
       .getMany();
