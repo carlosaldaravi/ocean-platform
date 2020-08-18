@@ -95,8 +95,10 @@ export class StudentRepository extends Repository<User> {
   async getCalendar(user: User): Promise<any> {
     let foundUser = await User.createQueryBuilder('user')
       .innerJoinAndSelect('user.userSports', 'userSports')
-      .where('user.id = :id', { id: user.id })
+      .where('user.id = :id')
+      .setParameter('id', user.id)
       .getOne();
+
     let userSportsIds = foundUser.userSports.map(sport => sport.sportId);
 
     let courseCalendar = await CourseCalendar.createQueryBuilder(
@@ -105,7 +107,18 @@ export class StudentRepository extends Repository<User> {
       .innerJoinAndSelect('courseCalendar.course', 'course')
       .innerJoinAndSelect('course.sport', 'sport')
       .innerJoinAndSelect('course.level', 'level')
-      .where('course.sport_id IN (:...ids)', { ids: userSportsIds })
+      .where('course.sport_id IN (:...userSportsIds)')
+      .andWhere('courseCalendar.start >= :today')
+      // .andWhere(qb => {
+      //   const subQuery = qb
+      //     .subQuery()
+      //     .select('course_id')
+      //     .from(CourseStudent, 'cs')
+      //     .where('course.level_id = :levelId', { levelId: userSportsIds })
+      //     .getQuery();
+      //   return 'course.id IN' + subQuery;
+      // })
+      .setParameters({ userSportsIds, today: new Date() })
       .getMany();
 
     let userCalendar = await UserCalendar.find({ where: { userId: user.id } });
