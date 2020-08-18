@@ -212,7 +212,7 @@ export class UserService {
       .where('course.sport_id = :sportId')
       .andWhere('course_students.student_id = :id')
       .andWhere('course_students.student_id = :id')
-      .andWhere('course_calendar.date > :today')
+      .andWhere('course_calendar.start > :today')
       .setParameters({
         sportId: userSport.sportId,
         id: user.id,
