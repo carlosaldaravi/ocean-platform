@@ -27,6 +27,8 @@ import { UserSport } from '../user-sports.entity';
 import { Role } from 'src/modules/role/role.entity';
 import { StudentTarget } from './student-target.entity';
 import { AuthService } from 'src/modules/auth/auth.service';
+import { ReadUserSportDto } from '../dto/read-user-sport.dto';
+import { ReadStudentTargetDto } from './dto/read-student-target.dto';
 
 @EntityRepository(User)
 export class StudentRepository extends Repository<User> {
@@ -154,6 +156,7 @@ export class StudentRepository extends Repository<User> {
     authService,
   ): Promise<any> {
     const foundUser: User = await User.findOne(user.id);
+    const userId = user.id;
 
     await this.createQueryBuilder()
       .update(UserDetails)
@@ -170,30 +173,28 @@ export class StudentRepository extends Repository<User> {
       .of(foundUser)
       .add(studentRole);
 
+    let userSportsSelected: Partial<ReadUserSportDto>[] = [];
+    let studentTargets: Partial<ReadStudentTargetDto>[] = [];
+
     createStudentDto.userSports.forEach(async uSport => {
-      await getManager().transaction(async manager => {
-        const userSports = new UserSport();
-        userSports.userId = user.id;
-        userSports.sportId = uSport.id;
-        let level = uSport.sportLevels.find(sl => sl.checked == true);
-        userSports.levelId = level.sportLevel.levelId;
-
+      let level = uSport.sportLevels.find(sl => sl.checked == true);
+      if (level) {
+        userSportsSelected.push({
+          userId,
+          sportId: uSport.id,
+          levelId: level.sportLevel.levelId,
+        });
         const targets: Target[] = await Target.find({
-          where: { levelId: userSports.levelId, sportId: userSports.sportId },
+          where: { levelId: level.sportLevel.levelId, sportId: uSport.id },
         });
-
-        targets.forEach(async target => {
-          await getManager().transaction(async manager => {
-            const studentTarget = new StudentTarget();
-            studentTarget.studentId = user.id;
-            studentTarget.targetId = target.id;
-            manager.save(studentTarget);
-          });
+        targets.forEach(target => {
+          studentTargets.push({ studentId: userId, targetId: target.id });
         });
-
-        manager.save(userSports);
-      });
+      }
     });
+
+    await getManager().insert(UserSport, userSportsSelected);
+    await getManager().insert(StudentTarget, studentTargets);
 
     await getConnection()
       .createQueryBuilder()
