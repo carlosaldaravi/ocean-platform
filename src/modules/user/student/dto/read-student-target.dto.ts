@@ -24,6 +24,11 @@ export class ReadStudentTargetDto {
   studentId: number;
 
   @Expose()
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'number' })
+  targetId: number;
+
+  @Expose()
   @IsString()
   @ApiProperty({ type: String, description: 'string' })
   feedback: string;
