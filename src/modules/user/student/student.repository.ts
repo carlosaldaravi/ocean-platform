@@ -93,39 +93,29 @@ export class StudentRepository extends Repository<User> {
   }
 
   async getCalendar(user: User): Promise<any> {
-    let foundUser = await User.createQueryBuilder('user')
-      .innerJoinAndSelect('user.userSports', 'userSports')
-      .where('user.id = :id')
-      .setParameter('id', user.id)
-      .getOne();
-
-    let userSportsIds = foundUser.userSports.map(sport => sport.sportId);
-
     let courseCalendar = await CourseCalendar.createQueryBuilder(
       'courseCalendar',
     )
       .innerJoinAndSelect('courseCalendar.course', 'course')
       .innerJoinAndSelect('course.sport', 'sport')
       .innerJoinAndSelect('course.level', 'level')
-      .where('course.sport_id IN (:...userSportsIds)')
-      .andWhere('courseCalendar.start >= :today')
-      // .andWhere(qb => {
-      //   const subQuery = qb
-      //     .subQuery()
-      //     .select('course_id')
-      //     .from(CourseStudent, 'cs')
-      //     .where('course.level_id = :levelId', { levelId: userSportsIds })
-      //     .getQuery();
-      //   return 'course.id IN' + subQuery;
-      // })
-      .setParameters({ userSportsIds, today: new Date() })
+      .where('courseCalendar.start >= :today')
+      .andWhere(qb => {
+        const subQuery = qb
+          .subQuery()
+          .select('sport_id')
+          .from(UserSport, 'us')
+          .where('us.user_id = :userId')
+          .andWhere('course.level_id = us.level_id')
+          .getQuery();
+        return 'course.sport_id IN' + subQuery;
+      })
+      .setParameters({ userId: user.id, today: new Date() })
       .getMany();
 
     let userCalendar = await UserCalendar.find({ where: { userId: user.id } });
 
     return [...courseCalendar, ...userCalendar];
-
-    // return targets.map(target => plainToClass(ReadTargetDto, target));
   }
 
   async getCourses(user: User): Promise<any> {
