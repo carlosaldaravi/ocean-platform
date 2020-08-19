@@ -24,6 +24,7 @@ import { UserSport } from './user-sports.entity';
 import { Course } from '../course/course.entity';
 import { Raw } from 'typeorm';
 import { networkInterfaces } from 'os';
+import { UserDetails } from './user.details.entity';
 
 @Injectable()
 export class UserService {
@@ -104,11 +105,11 @@ export class UserService {
     }
   }
 
-  async updateHimSelf(user: User, updateUser: UpdateUserDto): Promise<any> {
+  async updateHimSelf(user: User, updateUser: any): Promise<any> {
     try {
-      // const foundUser: User = await this._userRepository.findOne({
-      //   where: { email: user.email },
-      // });
+      const foundUser: User = await this._userRepository.findOne({
+        where: { email: user.email },
+      });
       // foundUser.email = updateUser.email;
       // foundUser.languages = updateUser.languages;
       // foundUser.details = updateUser.details;
@@ -120,7 +121,21 @@ export class UserService {
       // }
       console.log(updateUser);
 
-      const actualDetailsRelation = await this._userRepository
+      await this._userRepository
+        .createQueryBuilder()
+        .update(UserDetails)
+        .set(updateUser.details)
+        .where('id = :id', { id: foundUser.details.id })
+        .execute();
+
+      let userLanguages = [];
+      updateUser.languages.forEach(element => {
+        if (element.checked) {
+          userLanguages.push(element.language);
+        }
+      });
+
+      const actualLanguagesRelation = await this._userRepository
         .createQueryBuilder()
         .relation(User, 'languages')
         .of(user)
@@ -130,9 +145,9 @@ export class UserService {
         .createQueryBuilder()
         .relation(User, 'languages')
         .of(user)
-        .addAndRemove(updateUser.languages, actualDetailsRelation);
+        .addAndRemove(userLanguages, actualLanguagesRelation);
 
-      // console.log(actualDetailsRelation);
+      // console.log(actualLanguagesRelation);
 
       // await this._userRepository
       //   .createQueryBuilder()
