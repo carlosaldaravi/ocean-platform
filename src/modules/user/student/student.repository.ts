@@ -179,6 +179,8 @@ export class StudentRepository extends Repository<User> {
     let userSportsSelected: Partial<ReadUserSportDto>[] = [];
     let studentTargets: Partial<ReadStudentTargetDto>[] = [];
 
+    const targets: Target[] = await Target.find();
+
     createStudentDto.userSports.forEach(async uSport => {
       let level = uSport.sportLevels.find(sl => sl.checked == true);
       if (level) {
@@ -187,11 +189,14 @@ export class StudentRepository extends Repository<User> {
           sportId: uSport.id,
           levelId: level.sportLevel.levelId,
         });
-        const targets: Target[] = await Target.find({
-          where: { levelId: level.sportLevel.levelId, sportId: uSport.id },
-        });
+
         targets.forEach(target => {
-          studentTargets.push({ studentId: userId, targetId: target.id });
+          if (
+            target.levelId == level.sportLevel.levelId &&
+            target.sportId == uSport.id
+          ) {
+            studentTargets.push({ studentId: userId, targetId: target.id });
+          }
         });
       }
     });
