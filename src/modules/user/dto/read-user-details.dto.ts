@@ -19,6 +19,11 @@ export class ReadUserDetailsDto {
   @Expose()
   @IsString()
   @ApiProperty({ type: String, description: 'string' })
+  readonly photo: string;
+
+  @Expose()
+  @IsString()
+  @ApiProperty({ type: String, description: 'string' })
   readonly firstname: string;
 
   @Expose()
