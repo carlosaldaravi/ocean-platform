@@ -19,6 +19,8 @@ import { LoggingInterceptor } from './shared/logging.interceptor';
 import { CourseModule } from './modules/course/course.module';
 import { TransformInterceptor } from './shared/transform.interceptor';
 import { ErrorsInterceptor } from './shared/errors.interceptors';
+import { FileController } from './modules/file/file.controller';
+import { FileService } from './modules/file/file.service';
 
 @Module({
   imports: [
@@ -49,11 +51,13 @@ import { ErrorsInterceptor } from './shared/errors.interceptors';
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
     },
+    FileService,
     // {
     //   provide: APP_INTERCEPTOR,
     //   useClass: ErrorsInterceptor,
     // },
   ],
+  controllers: [FileController],
 })
 export class AppModule {
   static port: number | string;
