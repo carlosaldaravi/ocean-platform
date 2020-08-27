@@ -1,12 +1,10 @@
 import {
   Injectable,
-  BadRequestException,
   NotFoundException,
   InternalServerErrorException,
   ConflictException,
   HttpException,
   HttpStatus,
-  ForbiddenException,
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,13 +16,12 @@ import { plainToClass } from 'class-transformer';
 import { CreateStudentTargetDto } from './student/dto/create-student-target.dto';
 import { StudentTargetRepository } from './student/student-target.repository';
 import { TargetRepository } from '../target/target.reposity';
-import { Role } from '../role/role.entity';
 import { ReadSportDto } from '../sport/dto';
 import { UserSport } from './user-sports.entity';
 import { Course } from '../course/course.entity';
-import { Raw } from 'typeorm';
-import { networkInterfaces } from 'os';
 import { UserDetails } from './user.details.entity';
+import * as fs from 'fs';
+import * as im from 'imagemagick';
 
 @Injectable()
 export class UserService {
@@ -54,6 +51,11 @@ export class UserService {
 
     if (!user) {
       throw new HttpException('User not found as student', HttpStatus.OK);
+    }
+
+    if (user.details.photo) {
+      let userAvatar =
+        __dirname + '/../../uploads/imgs/avatar/' + user.details.photo;
     }
 
     return plainToClass(ReadUserDto, user);
@@ -110,16 +112,75 @@ export class UserService {
       const foundUser: User = await this._userRepository.findOne({
         where: { email: user.email },
       });
-      // foundUser.email = updateUser.email;
-      // foundUser.languages = updateUser.languages;
-      // foundUser.details = updateUser.details;
-      // foundUser.userSports = updateUser.userSports;
-      // const updatedUser = await this._userRepository.save(foundUser);
 
-      // if (!updatedUser) {
-      //   throw new InternalServerErrorException();
-      // }
-      console.log(updateUser);
+      // Save base64 image to disk
+      try {
+        // Decoding base-64 image
+        function decodeBase64Image(dataString) {
+          var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+          if (matches) {
+            var response: any = {};
+
+            if (matches.length !== 3) {
+              return new Error('Invalid input string');
+            }
+
+            response.type = matches[1];
+            response.data = Buffer.from(matches[2], 'base64');
+
+            return response;
+          }
+        }
+
+        // Regular expression for image type:
+        // This regular image extracts the "jpeg" from "image/jpeg"
+        var imageTypeRegularExpression = /\/(.*?)$/;
+
+        var base64Data = updateUser.details.photo64;
+        delete updateUser.details.photo64;
+
+        var imageBuffer = decodeBase64Image(base64Data);
+        let userAvatarLocation = __dirname + '/../../uploads/';
+        if (!fs.existsSync(userAvatarLocation)) {
+          fs.mkdirSync(userAvatarLocation);
+          userAvatarLocation = userAvatarLocation + '/imgs/';
+          if (!fs.existsSync(userAvatarLocation)) {
+            fs.mkdirSync(userAvatarLocation);
+            userAvatarLocation = userAvatarLocation + '/avatar/';
+            if (!fs.existsSync(userAvatarLocation)) {
+              fs.mkdirSync(userAvatarLocation);
+            }
+          }
+        }
+        userAvatarLocation = __dirname + '/../../uploads/imgs/avatar/';
+
+        var avatarName = `avatar_user_${foundUser.id}`;
+        // This variable is actually an array which has 5 values,
+        // The [1] value is the real image extension
+        var imageTypeDetected = imageBuffer.type.match(
+          imageTypeRegularExpression,
+        );
+
+        console.log('imageTypeDetected: ', imageTypeDetected);
+
+        var userUploadedImagePath =
+          userAvatarLocation + avatarName + '.' + imageTypeDetected[1];
+
+        // Save decoded binary image to disk
+        try {
+          fs.writeFile(userUploadedImagePath, imageBuffer.data, function() {
+            console.log(
+              'DEBUG - feed:message: Saved to disk image attached by user:',
+              userUploadedImagePath,
+            );
+          });
+          updateUser.details.photo = `avatar_user_${foundUser.id}.${imageTypeDetected[1]}`;
+        } catch (error) {
+          console.log('ERROR:', error);
+        }
+      } catch (error) {
+        console.log('ERROR:', error);
+      }
 
       await this._userRepository
         .createQueryBuilder()
@@ -147,16 +208,19 @@ export class UserService {
         .of(user)
         .addAndRemove(userLanguages, actualLanguagesRelation);
 
-      // console.log(actualLanguagesRelation);
-
-      // await this._userRepository
-      //   .createQueryBuilder()
-      //   .update(User)
-      //   .set(updateUser)
-      //   .where('email = :email', { email: user.email })
-      //   .execute();
-
-      // return plainToClass(ReadUserDto, updatedUser);
+      const savedUser: User = await this._userRepository
+        .createQueryBuilder('user')
+        .innerJoinAndSelect('user.details', 'details')
+        .innerJoinAndSelect('user.roles', 'roles')
+        .leftJoinAndSelect('user.userSports', 'uS')
+        .leftJoinAndSelect('uS.sport', 'sport')
+        .leftJoinAndSelect('uS.level', 'level')
+        .leftJoinAndSelect('user.languages', 'languages')
+        .where('user.status = :status')
+        .andWhere('user.id = :id')
+        .setParameters({ status: status.ACTIVE, id: user.id })
+        .getOne();
+      return savedUser;
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Email already exists');
@@ -219,8 +283,6 @@ export class UserService {
   }
 
   async deleteUserSport(userSport: UserSport, user: User) {
-    console.log('eliminando deporte');
-    console.log(userSport);
     let userCourses = await Course.createQueryBuilder('course')
       .innerJoin('course.courseStudents', 'course_students')
       .innerJoin('course.calendar', 'course_calendar')
