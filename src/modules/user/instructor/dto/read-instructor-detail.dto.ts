@@ -26,6 +26,11 @@ export class ReadInstructorDetailsDto {
   readonly phone: string;
 
   @Expose()
+  @IsString()
+  @ApiProperty({ type: String, description: 'string' })
+  readonly photo: string;
+
+  @Expose()
   @IsDate()
   @ApiProperty({ type: Date, description: 'Date' })
   readonly dateBorn: Date;
