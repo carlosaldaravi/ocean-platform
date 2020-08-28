@@ -174,31 +174,76 @@ export const targets_DB_DATA = [
       'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
   },
   {
-    name: 'Prueba 1 de windsurf',
+    name: 'Teoría',
     levelId: 1,
     sportId: 2,
-    description:
-      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+    description: 'Teoría de iniciación al windsurf',
   },
   {
-    name: 'Prueba 2 de windsurf',
+    name: 'Montaje',
     levelId: 1,
     sportId: 2,
-    description:
-      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+    description: 'Ser capaz de montar tu propio material',
   },
   {
-    name: 'Prueba 1 de sup',
+    name: 'Primeros planeos',
+    levelId: 1,
+    sportId: 2,
+    description: 'Realizar los primeros pasos sobre la tabla',
+  },
+  {
+    name: 'Virada',
+    levelId: 2,
+    sportId: 2,
+    description: 'Realizar una virada',
+  },
+  {
+    name: 'Trasluchada',
+    levelId: 2,
+    sportId: 2,
+    description: 'Realizar una trasluchada',
+  },
+  {
+    name: 'Salto básico',
+    levelId: 3,
+    sportId: 2,
+    description: 'Realizar un salto básico',
+  },
+  {
+    name: 'Forward',
+    levelId: 3,
+    sportId: 2,
+    description: 'Realizar un forward',
+  },
+  {
+    name: 'Teoría',
     levelId: 1,
     sportId: 3,
-    description:
-      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+    description: 'Teoría de iniciación al paddle surf',
   },
   {
-    name: 'Prueba 2 de sup',
+    name: 'Equilibrio',
+    levelId: 1,
+    sportId: 3,
+    description: 'Ser capaz de mantener el equilibrio de pie sobre la tabla',
+  },
+  {
+    name: 'Remada',
+    levelId: 1,
+    sportId: 3,
+    description: 'Ir y volver al punto',
+  },
+  {
+    name: 'Posición race',
     levelId: 2,
     sportId: 3,
     description:
-      'Ser capaz de encontrarte en una situación de soledad y no tener problemas para bajar la cometa sin asistente',
+      'Adoptar la posición de carrera con un pie delante y otro detrás',
+  },
+  {
+    name: 'Olas',
+    levelId: 2,
+    sportId: 3,
+    description: 'Coger una ola sin caer al agua',
   },
 ];
