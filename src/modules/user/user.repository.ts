@@ -18,9 +18,11 @@ export class UserRepository extends Repository<User> {
       .leftJoinAndSelect('u.roles', 'r')
       .leftJoinAndSelect('u.userSports', 'uS')
       .leftJoinAndSelect('uS.sport', 's')
+      .leftJoinAndSelect('uS.level', 'l')
       .leftJoinAndSelect('u.details', 'd')
       .where('r.name = :name', { name: role })
       .andWhere('u.status = :status', { status: status.ACTIVE })
+      .orderBy('l.id', 'DESC')
       .getMany();
 
     switch (role) {
