@@ -22,6 +22,7 @@ import { Course } from '../course/course.entity';
 import { UserDetails } from './user.details.entity';
 import * as fs from 'fs';
 import * as im from 'imagemagick';
+import { Target } from '../target/target.entity';
 
 @Injectable()
 export class UserService {
@@ -161,8 +162,6 @@ export class UserService {
           imageTypeRegularExpression,
         );
 
-        console.log('imageTypeDetected: ', imageTypeDetected);
-
         var userUploadedImagePath =
           userAvatarLocation + avatarName + '.' + imageTypeDetected[1];
 
@@ -174,6 +173,31 @@ export class UserService {
               userUploadedImagePath,
             );
           });
+          // im.resize(
+          //   {
+          //     srcPath: userUploadedImagePath,
+          //     dstPath: 'prueba.png',
+          //     width: 24,
+          //   },
+          //   function(err, stdout, stderr) {
+          //     if (err) throw err;
+          //     console.log('resized kittens.jpg to fit within 256x256px');
+          //   },
+          // );
+          // im.resize(
+          //   {
+          //     srcData: fs.readFileSync(userUploadedImagePath),
+          //     width: 24,
+          //   },
+          //   function(err, stdout, stderr) {
+          //     if (err) throw err;
+          //     fs.writeFileSync(
+          //       avatarName + '.' + imageTypeDetected[1],
+          //       userAvatarLocation,
+          //     );
+          //     console.log('resized kittens.jpg to fit within 256x256px');
+          //   },
+          // );
           updateUser.details.photo = `avatar_user_${foundUser.id}.${imageTypeDetected[1]}`;
         } catch (error) {
           console.log('ERROR:', error);
@@ -272,10 +296,31 @@ export class UserService {
     createStudentTargetDto: Partial<CreateStudentTargetDto[]>,
     user: User,
   ): Promise<any> {
-    return this._studentTargetRepository.setTargetsToUsers(
+    this._studentTargetRepository.setTargetsToUsers(
       createStudentTargetDto,
       user,
     );
+
+    const target = await Target.findOne({
+      where: { id: createStudentTargetDto[0].targetId },
+    });
+
+    let student = await User.createQueryBuilder('user')
+      .innerJoinAndSelect('user.details', 'details')
+      .innerJoinAndSelect('user.studentTargets', 'st')
+      .innerJoinAndSelect('st.target', 'target')
+      .innerJoinAndSelect('target.level', 'level')
+      .where('user.id = :id')
+      .andWhere('target.level_id = :levelId')
+      .andWhere('target.sport_id = :sportId')
+      .setParameters({
+        id: createStudentTargetDto[0].studentId,
+        levelId: target.levelId,
+        sportId: target.sportId,
+      })
+      .getOne();
+
+    return student;
   }
 
   getSports(user: User): Promise<ReadSportDto[]> {
